@@ -1,0 +1,52 @@
+/* line 1, /Users/KotaroHirayama/Work/Try/5shima/dev/tabs-03/assets/styles/app.sass */
+* {
+  margin: 0;
+  border: 0;
+  outline: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-radius: 0;
+  -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+          text-size-adjust: 100%;
+  font-size: 12px;
+  font-family: sans-serif;
+  line-height: 1.6;
+  text-align: justify;
+  list-style: none;
+  vertical-align: baseline;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.3);
+  -webkit-font-smoothing: antialiased;
+  word-wrap: keep-all;
+  -webkit-transition: all .2s linear 0;
+          transition: all .2s linear 0; }
+
+/* line 20, /Users/KotaroHirayama/Work/Try/5shima/dev/tabs-03/assets/styles/app.sass */
+.tabs {
+  width: 320px;
+  background: #aaa;
+  margin: 30px auto; }
+  /* line 25, /Users/KotaroHirayama/Work/Try/5shima/dev/tabs-03/assets/styles/app.sass */
+  .tabs .tabs-nav {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    background: #ccc; }
+    /* line 31, /Users/KotaroHirayama/Work/Try/5shima/dev/tabs-03/assets/styles/app.sass */
+    .tabs .tabs-nav .tab {
+      display: table-cell;
+      vertical-align: middle;
+      text-align: center; }
+      /* line 35, /Users/KotaroHirayama/Work/Try/5shima/dev/tabs-03/assets/styles/app.sass */
+      .tabs .tabs-nav .tab.active {
+        background: red; }
+  /* line 39, /Users/KotaroHirayama/Work/Try/5shima/dev/tabs-03/assets/styles/app.sass */
+  .tabs .tabs-content {
+    background: #999; }
+    /* line 42, /Users/KotaroHirayama/Work/Try/5shima/dev/tabs-03/assets/styles/app.sass */
+    .tabs .tabs-content .content {
+      display: none; }
+      /* line 44, /Users/KotaroHirayama/Work/Try/5shima/dev/tabs-03/assets/styles/app.sass */
+      .tabs .tabs-content .content.active {
+        display: block; }

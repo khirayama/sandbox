@@ -1,0 +1,69 @@
+/* line 1, /Users/KotaroHirayama/Work/Try/5shima/dev/flux/assets/styles/app.sass */
+* {
+  margin: 0;
+  border: 0;
+  outline: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  border-radius: 0;
+  -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+          text-size-adjust: 100%;
+  font-size: 18px;
+  font-family: sans-serif;
+  line-height: 1.6;
+  text-align: justify;
+  list-style: none;
+  vertical-align: baseline;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.3);
+  -webkit-font-smoothing: antialiased;
+  word-wrap: keep-all;
+  -webkit-transition: all .2s linear 0;
+          transition: all .2s linear 0; }
+
+/* line 20, /Users/KotaroHirayama/Work/Try/5shima/dev/flux/assets/styles/app.sass */
+#todoapp {
+  width: 320px;
+  margin: 30px auto;
+  border: solid 1px #aaa;
+  position: relative; }
+
+/* line 26, /Users/KotaroHirayama/Work/Try/5shima/dev/flux/assets/styles/app.sass */
+#new-todo {
+  width: calc(100% - 30px);
+  border: solid 1px #aaa;
+  height: 30px;
+  line-height: 30px;
+  padding: 0 8px; }
+
+/* line 33, /Users/KotaroHirayama/Work/Try/5shima/dev/flux/assets/styles/app.sass */
+#add {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  border: solid 1px #aaa; }
+
+/* line 44, /Users/KotaroHirayama/Work/Try/5shima/dev/flux/assets/styles/app.sass */
+#todo-list {
+  width: 100%; }
+  /* line 47, /Users/KotaroHirayama/Work/Try/5shima/dev/flux/assets/styles/app.sass */
+  #todo-list .todo-item {
+    border: solid 1px red; }
+    /* line 49, /Users/KotaroHirayama/Work/Try/5shima/dev/flux/assets/styles/app.sass */
+    #todo-list .todo-item .toggle {
+      width: 100%; }
+    /* line 51, /Users/KotaroHirayama/Work/Try/5shima/dev/flux/assets/styles/app.sass */
+    #todo-list .todo-item .edit {
+      width: 100%; }
+    /* line 53, /Users/KotaroHirayama/Work/Try/5shima/dev/flux/assets/styles/app.sass */
+    #todo-list .todo-item .todo {
+      display: block;
+      width: 100%; }
+    /* line 56, /Users/KotaroHirayama/Work/Try/5shima/dev/flux/assets/styles/app.sass */
+    #todo-list .todo-item .destroy {
+      width: 100%; }

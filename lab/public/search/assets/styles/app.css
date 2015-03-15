@@ -1,0 +1,29 @@
+/* line 1, /Users/KotaroHirayama/Work/Try/5shima/dev/search/assets/styles/app.sass */
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  list-style: none; }
+
+/* line 9, /Users/KotaroHirayama/Work/Try/5shima/dev/search/assets/styles/app.sass */
+body {
+  font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  line-height: 1.4em;
+  background: #b6b6b6;
+  color: #4d4d4d;
+  width: 420px;
+  margin: 0 auto;
+  font-smoothing: antialiased; }
+
+/* line 18, /Users/KotaroHirayama/Work/Try/5shima/dev/search/assets/styles/app.sass */
+table {
+  margin: 0 auto;
+  background: #fff;
+  width: 200px; }
+  /* line 23, /Users/KotaroHirayama/Work/Try/5shima/dev/search/assets/styles/app.sass */
+  table li {
+    padding: 5px 10px;
+    border-bottom: solid 1px #aaa; }

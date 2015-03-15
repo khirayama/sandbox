@@ -1,0 +1,45 @@
+*
+  margin: 0
+  border: 0
+  outline: 0
+  padding: 0
+  box-sizing: border-box
+  border-radius: 0
+  text-size-adjust: 100%
+  font-size: 12px
+  font-family: sans-serif
+  line-height: 1.6
+  text-align: justify
+  list-style: none
+  vertical-align: baseline
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.3)
+  -webkit-font-smoothing: antialiased
+  word-wrap: keep-all
+  transition: all .2s linear 0
+
+.tabs
+  width: 320px
+  background: #aaa
+  margin: 30px auto
+
+  .tabs-nav
+    display: table
+    table-layout: fixed
+    width: 100%
+    background: #ccc
+
+    .tab
+      display: table-cell
+      vertical-align: middle
+      text-align: center
+      &.active
+        background: red
+
+
+  .tabs-content
+    background: #999
+
+    .content
+      display: none
+      &.active
+        display: block
