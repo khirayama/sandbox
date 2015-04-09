@@ -1,4 +1,4 @@
-/* line 1, /Users/KotaroHirayama/Work/Try/5shima/dev/coco_min/assets/styles/app.sass */
+/* line 1, /Users/KotaroHirayama/Work/sandbox/lab/dev/coco_min/assets/styles/app.sass */
 * {
   margin: 0;
   border: 0;
@@ -22,6 +22,6 @@
   -webkit-transition: all .2s linear 0;
           transition: all .2s linear 0; }
 
-/* line 20, /Users/KotaroHirayama/Work/Try/5shima/dev/coco_min/assets/styles/app.sass */
+/* line 20, /Users/KotaroHirayama/Work/sandbox/lab/dev/coco_min/assets/styles/app.sass */
 .active {
   background: red; }

@@ -1,5 +1,5 @@
 @charset "UTF-8";
-/* line 1, /Users/KotaroHirayama/Work/Try/5shima/dev/todo_framework/assets/styles/app.sass */
+/* line 1, /Users/KotaroHirayama/Work/sandbox/lab/dev/todo_framework/assets/styles/app.sass */
 * {
   margin: 0;
   padding: 0;
@@ -8,7 +8,7 @@
   -webkit-box-sizing: border-box;
           box-sizing: border-box; }
 
-/* line 8, /Users/KotaroHirayama/Work/Try/5shima/dev/todo_framework/assets/styles/app.sass */
+/* line 8, /Users/KotaroHirayama/Work/sandbox/lab/dev/todo_framework/assets/styles/app.sass */
 body {
   font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
   line-height: 1.4em;
@@ -18,7 +18,7 @@ body {
   margin: 0 auto;
   font-smoothing: antialiased; }
 
-/* line 17, /Users/KotaroHirayama/Work/Try/5shima/dev/todo_framework/assets/styles/app.sass */
+/* line 17, /Users/KotaroHirayama/Work/sandbox/lab/dev/todo_framework/assets/styles/app.sass */
 #todoapp {
   background: #fff;
   margin: 130px 0 40px 0;
@@ -26,7 +26,7 @@ body {
   -webkit-box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.15);
           box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.15); }
 
-/* line 24, /Users/KotaroHirayama/Work/Try/5shima/dev/todo_framework/assets/styles/app.sass */
+/* line 24, /Users/KotaroHirayama/Work/sandbox/lab/dev/todo_framework/assets/styles/app.sass */
 #new-todo, .edit {
   position: relative;
   margin: 0;
@@ -43,7 +43,7 @@ body {
           box-shadow: inset 0 -1px 5px 0 rgba(0, 0, 0, 0.2);
   font-smoothing: antialiased; }
 
-/* line 39, /Users/KotaroHirayama/Work/Try/5shima/dev/todo_framework/assets/styles/app.sass */
+/* line 39, /Users/KotaroHirayama/Work/sandbox/lab/dev/todo_framework/assets/styles/app.sass */
 #new-todo {
   padding: 16px;
   border: none;
@@ -52,37 +52,37 @@ body {
   -webkit-box-shadow: none;
           box-shadow: none; }
 
-/* line 46, /Users/KotaroHirayama/Work/Try/5shima/dev/todo_framework/assets/styles/app.sass */
+/* line 46, /Users/KotaroHirayama/Work/sandbox/lab/dev/todo_framework/assets/styles/app.sass */
 #main {
   position: relative;
   z-index: 2;
   border-top: 1px dotted #adadad; }
 
-/* line 51, /Users/KotaroHirayama/Work/Try/5shima/dev/todo_framework/assets/styles/app.sass */
+/* line 51, /Users/KotaroHirayama/Work/sandbox/lab/dev/todo_framework/assets/styles/app.sass */
 #todo-list {
   margin: 0;
   padding: 0;
   list-style: none; }
-  /* line 55, /Users/KotaroHirayama/Work/Try/5shima/dev/todo_framework/assets/styles/app.sass */
+  /* line 55, /Users/KotaroHirayama/Work/sandbox/lab/dev/todo_framework/assets/styles/app.sass */
   #todo-list li {
     position: relative;
     font-size: 24px;
     border-bottom: 1px dotted #ccc; }
-    /* line 59, /Users/KotaroHirayama/Work/Try/5shima/dev/todo_framework/assets/styles/app.sass */
+    /* line 59, /Users/KotaroHirayama/Work/sandbox/lab/dev/todo_framework/assets/styles/app.sass */
     #todo-list li:last-child {
       border-bottom: none; }
-    /* line 61, /Users/KotaroHirayama/Work/Try/5shima/dev/todo_framework/assets/styles/app.sass */
+    /* line 61, /Users/KotaroHirayama/Work/sandbox/lab/dev/todo_framework/assets/styles/app.sass */
     #todo-list li .edit {
       display: inline; }
-    /* line 64, /Users/KotaroHirayama/Work/Try/5shima/dev/todo_framework/assets/styles/app.sass */
+    /* line 64, /Users/KotaroHirayama/Work/sandbox/lab/dev/todo_framework/assets/styles/app.sass */
     #todo-list li.editing .edit {
       display: block;
       width: 100%;
       padding: 13px 55px; }
-    /* line 68, /Users/KotaroHirayama/Work/Try/5shima/dev/todo_framework/assets/styles/app.sass */
+    /* line 68, /Users/KotaroHirayama/Work/sandbox/lab/dev/todo_framework/assets/styles/app.sass */
     #todo-list li.editing .view {
       display: none; }
-    /* line 70, /Users/KotaroHirayama/Work/Try/5shima/dev/todo_framework/assets/styles/app.sass */
+    /* line 70, /Users/KotaroHirayama/Work/sandbox/lab/dev/todo_framework/assets/styles/app.sass */
     #todo-list li .toggle {
       display: block;
       text-align: center;
@@ -96,10 +96,10 @@ body {
       margin: auto 0;
       font-size: 22px;
       appearance: none; }
-      /* line 83, /Users/KotaroHirayama/Work/Try/5shima/dev/todo_framework/assets/styles/app.sass */
+      /* line 83, /Users/KotaroHirayama/Work/sandbox/lab/dev/todo_framework/assets/styles/app.sass */
       #todo-list li .toggle:after {
         content: '✔︎'; }
-    /* line 85, /Users/KotaroHirayama/Work/Try/5shima/dev/todo_framework/assets/styles/app.sass */
+    /* line 85, /Users/KotaroHirayama/Work/sandbox/lab/dev/todo_framework/assets/styles/app.sass */
     #todo-list li label {
       white-space: pre;
       word-break: break-word;
@@ -109,11 +109,11 @@ body {
       line-height: 1.2;
       -webkit-transition: color 0.4s;
               transition: color 0.4s; }
-    /* line 93, /Users/KotaroHirayama/Work/Try/5shima/dev/todo_framework/assets/styles/app.sass */
+    /* line 93, /Users/KotaroHirayama/Work/sandbox/lab/dev/todo_framework/assets/styles/app.sass */
     #todo-list li.completed label {
       color: #a9a9a9;
       text-decoration: line-through; }
-    /* line 96, /Users/KotaroHirayama/Work/Try/5shima/dev/todo_framework/assets/styles/app.sass */
+    /* line 96, /Users/KotaroHirayama/Work/sandbox/lab/dev/todo_framework/assets/styles/app.sass */
     #todo-list li .destroy {
       display: block;
       text-align: center;
@@ -126,12 +126,12 @@ body {
       line-height: 40px;
       margin: auto 0;
       font-size: 22px; }
-      /* line 108, /Users/KotaroHirayama/Work/Try/5shima/dev/todo_framework/assets/styles/app.sass */
+      /* line 108, /Users/KotaroHirayama/Work/sandbox/lab/dev/todo_framework/assets/styles/app.sass */
       #todo-list li .destroy:after {
         content: '✖'; }
-    /* line 110, /Users/KotaroHirayama/Work/Try/5shima/dev/todo_framework/assets/styles/app.sass */
+    /* line 110, /Users/KotaroHirayama/Work/sandbox/lab/dev/todo_framework/assets/styles/app.sass */
     #todo-list li .edit {
       display: none; }
-    /* line 112, /Users/KotaroHirayama/Work/Try/5shima/dev/todo_framework/assets/styles/app.sass */
+    /* line 112, /Users/KotaroHirayama/Work/sandbox/lab/dev/todo_framework/assets/styles/app.sass */
     #todo-list li.editing:last-child {
       margin-bottom: -1px; }

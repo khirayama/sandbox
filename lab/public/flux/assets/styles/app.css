@@ -1,4 +1,4 @@
-/* line 1, /Users/KotaroHirayama/Work/Try/5shima/dev/flux/assets/styles/app.sass */
+/* line 1, /Users/KotaroHirayama/Work/sandbox/lab/dev/flux/assets/styles/app.sass */
 * {
   margin: 0;
   border: 0;
@@ -22,14 +22,14 @@
   -webkit-transition: all .2s linear 0;
           transition: all .2s linear 0; }
 
-/* line 20, /Users/KotaroHirayama/Work/Try/5shima/dev/flux/assets/styles/app.sass */
+/* line 20, /Users/KotaroHirayama/Work/sandbox/lab/dev/flux/assets/styles/app.sass */
 #todoapp {
   width: 320px;
   margin: 30px auto;
   border: solid 1px #aaa;
   position: relative; }
 
-/* line 26, /Users/KotaroHirayama/Work/Try/5shima/dev/flux/assets/styles/app.sass */
+/* line 26, /Users/KotaroHirayama/Work/sandbox/lab/dev/flux/assets/styles/app.sass */
 #new-todo {
   width: calc(100% - 30px);
   border: solid 1px #aaa;
@@ -37,7 +37,7 @@
   line-height: 30px;
   padding: 0 8px; }
 
-/* line 33, /Users/KotaroHirayama/Work/Try/5shima/dev/flux/assets/styles/app.sass */
+/* line 33, /Users/KotaroHirayama/Work/sandbox/lab/dev/flux/assets/styles/app.sass */
 #add {
   position: absolute;
   top: 0;
@@ -48,22 +48,22 @@
   line-height: 30px;
   border: solid 1px #aaa; }
 
-/* line 44, /Users/KotaroHirayama/Work/Try/5shima/dev/flux/assets/styles/app.sass */
+/* line 44, /Users/KotaroHirayama/Work/sandbox/lab/dev/flux/assets/styles/app.sass */
 #todo-list {
   width: 100%; }
-  /* line 47, /Users/KotaroHirayama/Work/Try/5shima/dev/flux/assets/styles/app.sass */
+  /* line 47, /Users/KotaroHirayama/Work/sandbox/lab/dev/flux/assets/styles/app.sass */
   #todo-list .todo-item {
     border: solid 1px red; }
-    /* line 49, /Users/KotaroHirayama/Work/Try/5shima/dev/flux/assets/styles/app.sass */
+    /* line 49, /Users/KotaroHirayama/Work/sandbox/lab/dev/flux/assets/styles/app.sass */
     #todo-list .todo-item .toggle {
       width: 100%; }
-    /* line 51, /Users/KotaroHirayama/Work/Try/5shima/dev/flux/assets/styles/app.sass */
+    /* line 51, /Users/KotaroHirayama/Work/sandbox/lab/dev/flux/assets/styles/app.sass */
     #todo-list .todo-item .edit {
       width: 100%; }
-    /* line 53, /Users/KotaroHirayama/Work/Try/5shima/dev/flux/assets/styles/app.sass */
+    /* line 53, /Users/KotaroHirayama/Work/sandbox/lab/dev/flux/assets/styles/app.sass */
     #todo-list .todo-item .todo {
       display: block;
       width: 100%; }
-    /* line 56, /Users/KotaroHirayama/Work/Try/5shima/dev/flux/assets/styles/app.sass */
+    /* line 56, /Users/KotaroHirayama/Work/sandbox/lab/dev/flux/assets/styles/app.sass */
     #todo-list .todo-item .destroy {
       width: 100%; }
