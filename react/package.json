@@ -1,0 +1,51 @@
+{
+  "name": "flux",
+  "version": "2.0.2",
+  "description": "An application architecture based on a unidirectional data flow",
+  "keywords": [
+    "flux",
+    "react",
+    "facebook",
+    "dispatcher"
+  ],
+  "homepage": "http://facebook.github.io/flux/",
+  "bugs": "https://github.com/facebook/flux/issues",
+  "files": [
+    "index.js",
+    "lib/",
+    "LICENSE",
+    "PATENTS"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "prepublish": "gulp publish",
+    "test": "jest"
+  },
+  "jest": {
+    "rootDir": "src",
+    "scriptPreprocessor": "../jest-preprocessor.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/facebook/flux"
+  },
+  "author": "Facebook",
+  "contributors": [
+    "Jing Chen <jingc@fb.com>",
+    "Bill Fisher <fisherwebdev@gmail.com>",
+    "Paul O'Shannessy <paul@oshanessy.com>"
+  ],
+  "license": "BSD",
+  "devDependencies": {
+    "browserify": "^9.0.3",
+    "del": "^1.1.1",
+    "gulp": "^3.8.11",
+    "gulp-clean": "^0.3.1",
+    "gulp-react": "^2.0.0",
+    "gulp-replace": "^0.5.3",
+    "jest-cli": "^0.4.0",
+    "react-tools": "^0.12.0",
+    "run-sequence": "^1.0.2",
+    "vinyl-source-stream": "^1.0.0"
+  }
+}
