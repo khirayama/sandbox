@@ -1,4 +1,6 @@
 import User from './classes/user.js';
+import Animal from './classes/animal.js';
 
 var user = new User('Kotaro');
-console.log('app ok ' + user.say());
+var animal = new Animal('Lion');
+console.log('app ok ' + user.say() + ' and ' + animal.say());

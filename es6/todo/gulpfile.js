@@ -1,26 +1,37 @@
 var gulp = require('gulp');
-var del = require('del');
 var browserSync = require('browser-sync');
 var plumber = require('gulp-plumber');
 var jade = require('gulp-jade');
 var sass = require('gulp-sass');
 var please = require('gulp-pleeease');
 var browserify = require('gulp-browserify');
+var notify = require('gulp-notify');
 
-// dev //////////////////////////////////////////////////////////////////////////////////////
-// markups /////////////////////////////////////////////////////////////////////////////////////
+var options = {
+  plumber: {
+    errorHandler: notify.onError({
+      message: 'Error: <%= error.message %>',
+      sound: false,
+      wait: true
+    })
+  }
+};
+
+// markups
 gulp.task('markups', function() {
+  'use strict';
   return gulp.src('dev/**/*.jade')
-    .pipe(plumber())
+    .pipe(plumber(options.plumber))
     .pipe(jade())
     .pipe(gulp.dest('public/'))
     .pipe(browserSync.reload({stream: true}));
 });
 
-// styles //////////////////////////////////////////////////////////////////////////////////////
+// styles
 gulp.task('styles', function() {
+  'use strict';
   return gulp.src('dev/**/*.sass')
-    .pipe(plumber())
+    .pipe(plumber(options.plumber))
     .pipe(sass({
       indentedSyntax: true,
       errLogToConsole: true,
@@ -36,10 +47,11 @@ gulp.task('styles', function() {
     .pipe(browserSync.reload({stream: true}));
 });
 
-// js ///////////////////////////////////////////////////////////////////////////////////////
+// scripts
 gulp.task('scripts', function() {
+  'use strict';
   return gulp.src(['dev/app.js'])
-    .pipe(plumber())
+    .pipe(plumber(options.plumber))
     .pipe(browserify({
       transform: ['babelify']
     }))
@@ -47,15 +59,17 @@ gulp.task('scripts', function() {
     .pipe(browserSync.reload({stream: true}));
 });
 
-// files ///////////////////////////////////////////////////////////////////////////////////////
+// files
 gulp.task('files', function() {
+  'use strict';
   return gulp.src(['dev/**/*.+(png|jpg|gif)'])
-    .pipe(plumber())
+    .pipe(plumber(options.plumber))
     .pipe(gulp.dest('public/'));
 });
 
-// other ///////////////////////////////////////////////////////////////////////////////////////
+// other
 gulp.task('browserSync', ['markups', 'styles', 'scripts', 'files'], function() {
+  'use strict';
   return browserSync.init(null, {
     server: {
       baseDir: 'public/'
@@ -65,6 +79,7 @@ gulp.task('browserSync', ['markups', 'styles', 'scripts', 'files'], function() {
 });
 
 gulp.task('watch', function() {
+  'use strict';
   gulp.watch(['dev/**/*.sass'], ['styles']);
   gulp.watch(['dev/**/*.html'], ['markups']);
   gulp.watch(['dev/**/*.js'], ['scripts']);
