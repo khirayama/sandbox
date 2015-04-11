@@ -57,3 +57,26 @@ AppDispatcher.dispatch({
   id: id
 });
 console.log(`destory: ${JSON.stringify(todo)}`);
+
+
+AppDispatcher.dispatch({
+  actionType: 'TODO_CREATE',
+  text: '111'
+});
+AppDispatcher.dispatch({
+  actionType: 'TODO_CREATE',
+  text: '222'
+});
+AppDispatcher.dispatch({
+  actionType: 'TODO_CREATE',
+  text: '333'
+});
+AppDispatcher.dispatch({
+  actionType: 'TODO_CREATE',
+  text: '444'
+});
+AppDispatcher.dispatch({
+  actionType: 'TODO_CREATE',
+  text: '555'
+});
+console.log(todo);
