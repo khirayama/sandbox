@@ -1,0 +1,94 @@
+@charset "UTF-8";
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  vertical-align: middle;
+  -ms-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+  -ms-font-smoothing: antialiased;
+  -o-font-smoothing: antialiased;
+  /*font-smoothing: antialiased;*/
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.2);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -webkit-overflow-scrolling: touch;
+}
+input[type=text] {
+  -webkit-user-select: auto;
+}
+@font-face {
+  font-weight: normal;
+  font-style: normal;
+  font-family: 'icons';
+  src: url('fonts/icomoon.eot?-4km4ci');
+  src: url('fonts/icomoon.eot?#iefix-4km4ci') format('embedded-opentype'), url('fonts/icomoon.woff?-4km4ci') format('woff'), url('fonts/icomoon.ttf?-4km4ci') format('truetype'), url('fonts/icomoon.svg?-4km4ci#icomoon') format('svg');
+}
+.icon {
+  font-family: icons;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 130%;
+  vertical-align: bottom;
+}
+html {
+  width: 100%;
+  height: 100%;
+  background: url(bg.gif) center;
+  background-size: cover;
+}
+body {
+  width: 100%;
+  height: 100%;
+  color: #333333;
+  font: 21px/1.1 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+#nav {
+  position: relative;
+  top: 40%;
+  margin: 0 auto;
+  padding: 20px;
+  width: 90%;
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.3);
+  -webkit-transform: translateY(-50%);
+}
+h1 {
+  color: #fff;
+  text-align: center;
+  font: bold 23px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  opacity: .9;
+}
+.twitter,
+.github {
+  color: #fff;
+  text-decoration: none;
+}
+.twitter div,
+.github div {
+  margin: 20px auto;
+  width: 90%;
+  height: 44px;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 80%;
+  line-height: 44px;
+}
+.twitter div .icon,
+.github div .icon {
+  margin: 0 20px 0 0;
+}
+.twitter div {
+  background: rgba(85, 172, 238, 0.95);
+}
+.github div {
+  background: rgba(200, 200, 200, 0.95);
+}
