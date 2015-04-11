@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="robots" content="INDEX,FOLLOW" />
+  <meta name="author" content="Kotaro Hirayama" />
+  <meta name="description" content="{block:Description}{MetaDescription}{/block:Description}" />
+  <meta name="keywords" content="図鑑,バンド,福岡,zukan,平山カンタロウ,マンエユウキ,脇本ヒサシ,異界論" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+  <link rel="shortcut icon" href="//dl.dropboxusercontent.com/u/69814198/zukan/tumblr/imgs/favicon.ico" />
+  <link rel="apple-touch-icon-precomposed" href="//dl.dropboxusercontent.com/u/69814198/zukan/tumblr/imgs/apple-touch-icon-precomposed.png" />
+  <link rel="canonical" href="//zukannet.com/" />
+  <link rel="alternate" type="application/rss+xml" href="{RSS}" title="RSS2.0" />
+  <title>{block:PermalinkPage}{block:Posts}{Title} | {/block:Posts}{/block:PermalinkPage}{block:TagPage}{Tag} | {/block:TagPage}{Title}</title>
+  <link rel="stylesheet" href="//dl.dropboxusercontent.com/u/69814198/zukan/tumblr/styles/style.css">
+</head>
+<body id="zukan">
+  <header class="header">
+    <section class="logo"><a href="/"><img src="//dl.dropboxusercontent.com/u/69814198/zukan/tumblr/imgs/logo.gif" alt="logo" width="50" height="61" /></a></section>
+    <ul class="sns">
+      <li><a href="//twitter.com/Zukan_OFFICIAL">t</a></li>
+      <li><a href="//www.facebook.com/zukan">F</a></li>
+      <li><a href="//ameblo.jp/zukanblog">A</a></li>
+    </ul>
+    <nav class="nav">
+      <ul>
+        <li><a href="/">HOME<br />ホーム</a></li>
+        <li><a href="/tagged/schedule">SCHEDULE<br />出演情報</a></li>
+        <li><a href="/tagged/discography">DISCOGRAPHY<br />ディスコグラフィー</a></li>
+        <li><a href="/profile">PROFILE<br />プロフィール</a></li>
+        <li><a href="/tagged/gallery">GALLERY<br />ギャラリー</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="main {block:TagPage}{Tag}{/block:TagPage}">
+    {block:IndexPage}
+      <section class="hot">{block:Posts}{block:Photo}<a href="{Permalink}"><img class="photo" src="{PhotoURL-HighRes}" /></a>{/block:Photo}{/block:Posts}</section>
+      <section class="topics"><h2>TOPICS</h2><ul class="topics-list"></ul></section>
+      <section class="schedule"><h2>SCHEDULE</h2><ul class="schedule-list"></ul></section>
+      <section class="live"><h2>LIVE</h2><ul class="live-list"></ul></section>
+      <section class="media"><h2>MEDIA</h2><ul class="media-list"></ul></section>
+      <section class="discography"><h2>DISCOGRAPHY</h2><ul class="discography-list"></ul></section>
+      <section class="gallery"><h2>GALLERY</h2><ul class="mv-list">{block:TagPage}{block:Posts}{block:Video}<li><div class="mv">{Video-700}</div>{block:Caption}<div class="mv-info">{Caption}</div>{/block:Caption}</li>{/block:Video}{/block:Posts}{/block:TagPage}</ul></section>
+      {block:TagPage}
+        {block:PreviousPage}<a href="{PreviousPage}" class="previous">&#171;前へ</a>{/block:PreviousPage}
+        {block:NextPage}<a href="{NextPage}" class="next">次へ&#187;</a>{/block:NextPage}
+      {/block:TagPage}
+    {/block:IndexPage}
+    {block:PermalinkPage}
+      {block:Posts}
+        {block:Text}{block:Title}
+          <article>
+            <h2>{Title}</h2>
+            <div class="date">{block:Date}{Year}/{MonthNumber}/{DayOfMonth}{/block:Date}</div><hr />
+            {Body}
+            <!-- {block:More}{/block:More} -->
+          </article>
+        {/block:Title}{/block:Text}
+        {block:Photo}
+          <article>
+            <img class="photo" src="{PhotoURL-HighRes}" />
+            <div class="date">{block:Date}{Year}/{MonthNumber}/{DayOfMonth}{/block:Date}</div><hr />
+            {block:Caption}{Caption}{/block:Caption}
+            <!-- {block:More}{/block:More} -->
+          </article>
+        {/block:Photo}
+      {/block:Posts}
+    {/block:PermalinkPage}
+  </main>
+  <footer class="footer">Copyright &copy; 2014- Zukan. All rights reserved.</footer>
+
+  <script type="text/template" id="top-template">
+    <a href="<%- link %>"><h3><%= title.replace('【LIVE】', '') %></h3><div><%= body %></div></a>
+  </script>
+  <script type="text/template" id="short-template">
+    <a href="<%- link %>"><h3><%= title %></h3></a>
+  </script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <script src="//dl.dropboxusercontent.com/u/69814198/zukan/tumblr/js/libs/underscore.min.js" defer></script>
+  <script src="//dl.dropboxusercontent.com/u/69814198/zukan/tumblr/js/libs/backbone.min.js" defer></script>
+  <script src="//dl.dropboxusercontent.com/u/69814198/zukan/tumblr/js/app.min.js" defer></script>
+  <script defer>var articles = [], topics = [], schedule = [], discography = [];</script>
+  {block:Posts}{block:Text}{block:Title}
+  <div class="bodyText" style="display:none;">{Body}</div>
+  <script defer>
+    var body = '' + $('.bodyText').html();
+    articles[articles.length] = {
+      'title': '{Title}',
+      'body': body,
+      'link': '{Permalink}',
+      'pubDate': new Date({block:Date}{Year}, ({MonthNumber}-1), ({DayOfMonth}){/block:Date}),
+      'tags': '{block:Tags}{Tag},{/block:Tags}'.split(','),
+      'schedule': ''
+    };
+    $('.bodyText').remove();
+  </script>
+  {/block:Title}{/block:Text}{/block:Posts}
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-48216188-1', 'zukannet.com');
+  ga('require', 'displayfeatures');
+  ga('send', 'pageview');
+
+  </script>
+</body>
+</html>
