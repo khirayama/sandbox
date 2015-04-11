@@ -9,6 +9,7 @@
   "author": "Kotaro Hirayama",
   "license": "BSD-2-Clause",
   "devDependencies": {
+    "babel": "^5.0.12",
     "babelify": "^6.0.2",
     "browser-sync": "^1.6.2",
     "browserify": "^9.0.8",
@@ -38,6 +39,7 @@
     "gulp-util": "^3.0.1",
     "karma": "~0.12.24",
     "main-bower-files": "~2.4.0",
+    "object-assign": "^2.0.0",
     "rimraf": "^2.2.8"
   }
 }

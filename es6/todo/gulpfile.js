@@ -53,7 +53,8 @@ gulp.task('scripts', function() {
   return gulp.src(['dev/app.js'])
     .pipe(plumber(options.plumber))
     .pipe(browserify({
-      transform: ['babelify']
+      transform: ['babelify'],
+      debug: true
     }))
     .pipe(gulp.dest('public/'))
     .pipe(browserSync.reload({stream: true}));
