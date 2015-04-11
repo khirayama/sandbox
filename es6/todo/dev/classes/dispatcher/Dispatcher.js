@@ -1,43 +1,43 @@
 'use strict';
-
-function Dispatcher() {
-  this._lastID = 1;
-  this.callbacks = {};
-  this.isPending = {};
-  this.pendingPayload = null;
-}
-Dispatcher.prototype.register=function(callback) {
-  var id = 'ID_' + this._lastID++;
-  this.callbacks[id] = callback;
-  return id;
-};
-Dispatcher.prototype.unregister=function(id) {
-  delete this.callbacks[id];
-};
-Dispatcher.prototype.dispatch=function(payload) {
-  this.startDispatching(payload);
-  try {
-    for (var id in this.callbacks) {
-      if (this.isPending[id]) {
-        continue;
+export default class Dispatcher {
+  constructor() {
+    this._lastID = 1;
+    this._callbacks = {};
+    this._isPending = {};
+    this._pendingPayload = null;
+  }
+  register(callback) {
+    let id = 'ID_' + this._lastID++;
+    this._callbacks[id] = callback;
+    return id;  
+  }
+  unregister(id) {
+    delete this._callbacks[id];
+  }
+  dispatch(payload) {
+    this._startDispatching(payload);
+    try {
+      for (var id in this._callbacks) {
+        if (this._isPending[id]) {
+          continue;
+        }
+        this._invokeCallback(id);
       }
-      this.invokeCallback(id);
+    } finally {
+      this._stopDispatching();
     }
-  } finally {
-    this.stopDispatching();
   }
-};
-Dispatcher.prototype.invokeCallback=function(id) {
-  this.isPending[id] = true;
-  this.callbacks[id](this.pendingPayload);
-};
-Dispatcher.prototype.startDispatching=function(payload) {
-  for (var id in this.callbacks) {
-    this.isPending[id] = false;
+  _invokeCallback(id) {
+    this._isPending[id] = true;
+    this._callbacks[id](this._pendingPayload);
   }
-  this.pendingPayload = payload;
-};
-Dispatcher.prototype.stopDispatching=function() {
-  this.pendingPayload = null;
-};
-export default Dispatcher;
+  _startDispatching(payload) {
+    for (var id in this._callbacks) {
+      this._isPending[id] = false;
+    }
+    this._pendingPayload = payload;
+  }
+  _stopDispatching() {
+    this._pendingPayload = null;
+  }
+}
