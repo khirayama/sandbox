@@ -1,4 +1,5 @@
 'use strict';
+
 export default class Dispatcher {
   constructor() {
     this._lastID = 1;
