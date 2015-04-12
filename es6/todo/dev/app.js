@@ -3,7 +3,6 @@ import AppDispatcher from './classes/dispatcher/AppDispatcher';
 
 var todo = Todo.getAll();
 var keys, id;
-
 console.log(`nothing: ${JSON.stringify(todo)}`);
 
 AppDispatcher.dispatch({
@@ -80,3 +79,4 @@ AppDispatcher.dispatch({
   text: '555'
 });
 console.log(todo);
+
