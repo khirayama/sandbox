@@ -1,12 +1,15 @@
 'use strict';
+import AppDispatcher from '../dispatcher/AppDispatcher';
 
-export default class User {
-  constructor(name) {
-    this._name = name;
-  }
-
-  say() {
-    return 'My name is ' + this._name;
+export default class TodoItem {
+  constructor(todo) {
+    this.template = 
+      `<li>
+        <div class="view">
+          <div class="toggle"></div>
+          <label>${todo.text}</label>
+          <div class="destroy"></div>
+        </div>
+      </li>`;
   }
 }
-

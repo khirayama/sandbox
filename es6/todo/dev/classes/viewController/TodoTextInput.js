@@ -6,13 +6,13 @@ export default class TodoTextInput {
   constructor(el) {
     this.el = el;
     this.events();
-
     Todo.addChangeListener(this._onChange.bind(this));
   }
   events() {
     this.el.addEventListener('keydown', (event) =>  {
       if(event.keyCode !== 13) return;
-      let text = this.el.value || 'inputからだよ';
+      let text = this.el.value;
+      if(!text) return;
       AppDispatcher.dispatch({
         actionType: 'TODO_CREATE',
         text: text
