@@ -1,5 +1,6 @@
 import Todo from './classes/model/Todo';
 import AppDispatcher from './classes/dispatcher/AppDispatcher';
+import TodoTextInput from './classes/viewController/TodoTextInput';
 
 var todo = Todo.getAll();
 var keys, id;
@@ -57,26 +58,5 @@ AppDispatcher.dispatch({
 });
 console.log(`destory: ${JSON.stringify(todo)}`);
 
-
-AppDispatcher.dispatch({
-  actionType: 'TODO_CREATE',
-  text: '111'
-});
-AppDispatcher.dispatch({
-  actionType: 'TODO_CREATE',
-  text: '222'
-});
-AppDispatcher.dispatch({
-  actionType: 'TODO_CREATE',
-  text: '333'
-});
-AppDispatcher.dispatch({
-  actionType: 'TODO_CREATE',
-  text: '444'
-});
-AppDispatcher.dispatch({
-  actionType: 'TODO_CREATE',
-  text: '555'
-});
-console.log(todo);
-
+let todoTextInputElements = document.querySelectorAll('#new-todo');
+new TodoTextInput(todoTextInputElements[0]);
