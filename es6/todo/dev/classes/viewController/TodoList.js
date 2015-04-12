@@ -20,6 +20,7 @@ export default class TodoList {
       todo = this.state.todos[key];
       todos.push(new TodoItem(todo).template);
     }
+    console.log(todos);
     this.el.innerHTML = todos.join('');
    }
 }

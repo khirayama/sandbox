@@ -11,5 +11,15 @@ export default class TodoItem {
           <div class="destroy"></div>
         </div>
       </li>`;
+    this.events();
+  }
+  events() {
+    let parser = new DOMParser();
+    let dom = parser.parseFromString(this.template, 'text/xml');
+    this.template = dom.firstChild;
+    console.log(this.template);
+    this.template.addEventListener('click', (event) => {
+      console.log(event);
+    });
   }
 }
