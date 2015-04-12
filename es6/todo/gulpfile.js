@@ -82,7 +82,7 @@ gulp.task('browserSync', ['markups', 'styles', 'scripts', 'files'], function() {
 gulp.task('watch', function() {
   'use strict';
   gulp.watch(['dev/**/*.sass'], ['styles']);
-  gulp.watch(['dev/**/*.html'], ['markups']);
+  gulp.watch(['dev/**/*.jade'], ['markups']);
   gulp.watch(['dev/**/*.js'], ['scripts']);
   gulp.watch(['dev/**/*.+(png|jpg|gif)'], ['files']);
 });
