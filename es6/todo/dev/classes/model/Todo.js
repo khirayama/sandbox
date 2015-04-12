@@ -4,12 +4,10 @@ import Model from './Model';
 
 class Todo extends Model {
   constructor() {
-    let actions = {
+    super({
       'TODO_CREATE': (action) => {
         let text = action.text.trim();
-        if (text !== '') {
-          this._create(text);
-        }
+        if (text !== '') this._create(text);
       },
       'TODO_UNDO_COMPLETE': (action) => {
         this._update(action.id, {complete: false});
@@ -20,8 +18,7 @@ class Todo extends Model {
       'TODO_DESTROY': (action) => {
         this._destroy(action.id);
       }
-    };
-    super(actions);
+    });
 
     this._todos = {};
   }

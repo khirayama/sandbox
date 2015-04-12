@@ -18,7 +18,7 @@ export default class Dispatcher {
   dispatch(payload) {
     this._startDispatching(payload);
     try {
-      for (var id in this._callbacks) {
+      for (let id in this._callbacks) {
         if (this._isPending[id]) {
           continue;
         }
@@ -33,7 +33,7 @@ export default class Dispatcher {
     this._callbacks[id](this._pendingPayload);
   }
   _startDispatching(payload) {
-    for (var id in this._callbacks) {
+    for (let id in this._callbacks) {
       this._isPending[id] = false;
     }
     this._pendingPayload = payload;
