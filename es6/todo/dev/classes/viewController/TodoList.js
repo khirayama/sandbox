@@ -14,13 +14,12 @@ export default class TodoList {
     this.render();
   }
   render() {
-    let todos = [];
     let todo = {};
+    this.el.innerHTML = '';
     for(let key in this.state.todos) {
       todo = this.state.todos[key];
-      todos.push(new TodoItem(todo).template);
+      // TODO: 可能ならまとめてappendしたい
+      this.el.appendChild(new TodoItem(todo).el);
     }
-    console.log(todos);
-    this.el.innerHTML = todos.join('');
    }
 }

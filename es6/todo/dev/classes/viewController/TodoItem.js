@@ -11,15 +11,24 @@ export default class TodoItem {
           <div class="destroy"></div>
         </div>
       </li>`;
+    this.el = this._createElements(this.template);
     this.events();
   }
   events() {
-    let parser = new DOMParser();
-    let dom = parser.parseFromString(this.template, 'text/xml');
-    this.template = dom.firstChild;
-    console.log(this.template);
-    this.template.addEventListener('click', (event) => {
-      console.log(event);
+    this.el.querySelector('.toggle').addEventListener('click', () => {
+      console.log('toggle');
     });
+    this.el.querySelector('.destroy').addEventListener('click', () => {
+      console.log('destroy');
+    });
+    this.el.querySelector('label').addEventListener('click', () => {
+      console.log('edit');
+    });
+  }
+  _createElements(template) {
+    // TODO: DOMparserだとafter要素とか消えた...
+    let parser = document.createElement('div');
+    parser.innerHTML = template;
+    return parser.firstChild;
   }
 }
