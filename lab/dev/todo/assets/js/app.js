@@ -6,7 +6,7 @@ app.Main = app.Main || {};
 
 (function() {
   'use strict';
-  // collection /////////////////////////////////////////////////////////////////////////////////////////
+  // collection 
   app.Collection = function() {
     this.items = {};
     this.remove = function(id) {
@@ -35,7 +35,7 @@ app.Main = app.Main || {};
     this.init();
   };
 
-  // model /////////////////////////////////////////////////////////////////////////////////////////
+  // model 
   app.Model = function() {
     this.create = function(id, text) {
       var model = {
@@ -68,19 +68,19 @@ app.Main = app.Main || {};
     this.init();
   };
 
-  // view /////////////////////////////////////////////////////////////////////////////////////////
+  // view
   app.View.TextInput = function($dom) {
     this.$dom = $dom;
     this.init = function() {
       var _this = this;
       this.$dom.on('keydown', function(evt) {
-        if(evt.keyCode != 13) return;
+        if(evt.keyCode !== 13) return;
         var text = _this.$dom.val();
         var id = Math.round(Math.random() * 1000);
         _this.$dom.val('');
         $(window).trigger('ENTER_INPUT', [id, text]);
       });
-    }
+    };
     this.init();
   };
 
@@ -90,7 +90,13 @@ app.Main = app.Main || {};
     this.render = function(items) {
       this.$dom.html('');
       for(var key in items) {
-        this.$dom.append(new app.View.ListItem(items[key].id, items[key].text, items[key].completed));
+        this.$dom.append(
+          new app.View.ListItem(
+            items[key].id,
+            items[key].text,
+            items[key].completed
+          )
+        );
       }
     };
     this.init = function() {
@@ -100,7 +106,7 @@ app.Main = app.Main || {};
       $(window).on('MODEL_CREATE MODEL_UPDATE MODEL_DELETE', function() {
         _this.render(_this.items);
       });
-    }
+    };
     this.init();
   };
 
@@ -121,7 +127,7 @@ app.Main = app.Main || {};
       this.$template.find('.edit').focus();
     };
     this.editing = function(evt) {
-      if(evt.keyCode != 13) return;
+      if(evt.keyCode !== 13) return;
       this.editDone();
     };
     this.editDone = function() {
@@ -154,7 +160,7 @@ app.Main = app.Main || {};
     return this.init();
   };
 
-  // main /////////////////////////////////////////////////////////////////////////////////////////
+  // main
   app.Main = function() {
     app.model = new app.Model();
     app.collection = new app.Collection();
