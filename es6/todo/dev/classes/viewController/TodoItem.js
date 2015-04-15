@@ -1,5 +1,4 @@
 'use strict';
-import AppDispatcher from '../dispatcher/AppDispatcher';
 
 export default class TodoItem {
   constructor(todo) {
@@ -26,7 +25,6 @@ export default class TodoItem {
     });
   }
   _createElements(template) {
-    // TODO: DOMparserだとafter要素とか消えた...
     var tmp = document.implementation.createHTMLDocument();
     tmp.body.innerHTML = template;
     return tmp.body.children[0];

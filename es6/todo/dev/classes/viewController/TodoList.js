@@ -8,7 +8,7 @@ export default class TodoList {
       todos: Todo.getAll()
     };
     this.el = el;
-    Todo.addChangeListener(this._onChange.bind(this));
+    Todo.addChangeListener(() => this._onChange());
   }
   _onChange() {
     this.render();
