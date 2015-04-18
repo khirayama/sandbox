@@ -1,9 +1,13 @@
 'use strict';
+import TodoActions from '../actions/TodoActions';
 
 export default class TodoItem {
   constructor(todo) {
+    this.todo = todo;
     this.template = 
-      `<li>
+      `<li class="${this._cx({
+        'completed': todo.complete
+      })}">
         <div class="view">
           <div class="toggle"></div>
           <label>${todo.text}</label>
@@ -15,7 +19,7 @@ export default class TodoItem {
   }
   events() {
     this.el.querySelector('.toggle').addEventListener('click', () => {
-      console.log('toggle');
+      TodoActions.toggleComplete(this.todo);
     });
     this.el.querySelector('.destroy').addEventListener('click', () => {
       console.log('destroy');
@@ -28,5 +32,14 @@ export default class TodoItem {
     var tmp = document.implementation.createHTMLDocument();
     tmp.body.innerHTML = template;
     return tmp.body.children[0];
+  }
+  _cx(classNames) {
+    let classStr = '';
+    for(let className in classNames) {
+      if(classNames[className]) {
+        classStr += className;
+      }
+    }
+    return classStr;
   }
 }
