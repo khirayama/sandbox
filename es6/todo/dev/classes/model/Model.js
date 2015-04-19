@@ -1,6 +1,6 @@
 'use strict';
 import 'babel/polyfill';
-import {EventEmitter} from 'events';
+import EventEmitter from './EventEmitter';
 import AppDispatcher from '../dispatcher/AppDispatcher';
 
 const CHANGE_EVENT = 'CHANGE';

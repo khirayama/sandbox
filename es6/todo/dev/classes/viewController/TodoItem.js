@@ -34,12 +34,12 @@ export default class TodoItem {
     return tmp.body.children[0];
   }
   _cx(classNames) {
-    let classStr = '';
+    let classStr = [];
     for(let className in classNames) {
       if(classNames[className]) {
-        classStr += className;
+        classStr.push(className);
       }
     }
-    return classStr;
+    return classStr.join(' ');
   }
 }
