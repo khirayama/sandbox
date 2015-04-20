@@ -3,35 +3,56 @@ import TodoActions from '../actions/TodoActions';
 
 export default class TodoItem {
   constructor(todo) {
+    this.state = {
+      isEditing: false
+    };
     this.todo = todo;
     this.template = 
       `<li class="${this._cx({
-        'completed': todo.complete
+        'completed': this.todo.complete
       })}">
         <div class="view">
           <div class="toggle"></div>
-          <label>${todo.text}</label>
+          <label>${this.todo.text}</label>
+          <input value="${this.todo.text}"></input>
           <div class="destroy"></div>
         </div>
       </li>`;
     this.el = this._createElements(this.template);
     this.events();
   }
+  setState(state) {
+    this.state = Object.assign({}, this.state, state);
+    this._update();
+  }
   events() {
     this.el.querySelector('.toggle').addEventListener('click', () => {
       TodoActions.toggleComplete(this.todo);
     });
     this.el.querySelector('.destroy').addEventListener('click', () => {
-      console.log('destroy');
+      TodoActions.destroy(this.todo.id);
     });
     this.el.querySelector('label').addEventListener('click', () => {
-      console.log('edit');
+      this._onClick();
     });
+  }
+  _update() {
+    this._template(this.template);
+
+    let parentNode = this.el.parentNode;
+    let tmp = this._createElements(this.template);
+    parentNode.replaceChild(tmp, this.el);
+    this.el = tmp;
+    this.events();
   }
   _createElements(template) {
     var tmp = document.implementation.createHTMLDocument();
     tmp.body.innerHTML = template;
     return tmp.body.children[0];
+  }
+  _onClick() {
+    this.setState({isEditing: true});
+    console.log(this.state);
   }
   _cx(classNames) {
     let classStr = [];

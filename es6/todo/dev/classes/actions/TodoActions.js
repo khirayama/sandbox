@@ -8,6 +8,13 @@ var TodoActions = {
       text: text
     });
   },
+  updateText: function(id, text) {
+    AppDispatcher.dispatch({
+      actionType: 'TODO_UPDATE_TEXT',
+      id: id,
+      text: text
+    });
+  },
   toggleComplete: function(todo) {
     let id = todo.id;
     if (todo.complete) {
@@ -21,6 +28,12 @@ var TodoActions = {
         id: id
       });
     }
+  },
+  destroy: function(id) {
+    AppDispatcher.dispatch({
+      actionType: 'TODO_DESTROY',
+      id: id
+    });
   }
 };
 export default TodoActions;
