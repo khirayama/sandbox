@@ -135,3 +135,7 @@ body {
     /* line 112, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
     #todo-list li.editing:last-child {
       margin-bottom: -1px; }
+
+/* line 116, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
+.edit {
+  background-color: red; }

@@ -7,9 +7,10 @@ export default class TodoItem {
       isEditing: false
     };
     this.todo = todo;
-    this.template = 
+    this.template =
       `<li class="${this._cx({
-        'completed': this.todo.complete
+        'completed': this.todo.complete,
+        'edit': this.state.isEditing
       })}">
         <div class="view">
           <div class="toggle"></div>
@@ -37,7 +38,18 @@ export default class TodoItem {
     });
   }
   _update() {
-    this._template(this.template);
+    this.template =
+      `<li class="${this._cx({
+        'completed': this.todo.complete,
+        'edit': this.state.isEditing
+      })}">
+        <div class="view">
+          <div class="toggle"></div>
+          <label>${this.todo.text}</label>
+          <input value="${this.todo.text}"></input>
+          <div class="destroy"></div>
+        </div>
+      </li>`;
 
     let parentNode = this.el.parentNode;
     let tmp = this._createElements(this.template);
@@ -52,7 +64,6 @@ export default class TodoItem {
   }
   _onClick() {
     this.setState({isEditing: true});
-    console.log(this.state);
   }
   _cx(classNames) {
     let classStr = [];
