@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Bacon.js • TodoMVC</title>
+    <link rel="stylesheet" href="http://juhajasatu.com/todomvc/base.css">
+    <link rel="stylesheet" href="http://juhajasatu.com/todomvc/css/app.css">
+  </head>
+  <body>
+    <script type="text/html" id="todo-template">
+      <li>
+        <div class="view">
+          <input class="toggle" type="checkbox">
+          <label></label>
+          <button class="destroy"></button>
+        </div>
+        <input class="edit">
+      </li>
+    </script>
+
+    <section id="todoapp">
+      <header id="header">
+        <h1>todos</h1>
+        <input id="new-todo" placeholder="What needs to be done?" autofocus>
+      </header>
+      <section id="main" style="display: none;">
+        <input id="toggle-all" type="checkbox">
+        <label for="toggle-all">Mark all as complete</label>
+        <ul id="todo-list"></ul>
+      </section>
+      <footer id="footer" style="display: none;">
+        <span id="todo-count"><strong>0</strong> items left</span>
+        <ul id="filters">
+          <li><a href="http://juhajasatu.com/todomvc/#/" class="selected">All</a></li>
+          <li><a href="http://juhajasatu.com/todomvc/#/active">Active</a></li>
+          <li><a href="http://juhajasatu.com/todomvc/#/completed">Completed</a></li>
+        </ul>
+        <button id="clear-completed" style="display: none;">Clear completed (<span class="count">0</span>)</button>
+      </footer>
+    </section>
+    <script src="./assets/base.js"></script>
+    <script src="./assets/jquery.min.js"></script>
+    <script src="./assets/lodash.min.js"></script>
+    <script src="./assets/handlebars.min.js"></script>
+    <script src="./assets/jquery-hashchange-min.js"></script>
+    <script src="./assets/Bacon.js"></script>
+    <script src="./assets/Bacon.UI.js"></script>
+    <script src="./assets/app.js"></script>
+  </body>
+</html>
