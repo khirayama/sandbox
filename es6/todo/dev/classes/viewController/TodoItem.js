@@ -54,6 +54,8 @@ export default class TodoItem {
     this.setState({isEditing: true});
   }
   _template() {
+    // TODO: template literalsで渡すのはkeyにして、objectで拾う。
+    // そうするとうまくいく。が、オブジェクト二つ渡すのがなー...
     let args = arguments;
     let args2 = Array.from(arguments).slice(1);
     console.log(args, args2);
