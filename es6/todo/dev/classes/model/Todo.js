@@ -25,7 +25,6 @@ class Todo extends Model {
         }
       }
     });
-
     this._todos = {};
   }
   _create(text) {
@@ -42,7 +41,6 @@ class Todo extends Model {
   _destroy(id) {
     delete this._todos[id];
   }
-
   getAll() {
     return this._todos;
   }
