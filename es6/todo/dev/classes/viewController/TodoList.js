@@ -5,11 +5,9 @@ import View from './View';
 
 export default class TodoList extends View {
   constructor(el) {
-    super();
-    this.state = {
+    super(el, {
       todos: Todo.getAll()
-    };
-    this.el = el;
+    });
     Todo.addChangeListener(() => this._onChange());
   }
   _onChange() {

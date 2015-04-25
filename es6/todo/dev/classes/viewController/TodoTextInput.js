@@ -5,13 +5,11 @@ import View from './View';
 
 export default class TodoTextInput extends View {
   constructor(el) {
-    super();
-    this.el = el;
-    this.handleEvents();
+    super(el);
     Todo.addChangeListener(() => this._onChange());
   }
   handleEvents() {
-    this.el.addEventListener('keydown', (event) =>  {
+    this.on('keydown', (event) => {
       if(event.keyCode !== 13) return;
       let text = this.el.value;
       if(!text) return;
