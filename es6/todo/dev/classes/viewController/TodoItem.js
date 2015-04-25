@@ -1,26 +1,30 @@
 'use strict';
 import TodoActions from '../actions/TodoActions';
+import View from './View';
 
-export default class TodoItem {
+export default class TodoItem extends View {
   constructor(todo) {
+    super();
     this.state = {
       isEditing: false
     };
-    this.todo = todo;
+    this.props = {
+      todo: todo
+    };
     this.input = function() {
       if(this.state.isEditing) {
         return `<input
                   class="edit"
                   type="text"
-                  value="${this.todo.text}">
+                  value="${this.props.todo.text}">
                 </input>`;
       } else {
-        return `<label>${this.todo.text}</label>`;
+        return `<label>${this.props.todo.text}</label>`;
       }
     };
     this.template = function() {
       return `<li class="${this._cx({
-        'completed': this.todo.complete,
+        'completed': this.props.todo.complete,
         'editing': this.state.isEditing
       })}">
         <div class="view">
@@ -39,10 +43,10 @@ export default class TodoItem {
   }
   handleEvents() {
     this.on('click', '.toggle', () => {
-      TodoActions.toggleComplete(this.todo);
+      TodoActions.toggleComplete(this.props.todo);
     });
     this.on('click', '.destroy', () => {
-      TodoActions.destroy(this.todo.id);
+      TodoActions.destroy(this.props.todo.id);
     });
     this.on('click', 'label', () => {
       this._onClick();
@@ -50,7 +54,11 @@ export default class TodoItem {
     this.on('blur', '.edit', (event) => {
       let text = event.target.value;
       this.setState({isEditing: false});
-      TodoActions.updateText(this.todo.id, text);
+      TodoActions.updateText(this.props.todo.id, text);
+    });
+    this.on('keyup', '.edit', (event) => {
+      if(event.keyCode !== 13) return;
+      this.el.querySelector('.edit').blur();
     });
   }
   on(eventType, selector, callback) {
