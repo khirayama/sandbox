@@ -61,11 +61,17 @@ body
     .edit
       display: inline
     &.editing
-      .edit
+      input
         display: block
-        width: 100%
-        padding: 13px 55px
-      .view
+        font-size: 24px
+        white-space: pre
+        word-break: break-word
+        padding: 15px
+        margin: 0
+        display: block
+        line-height: 1.2
+        transition: color 0.4s
+      label
         display: none
     .toggle
       display: block
@@ -111,7 +117,7 @@ body
       display: none
     &.editing:last-child
       margin-bottom: -1px
+    input
+      display: none
 
 
-.edit
-  background-color: red

@@ -17,6 +17,12 @@ class Todo extends Model {
       },
       'TODO_DESTROY': (action) => {
         this._destroy(action.id);
+      },
+      'TODO_UPDATE_TEXT': (action) => {
+        let text = action.text.trim();
+        if (text !== '') {
+          this._update(action.id, {text: text});
+        }
       }
     });
 

@@ -7,15 +7,21 @@ export default class TodoItem {
       isEditing: false
     };
     this.todo = todo;
+    this.input = function() {
+      if(this.state.isEditing) {
+        return `<input class="edit" type="text" value="${this.todo.text}"></input>`;
+      } else {
+        return `<label>${this.todo.text}</label>`;
+      }
+    };
     this.template = function() {
       return `<li class="${this._cx({
         'completed': this.todo.complete,
-        'edit': this.state.isEditing
+        'editing': this.state.isEditing
       })}">
         <div class="view">
           <div class="toggle"></div>
-          <label>${this.todo.text}</label>
-          <input value="${this.todo.text}"></input>
+          ${this.input()}
           <div class="destroy"></div>
         </div>
       </li>`;
@@ -37,18 +43,25 @@ export default class TodoItem {
     this.on('click', 'label', () => {
       this._onClick();
     });
+    this.on('blur', '.edit', (event) => {
+      let text = event.target.value;
+      this.setState({isEditing: false});
+      TodoActions.updateText(this.todo.id, text);
+    });
   }
   on(eventType, selector, callback) {
     if(arguments.length === 2) {
       callback = selector;
       this.el.addEventListener(eventType, callback);
     } else if (arguments.length === 3) {
-      this.el.querySelector(selector).addEventListener(eventType, callback);
+      let target = this.el.querySelector(selector);
+      if(target) target.addEventListener(eventType, callback);
     }
   }
   _update() {
     let parentNode = this.el.parentNode;
     let tmp = this._createElements(this.template());
+    console.log(parentNode);
     parentNode.replaceChild(tmp, this.el);
     this.el = tmp;
     this.handleEvents();
@@ -59,7 +72,8 @@ export default class TodoItem {
     return tmp.body.children[0];
   }
   _onClick() {
-    this.setState({isEditing: true});
+    this.setState({ isEditing: true });
+    this.el.querySelector('.edit').focus();
   }
   _cx(classNames) {
     let classStr = [];

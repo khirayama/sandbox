@@ -75,14 +75,21 @@ body {
     #todo-list li .edit {
       display: inline; }
     /* line 64, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
-    #todo-list li.editing .edit {
+    #todo-list li.editing input {
       display: block;
-      width: 100%;
-      padding: 13px 55px; }
-    /* line 68, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
-    #todo-list li.editing .view {
+      font-size: 24px;
+      white-space: pre;
+      word-break: break-word;
+      padding: 15px;
+      margin: 0;
+      display: block;
+      line-height: 1.2;
+      -webkit-transition: color 0.4s;
+              transition: color 0.4s; }
+    /* line 74, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
+    #todo-list li.editing label {
       display: none; }
-    /* line 70, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
+    /* line 76, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
     #todo-list li .toggle {
       display: block;
       text-align: center;
@@ -96,10 +103,10 @@ body {
       margin: auto 0;
       font-size: 22px;
       appearance: none; }
-      /* line 83, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
+      /* line 89, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
       #todo-list li .toggle:after {
         content: '✔︎'; }
-    /* line 85, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
+    /* line 91, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
     #todo-list li label {
       white-space: pre;
       word-break: break-word;
@@ -109,11 +116,11 @@ body {
       line-height: 1.2;
       -webkit-transition: color 0.4s;
               transition: color 0.4s; }
-    /* line 93, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
+    /* line 99, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
     #todo-list li.completed label {
       color: #a9a9a9;
       text-decoration: line-through; }
-    /* line 96, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
+    /* line 102, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
     #todo-list li .destroy {
       display: block;
       text-align: center;
@@ -126,16 +133,15 @@ body {
       line-height: 40px;
       margin: auto 0;
       font-size: 22px; }
-      /* line 108, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
+      /* line 114, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
       #todo-list li .destroy:after {
         content: '✖'; }
-    /* line 110, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
+    /* line 116, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
     #todo-list li .edit {
       display: none; }
-    /* line 112, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
+    /* line 118, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
     #todo-list li.editing:last-child {
       margin-bottom: -1px; }
-
-/* line 116, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
-.edit {
-  background-color: red; }
+    /* line 120, /Users/KotaroHirayama/Work/sandbox/es6/todo/dev/base.sass */
+    #todo-list li input {
+      display: none; }
