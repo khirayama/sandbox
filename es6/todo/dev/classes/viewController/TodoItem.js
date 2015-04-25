@@ -9,7 +9,11 @@ export default class TodoItem {
     this.todo = todo;
     this.input = function() {
       if(this.state.isEditing) {
-        return `<input class="edit" type="text" value="${this.todo.text}"></input>`;
+        return `<input
+                  class="edit"
+                  type="text"
+                  value="${this.todo.text}">
+                </input>`;
       } else {
         return `<label>${this.todo.text}</label>`;
       }
