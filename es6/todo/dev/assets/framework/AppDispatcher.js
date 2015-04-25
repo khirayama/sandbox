@@ -1,2 +1,2 @@
-import Dispatcher from './Dispatcher';
-export default new Dispatcher();
+import Observer from './Observer';
+export default new Observer();

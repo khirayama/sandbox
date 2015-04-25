@@ -9,16 +9,16 @@ export default class Store extends Observer {
   constructor(actions) {
     super();
     this.actions = actions;
-    AppDispatcher.register((action) => {
-      this._actions(action);
-    });
+    for(let key in this.actions) {
+      let action = actions[key];
+      AppDispatcher.on(key, (data) => {
+        action(data);
+        this.dispatchChange();
+      });
+    }
   }
-  _actions(action) {
-    (this.actions[action.actionType])(action);
-    this.emitChange();
-  }
-  emitChange() {
-    this.emit(CHANGE_EVENT);
+  dispatchChange() {
+    this.dispatch(CHANGE_EVENT);
   }
   addChangeListener(callback) {
     this.on(CHANGE_EVENT, callback);
@@ -27,3 +27,4 @@ export default class Store extends Observer {
     this.removeListener(CHANGE_EVENT, callback);
   }
 }
+
