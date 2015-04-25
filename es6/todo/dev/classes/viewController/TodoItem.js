@@ -21,29 +21,37 @@ export default class TodoItem {
       </li>`;
     };
     this.el = this._createElements(this.template());
-    this.events();
+    this.handleEvents();
   }
   setState(state) {
     this.state = Object.assign({}, this.state, state);
     this._update();
   }
-  events() {
-    this.el.querySelector('.toggle').addEventListener('click', () => {
+  handleEvents() {
+    this.on('click', '.toggle', () => {
       TodoActions.toggleComplete(this.todo);
     });
-    this.el.querySelector('.destroy').addEventListener('click', () => {
+    this.on('click', '.destroy', () => {
       TodoActions.destroy(this.todo.id);
     });
-    this.el.querySelector('label').addEventListener('click', () => {
+    this.on('click', 'label', () => {
       this._onClick();
     });
+  }
+  on(eventType, selector, callback) {
+    if(arguments.length === 2) {
+      callback = selector;
+      this.el.addEventListener(eventType, callback);
+    } else if (arguments.length === 3) {
+      this.el.querySelector(selector).addEventListener(eventType, callback);
+    }
   }
   _update() {
     let parentNode = this.el.parentNode;
     let tmp = this._createElements(this.template());
     parentNode.replaceChild(tmp, this.el);
     this.el = tmp;
-    this.events();
+    this.handleEvents();
   }
   _createElements(template) {
     var tmp = document.implementation.createHTMLDocument();
