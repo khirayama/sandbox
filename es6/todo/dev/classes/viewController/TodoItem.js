@@ -13,11 +13,7 @@ export default class TodoItem extends View {
     };
     this.input = function() {
       if(this.state.isEditing) {
-        return `<input
-                  class="edit"
-                  type="text"
-                  value="${this.props.todo.text}">
-                </input>`;
+        return `<input class="edit" type="text" value="${this.props.todo.text}"></input>`;
       } else {
         return `<label>${this.props.todo.text}</label>`;
       }
