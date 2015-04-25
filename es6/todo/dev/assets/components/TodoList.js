@@ -11,7 +11,6 @@ export default class TodoList extends Component {
     TodoStore.addChangeListener(() => this._onChange());
   }
   _onChange() {
-    console.log('on');
     this.render();
   }
   render() {

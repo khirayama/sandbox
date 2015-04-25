@@ -14,7 +14,6 @@ export default class Observer {
 	dispatch(payload){
     var event = '';
     let data = {};
-    console.log(typeof payload);
     if(typeof payload === 'object') {
       event = payload.actionType;
       // TODO: make this simple.
