@@ -1,6 +1,8 @@
 'use strict';
 
 export default class View {
+  // TODO: componentsの破棄（イベント消したり）
+  // TODO: animationを考慮したAPIの追加（animationってなんかダサいからUIとかにしよう）
   constructor(el, state = {}, props = {}) {
     this.state = state;
     this.props = props;
