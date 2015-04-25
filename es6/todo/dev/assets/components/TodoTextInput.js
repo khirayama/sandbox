@@ -1,12 +1,12 @@
 'use strict';
-import Todo from '../model/Todo';
+import TodoStore from '../stores/TodoStore';
 import TodoActions from '../actions/TodoActions';
-import View from './View';
+import Component from '../framework/Component';
 
-export default class TodoTextInput extends View {
+export default class TodoTextInput extends Component {
   constructor(el) {
     super(el);
-    Todo.addChangeListener(() => this._onChange());
+    TodoStore.addChangeListener(() => this._onChange());
   }
   handleEvents() {
     this.on('keydown', (event) => {

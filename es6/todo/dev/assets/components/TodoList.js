@@ -1,14 +1,14 @@
 'use strict';
-import Todo from '../model/Todo';
+import TodoStore from '../stores/TodoStore';
 import TodoItem from './TodoItem';
-import View from './View';
+import Component from '../framework/Component';
 
-export default class TodoList extends View {
+export default class TodoList extends Component {
   constructor(el) {
     super(el, {
-      todos: Todo.getAll()
+      todos: TodoStore.getAll()
     });
-    Todo.addChangeListener(() => this._onChange());
+    TodoStore.addChangeListener(() => this._onChange());
   }
   _onChange() {
     this.render();

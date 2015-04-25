@@ -1,8 +1,8 @@
 'use strict';
 import TodoActions from '../actions/TodoActions';
-import View from './View';
+import Component from '../framework/Component';
 
-export default class TodoItem extends View {
+export default class TodoItem extends Component {
   constructor(todo) {
     super('template', {
       isEditing: false
@@ -36,7 +36,7 @@ export default class TodoItem extends View {
       'completed': this.props.todo.complete,
       'editing': this.state.isEditing
     })}">
-      <div class="view">
+      <div class="Component">
         <div class="toggle"></div>
         ${this.input()}
         <div class="destroy"></div>

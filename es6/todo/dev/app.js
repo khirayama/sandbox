@@ -1,5 +1,5 @@
-import TodoTextInput from './classes/viewController/TodoTextInput';
-import TodoList from './classes/viewController/TodoList';
+import TodoTextInput from './assets/components/TodoTextInput';
+import TodoList from './assets/components/TodoList';
 
 let todoTextInputElements = document.querySelectorAll('#new-todo');
 new TodoTextInput(todoTextInputElements[0]);

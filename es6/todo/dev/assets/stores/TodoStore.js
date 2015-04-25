@@ -1,8 +1,8 @@
 'use strict';
 import 'babel/polyfill';
-import Model from './Model';
+import Store from '../framework/Store';
 
-class Todo extends Model {
+class Todo extends Store {
   constructor() {
     super({
       'TODO_CREATE': (action) => {

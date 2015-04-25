@@ -1,11 +1,11 @@
 'use strict';
 import 'babel/polyfill';
-import EventEmitter from './EventEmitter';
-import AppDispatcher from '../dispatcher/AppDispatcher';
+import Observer from './Observer';
+import AppDispatcher from './AppDispatcher';
 
 const CHANGE_EVENT = 'CHANGE';
 
-export default class Model extends EventEmitter {
+export default class Store extends Observer {
   constructor(actions) {
     super();
     this.actions = actions;

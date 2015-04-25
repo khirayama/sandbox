@@ -1,5 +1,5 @@
 'use strict';
-import AppDispatcher from '../dispatcher/AppDispatcher';
+import AppDispatcher from '../framework/AppDispatcher';
 
 var TodoActions = {
   create: function(text) {

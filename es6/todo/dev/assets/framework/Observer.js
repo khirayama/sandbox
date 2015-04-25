@@ -1,5 +1,6 @@
 'use strict';
-export default class EventEitter {
+
+export default class Observer {
   on(event, fct) {
 		this._events = this._events || {};
 		this._events[event] = this._events[event]	|| [];
