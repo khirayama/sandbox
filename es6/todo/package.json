@@ -3,21 +3,12 @@
   "version": "0.0.1",
   "description": "app",
   "keywords": [
-    "flux",
-    "react",
-    "facebook",
-    "dispatcher",
-    "framework",
-    "event",
-    "observer"
+    "flux", "react", "facebook", "dispatcher", "framework", "event", "observer"
   ],
   "homepage": "http://",
   "bugs": "http://github.com/khirayama/hogehoge/issues",
   "files": [
-    "index.js",
-    "lib/",
-    "LICENSE",
-    "PATENTS"
+    "index.js", "dev/", "LICENSE", "PATENTS"
   ],
   "main": "index.js",
   "scripts": {
