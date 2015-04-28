@@ -4,6 +4,7 @@ export default class View {
   // TODO: componentsの破棄（イベント消したり）
   // TODO: animationを考慮したAPIの追加（animationってなんかダサいからUIとかにしよう）
   // TODO: renderメソッドとtemplateメソッドをうまく抽象化して吸収したほうがいい
+  // TODO: html escape
   constructor(el, state = {}, props = {}) {
     this.state = state;
     this.props = props;

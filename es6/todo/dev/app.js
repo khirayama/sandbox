@@ -1,3 +1,6 @@
+// TODO: フレームワーク切り出し
+// TODO: TodoMVC作成
+'use strict';
 import TodoTextInput from './assets/components/TodoTextInput';
 import TodoList from './assets/components/TodoList';
 

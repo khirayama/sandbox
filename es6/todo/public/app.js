@@ -308,6 +308,7 @@ var View = (function () {
   // TODO: componentsの破棄（イベント消したり）
   // TODO: animationを考慮したAPIの追加（animationってなんかダサいからUIとかにしよう）
   // TODO: renderメソッドとtemplateメソッドをうまく抽象化して吸収したほうがいい
+  // TODO: html escape
 
   function View(el) {
     var state = arguments[1] === undefined ? {} : arguments[1];
@@ -599,6 +600,8 @@ exports['default'] = new Todo();
 module.exports = exports['default'];
 
 },{"../framework/Store":8,"babel/polyfill":94}],10:[function(require,module,exports){
+// TODO: フレームワーク切り出し
+// TODO: TodoMVC作成
 'use strict';
 
 var _interopRequireDefault = function (obj) { return obj && obj.__esModule ? obj : { 'default': obj }; };
