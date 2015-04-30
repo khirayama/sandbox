@@ -11,4 +11,3 @@ let todoListElements = document.querySelectorAll('#todo-list');
 new TodoList(todoListElements[0]);
 
 import db from './assets/db/sample';
-console.log(db);

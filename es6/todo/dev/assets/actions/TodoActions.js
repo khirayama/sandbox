@@ -1,7 +1,7 @@
 'use strict';
 import AppDispatcher from '../framework/AppDispatcher';
 
-var TodoActions = {
+let TodoActions = {
   create: function(text) {
     AppDispatcher.dispatch('TODO_CREATE', {
       text: text
