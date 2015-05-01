@@ -17,6 +17,7 @@ html5rocks.indexedDB.db = null;
 // var trans = db.transaction(['todo'], 'readwrite');
 // var store = trans.objectStore('todo');
 // var request = store.put(data);
+// result.continue();
 
 // ここから本番
 html5rocks.indexedDB.open = function() {
@@ -33,10 +34,15 @@ html5rocks.indexedDB.open = function() {
   };
 };
 
-html5rocks.indexedDB.addTodo = function(todoText) {
+html5rocks.indexedDB.connect = function() {
   var db = html5rocks.indexedDB.db;
   var trans = db.transaction(['todo'], 'readwrite');
   var store = trans.objectStore('todo');
+  return store;
+};
+
+html5rocks.indexedDB.addTodo = function(todoText) {
+  var store = html5rocks.indexedDB.connect();
   var data = {
     text: todoText,
     timeStamp: new Date().getTime()
@@ -48,9 +54,7 @@ html5rocks.indexedDB.addTodo = function(todoText) {
 };
 
 html5rocks.indexedDB.deleteTodo = function(id) {
-  var db = html5rocks.indexedDB.db;
-  var trans = db.transaction(['todo'], 'readwrite');
-  var store = trans.objectStore('todo');
+  var store = html5rocks.indexedDB.connect();
   var request = store.delete(id);
   request.onsuccess = function() {
     html5rocks.indexedDB.getAllTodoItems();
@@ -58,12 +62,10 @@ html5rocks.indexedDB.deleteTodo = function(id) {
 };
 
 html5rocks.indexedDB.getAllTodoItems = function() {
+  var store = html5rocks.indexedDB.connect();
+
   var todos = document.getElementById('todoItems');
   todos.innerHTML = '';
-  var db = html5rocks.indexedDB.db;
-  var trans = db.transaction(['todo'], 'readwrite');
-  var store = trans.objectStore('todo');
-  // Get everything in the store;
   var keyRange = IDBKeyRange.lowerBound(0);
   var cursorRequest = store.openCursor(keyRange);
   cursorRequest.onsuccess = function(e) {
@@ -74,7 +76,7 @@ html5rocks.indexedDB.getAllTodoItems = function() {
   };
 };
 
-// ここからviewな感じだ
+// ここからviewな感じなので無視
 function renderTodo(row) {
   var todos = document.getElementById('todoItems');
   var li = document.createElement('li');
