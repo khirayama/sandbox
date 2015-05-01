@@ -3,12 +3,13 @@
 var html5rocks = {};
 var indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB;
 if ('webkitIndexedDB' in window) {
-  var IDBTransaction = window.webkitIDBTransaction;
+  // var IDBTransaction = window.webkitIDBTransaction;
   var IDBKeyRange = window.webkitIDBKeyRange;
 }
 html5rocks.indexedDB = {};
 html5rocks.indexedDB.db = null;
 
+// ここから本番
 html5rocks.indexedDB.onerror = function(e) { console.log(e); };
 html5rocks.indexedDB.open = function() {
   var version = 1;
