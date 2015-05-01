@@ -10,6 +10,10 @@ html5rocks.indexedDB = {};
 html5rocks.indexedDB.db = null;
 
 // request: openする。接続する感じ
+// transaction: しらん
+// object:
+// store:
+// keypath: 
 
 // ここから本番
 html5rocks.indexedDB.onerror = function(e) { console.log(e); };
@@ -79,6 +83,8 @@ html5rocks.indexedDB.getAllTodoItems = function() {
   };
   cursorRequest.onerror = html5rocks.indexedDB.onerror;
 };
+
+// ここからviewな感じだ
 function renderTodo(row) {
   var todos = document.getElementById('todoItems');
   var li = document.createElement('li');
