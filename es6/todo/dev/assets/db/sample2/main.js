@@ -9,19 +9,21 @@ if ('webkitIndexedDB' in window) {
 html5rocks.indexedDB = {};
 html5rocks.indexedDB.db = null;
 
+// request: openする。接続する感じ
+
 // ここから本番
 html5rocks.indexedDB.onerror = function(e) { console.log(e); };
 html5rocks.indexedDB.open = function() {
   var version = 1;
   var request = indexedDB.open('todos', version);
-
-  // バージョン変更があったときに呼び出す - 初期化含め
+  // 初期化 - バージョン変更があったときに呼び出す
   request.onupgradeneeded = function(e) {
     var db = e.target.result;
     e.target.transaction.onerror = html5rocks.indexedDB.onerror;
     if(db.objectStoreNames.contains('todo')) db.deleteObjectStore('todo');
     db.createObjectStore('todo', {keyPath: 'timeStamp'});
   };
+  // open成功時に実行される
   request.onsuccess = function(e) {
     html5rocks.indexedDB.db = e.target.result;
     html5rocks.indexedDB.getAllTodoItems();
