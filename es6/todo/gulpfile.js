@@ -28,10 +28,10 @@ gulp.task('markups', function() {
 });
 
 gulp.task('styles', function() {
-  return gulp.src('dev/**/*.sass')
+  return gulp.src('dev/**/*.scss')
     .pipe(plumber(options.plumber))
     .pipe(sass({
-      indentedSyntax: true,
+      // indentedSyntax: true,
       errLogToConsole: true,
       sourceComments : 'normal'
     }))
@@ -75,7 +75,7 @@ gulp.task('browserSync', ['markups', 'styles', 'scripts', 'files'], function() {
 });
 
 gulp.task('watch', function() {
-  gulp.watch(['dev/**/*.sass'], ['styles']);
+  gulp.watch(['dev/**/*.scss'], ['styles']);
   gulp.watch(['dev/**/*.jade'], ['markups']);
   gulp.watch(['dev/**/*.js', '!dev/**/*.test.js'], ['scripts']);
   gulp.watch(['dev/**/*.test.js'], ['test']);
