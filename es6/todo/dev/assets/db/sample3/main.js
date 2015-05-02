@@ -33,7 +33,6 @@ html5rocks.indexedDB.open = function() {
   };
   request.onsuccess = function(e) {
     html5rocks.indexedDB.db = e.target.result;
-    html5rocks.indexedDB.store = html5rocks.indexedDB.connect('todo');
     html5rocks.indexedDB.getAllTodoItems();
   };
 };
@@ -46,28 +45,31 @@ html5rocks.indexedDB.connect = function(key) {
 };
 
 html5rocks.indexedDB.addTodo = function(todoText) {
+  var store = html5rocks.indexedDB.connect('todo');
   var data = {
     text: todoText,
     timeStamp: new Date().getTime()
   };
-  var request = html5rocks.indexedDB.store.put(data);
+  var request = store.put(data);
   request.onsuccess = function() {
     html5rocks.indexedDB.getAllTodoItems();
   };
 };
 
 html5rocks.indexedDB.deleteTodo = function(id) {
-  var request = html5rocks.indexedDB.store.delete(id);
+  var store = html5rocks.indexedDB.connect('todo');
+  var request = store.delete(id);
   request.onsuccess = function() {
     html5rocks.indexedDB.getAllTodoItems();
   };
 };
 
 html5rocks.indexedDB.getAllTodoItems = function() {
+  var store = html5rocks.indexedDB.connect('todo');
   var todos = document.getElementById('todoItems');
   todos.innerHTML = '';
   var keyRange = IDBKeyRange.lowerBound(0);
-  var cursorRequest = html5rocks.indexedDB.store.openCursor(keyRange);
+  var cursorRequest = store.openCursor(keyRange);
   cursorRequest.onsuccess = function(e) {
     var result = e.target.result;
     if(!result) return;
