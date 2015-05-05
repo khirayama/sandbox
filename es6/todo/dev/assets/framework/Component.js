@@ -1,6 +1,6 @@
 'use strict';
 
-export default class View {
+export default class Component {
   // TODO: componentsの破棄（イベント消したり）
   // TODO: animationを考慮したAPIの追加（animationってなんかダサいからUIとかにしよう）
   // TODO: renderメソッドとtemplateメソッドをうまく抽象化して吸収したほうがいい
