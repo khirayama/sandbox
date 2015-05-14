@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GitHub WebView</title>
+    <style>
+    * {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      border: 0;
+      outline: 0;
+    }
+    </style>
+  </head>
+  <body>
+    <webview id="foo" src="https://github.com/" style="width:640px; height:480px"></webview>
+    <script>
+onload = function() {
+  var webview = document.getElementById("foo");
+  var indicator = document.querySelector(".indicator");
+
+  var loadstart = function() {
+    indicator.innerText = "loading...";
+  }
+  var loadstop = function() {
+    indicator.innerText = "";
+  }
+  webview.addEventListener("did-start-loading", loadstart);
+  webview.addEventListener("did-stop-loading", loadstop);
+}
+    </script>
+  </body>
+</html>
