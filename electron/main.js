@@ -12,6 +12,7 @@ app.on('window-all-closed', function() {
 });
 
 app.on('ready', function() {
+  // TODO: とりあえずes6版作ってみる
   // Create the browser window.
   mainWindow = new BrowserWindow({width: 800, height: 600});
 
