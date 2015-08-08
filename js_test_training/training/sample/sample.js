@@ -2,7 +2,6 @@ import Util from './util.js';
 
 export default class Sample {
   sum( a, b ) {
-    // ES6 modules を試すため、別クラスのメソッドを呼ぶ
     return Util.sum( a, b );
   }
   exists( arr, target ) {

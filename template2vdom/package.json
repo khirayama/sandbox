@@ -1,0 +1,15 @@
+{
+  "name": "template2vdom",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "htmlparser2": "^3.8.3",
+    "virtual-dom": "^2.1.1"
+  }
+}

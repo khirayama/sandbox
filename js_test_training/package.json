@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --compilers js:espower-babel/guess test/**/*.js"
+    "test": "mocha --compilers js:espower-babel/guess ./training/**/*.test.js"
   },
   "author": "",
   "license": "ISC",
