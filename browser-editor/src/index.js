@@ -3,6 +3,7 @@ const CodeMirror = require('codemirror/lib/codemirror');
 require('codemirror/keymap/emacs');
 require('codemirror/keymap/sublime');
 require('codemirror/keymap/vim');
+require('codemirror/addon/dialog/dialog');
 
 // mode
 require('codemirror/mode/markdown/markdown');
