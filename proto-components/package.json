@@ -8,7 +8,9 @@
     "build:scripts": "webpack --mode production",
     "build:scripts:watch": "webpack --mode development -w",
     "copy:files": "cpx src/**/*.html dist",
-    "copy:files:watch": "cpx -w src/**/*.html dist"
+    "copy:files:watch": "cpx -w src/**/*.html dist",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +27,13 @@
     "tsconfig-paths-webpack-plugin": "3.2.0",
     "typescript": "3.2.2",
     "webpack": "4.28.4",
-    "webpack-cli": "3.2.1"
-  }
+    "webpack-cli": "3.2.1",
+    "@storybook/react": "^4.1.6",
+    "@storybook/addon-actions": "^4.1.6",
+    "@storybook/addon-links": "^4.1.6",
+    "@storybook/addons": "^4.1.6",
+    "@babel/core": "^7.2.2",
+    "babel-loader": "^8.0.5"
+  },
+  "dependencies": {}
 }
