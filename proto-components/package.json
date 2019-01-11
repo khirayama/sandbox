@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev": "concurrently 'npm run build:scripts:watch' 'npm run copy:files:watch'",
     "build:scripts": "webpack --mode production",
     "build:scripts:watch": "webpack --mode development -w",
     "copy:files": "cpx src/**/*.html dist",
@@ -13,6 +14,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "concurrently": "4.1.0",
     "cpx": "1.5.0",
     "react": "16.7.0",
     "react-dom": "16.7.0",
