@@ -1,0 +1,25 @@
+{
+  "name": "proto-components",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:scripts": "webpack --mode production",
+    "build:scripts:watch": "webpack --mode development -w",
+    "copy:files": "cpx src/**/*.html dist",
+    "copy:files:watch": "cpx -w src/**/*.html dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cpx": "1.5.0",
+    "react": "16.7.0",
+    "react-dom": "16.7.0",
+    "ts-loader": "5.3.3",
+    "tsconfig-paths-webpack-plugin": "3.2.0",
+    "typescript": "3.2.2",
+    "webpack": "4.28.4",
+    "webpack-cli": "3.2.1"
+  }
+}
