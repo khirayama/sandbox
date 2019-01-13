@@ -4,6 +4,13 @@ import * as React from 'react';
   - inputの入力値の制御でIME入力とかいろいろ辛かった話 https://qiita.com/yanyan_ys/items/d14ecb3d2e5b7d119d5d
   - JavaScript における 日本語入力 確定 (Enter) イベント https://garafu.blogspot.com/2015/09/javascript-ime-enter-event.html?m=1
   - JavaScript とクロスブラウザでの IME event handling (2017年) https://tanishiking24.hatenablog.com/entry/ime-event-handling-javascript
+
+  - 共同編集のためを考えたけど、結構厳しい
+    - OT方式だと行けそうに感じるが...
+    - IME起動時のキャレット位置や確定処理が不安定
+      - isComposingは使えそうだった
+        - ReactのEventは対応してなさそうだったので生DOMにつける必要あり
+  - 一旦、入力をブロックする方式で
 */
 
 interface IProps {
@@ -14,27 +21,12 @@ interface IProps {
 export class ContentEditableText extends React.Component<IProps, {}> {
   private ref: any;
 
-  private isDispatch: boolean = true;
-
   constructor(props: any) {
     super(props);
 
     this.ref = React.createRef();
 
     this.onInput = this.onInput.bind(this);
-  }
-
-  public componentDidMount(): void {
-    const el: HTMLDivElement = this.ref.current;
-    el.addEventListener('keydown', (e: any) => {
-      console.log('keydown', e.isComposing);
-    });
-    el.addEventListener('compostionstart', () => {
-      console.log('start');
-    });
-    el.addEventListener('compostionend', () => {
-      console.log('end');
-    });
   }
 
   public shouldComponentUpdate(nextProps: any): boolean {
@@ -69,31 +61,12 @@ export class ContentEditableText extends React.Component<IProps, {}> {
         contentEditable={true}
         suppressContentEditableWarning={true}
         onInput={this.onInput}
-        onKeyDown={(event: any) => {
-          console.log('keydown', event.keyCode, event.isComposing);
-          if (event.keyCode === 229) {
-            this.isDispatch = false;
-          }
-        }}
-        onKeyPress={(event: any) => {
-          // IME中だとKeyPressイベントは起きない
-          // SafariだとKeyPressは起きない？
-          this.isDispatch = true;
-          console.log('keypress', event.keyCode, event.isComposing);
-        }}
-        onKeyUp={(event: any) => {
-          console.log('keyup', event.keyCode, event.isComposing);
-
-          // Reset
-          this.isDispatch = true;
-        }}
       >{value}</div>
     );
   }
 
   private onInput(event: React.FormEvent<HTMLDivElement>): void {
-    console.log((this.isDispatch) ? '内容確定' : '未確定');
-    if (this.props.onInput && this.isDispatch) {
+    if (this.props.onInput) {
       this.props.onInput(event);
     }
   }

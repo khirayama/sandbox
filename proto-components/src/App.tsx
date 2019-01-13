@@ -10,11 +10,12 @@ export class App extends React.Component<{}, { value: string }> {
       value: 'value',
     };
 
-    // setInterval(() => {
-    //   this.setState({
-    //     value: '000' + this.state.value + '111',
-    //   });
-    // }, 2000);
+    setInterval(() => {
+      this.setState({
+        // value: '000' + this.state.value + '111',
+        value: this.state.value + '111',
+      });
+    }, 3000);
   }
 
   public render(): JSX.Element {
@@ -22,7 +23,7 @@ export class App extends React.Component<{}, { value: string }> {
       <div>
         <ContentEditableText value={this.state.value} onInput={(event: React.FormEvent<HTMLElement>) => {
           const value: string = event.currentTarget.innerText;
-          // console.log(value);
+          console.log(value);
           this.setState({ value });
         }} />
       </div>
