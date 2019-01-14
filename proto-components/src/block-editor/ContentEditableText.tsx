@@ -15,7 +15,7 @@ import * as React from 'react';
 
 interface IProps {
   value?: string;
-  onInput?: (event: React.FormEvent<HTMLDivElement>) => void;
+  onInput?: (event: React.FormEvent<HTMLSpanElement>) => void;
 }
 
 export class ContentEditableText extends React.Component<IProps, {}> {
@@ -56,16 +56,16 @@ export class ContentEditableText extends React.Component<IProps, {}> {
     // Firefox: keydown - keypress - input - keyup
     // Safari:  input - keydown - keyup
     return (
-      <div
+      <span
         ref={this.ref}
         contentEditable={true}
         suppressContentEditableWarning={true}
         onInput={this.onInput}
-      >{value}</div>
+      >{value}</span>
     );
   }
 
-  private onInput(event: React.FormEvent<HTMLDivElement>): void {
+  private onInput(event: React.FormEvent<HTMLSpanElement>): void {
     if (this.props.onInput) {
       this.props.onInput(event);
     }
