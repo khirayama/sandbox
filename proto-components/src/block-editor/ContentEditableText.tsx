@@ -32,6 +32,8 @@ export class ContentEditableText extends React.Component<IProps, {}> {
   public shouldComponentUpdate(nextProps: any): boolean {
     const el = this.ref.current;
     const value = el.innerText;
+    // TODO: 入力中は外部からの更新をブロック
+    // - これは外部で判断すべきでは...
     if (nextProps.value !== value) {
       const sel: any = window.getSelection();
       const start: number = sel.anchorOffset;
