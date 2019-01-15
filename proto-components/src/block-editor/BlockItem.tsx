@@ -30,18 +30,18 @@ export class BlockItem extends React.Component<any, any> {
   }
 
   public render(): JSX.Element {
-    // TODO: 同じブロックの共同編集はブロックする方針だし、ContentEditableの意味はなさそう？
-    // textareaで普通に行けそう（inputだと1行表示しかできない）
-    // inline表現はmarkdownを踏襲。入力中は全てテキストでよし。
+    // contenteditableを使う理由
+    // - textareaの場合、行数を自動で伸びるようにできない
+    // - inputの場合、1行しか利用できない
     return (
-      <div className="Block" style={{marginLeft: `${this.props.indent}rem`}} onClick={() => {
+      <div className="BlockItem" style={{marginLeft: `${this.props.indent}rem`}} onClick={() => {
         const sel = window.document.getSelection();
         this.setState({ caretPosition: sel.anchorOffset });
 
         this.showLineNumberInTextarea();
       }}>
-        <span className="Block--OneLine" ref={this.oneLineRef}>{this.props.block.text.substring(0, 1)}</span>
-        <span className="Block--Shadow" ref={this.shadowRef}>{this.props.block.text.substring(0, this.state.caretPosition || 1)}</span>
+        <span className="BlockItem--OneLine" ref={this.oneLineRef}>{this.props.block.text.substring(0, 1)}</span>
+        <span className="BlockItem--Shadow" ref={this.shadowRef}>{this.props.block.text.substring(0, this.state.caretPosition || 1)}</span>
         <ContentEditableText
           ref={this.contentRef}
           value={this.props.block.text}
@@ -63,7 +63,7 @@ export class BlockItem extends React.Component<any, any> {
 
   private showLineNumberInTextarea() {
     setTimeout(() => {
-      // It's for moving BlockItem
+      // BlockItemを移動するときに、1行目/最終行目の場合、次のBlockItemに移動する
       const height = this.contentRef.current.ref.current.offsetHeight;
       const currentHeight = this.shadowRef.current.offsetHeight;
       const oneLineHeight = this.oneLineRef.current.offsetHeight || 1;
