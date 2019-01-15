@@ -43,12 +43,16 @@ export namespace Clap {
 
     public nodes: INode[] | null;
 
-    constructor(pureNode?: INode) {
+    private parentNode: INode | null;
+
+    constructor(pureNode?: INode, parentNode: INode | null = null) {
       this.id = pureNode ? pureNode.id : uuid();
       this.text = pureNode ? pureNode.text : '';
       this.type = pureNode ? pureNode.type : null;
       this.properties = pureNode ? pureNode.properties : null;
-      this.nodes = pureNode ? pureNode.nodes === null ? null : pureNode.nodes.map((pureChildNode: INode) => new Node(pureChildNode)) : [];
+      this.nodes = pureNode ? pureNode.nodes === null ? null : pureNode.nodes.map((pureChildNode: INode) => new Node(pureChildNode, this)) : [];
+
+      this.parentNode = parentNode;
     }
 
     public toPureNode(rootNode: Node = this): INode {
