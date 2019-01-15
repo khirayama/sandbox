@@ -13,162 +13,132 @@ import * as uuid from 'uuid/v4';
  * Node: Instance
  */
 
+/*
 interface INode {
   id: string;
   object: 'document' | 'block' | 'text';
   type: 'paragraph' | null;
   nodes: INode[] | null;
 }
+という構造もやったけど、ちょっと違うな。きっとデータ構造的には正しそうだけど、汎用性の高さよりもアプリケーションの要件をちゃんとモデルにした方がいい気がした。
+*/
 
-class SuperNode implements INode {
-  public id: string = uuid();
-
-  public object: 'document' | 'block' | 'text';
-
-  public type: 'paragraph' | null;
-
-  public nodes: INode[] | null;
-
-  constructor(pureNode: INode) {
-    this.id = pureNode.id;
-    this.object = pureNode.object;
-    this.type = pureNode.type;
-    this.nodes = [];
-  }
-}
-
-/* ------- Text Node ----------- */
-class TextNode extends SuperNode {
-  public text: string;
-
-  constructor(pureNode: INode) {
-    super(pureNode);
-
-    this.object = 'text';
-    this.type = null;
-    this.nodes = null;
-    this.text = '';
-  }
-}
-
-/* ------- Block Node ----------- */
-class BlockNode extends SuperNode {
-  constructor(pureNode: INode) {
-    super(pureNode);
-
-    this.object = 'block';
-    this.type = null;
-    this.nodes = [];
-  }
-}
-/* ------- Document Node ----------- */
-class DocumentNode extends SuperNode {
-  constructor(pureNode: INode) {
-    super(pureNode);
-
-    this.object = 'document';
-    this.type = null;
-    this.nodes = [];
-  }
-}
-
-function createNodeFromPureNode(rootPureNode: INode): INode {
-  let rootNode: DocumentNode | BlockNode | TextNode;
-
-  if (rootPureNode.object === 'document') {
-    rootNode = new DocumentNode(rootPureNode);
-  } else if (rootPureNode.object === 'block') {
-    rootNode = new BlockNode(rootPureNode);
-  } else if (rootPureNode.object === 'text') {
-    rootNode = new TextNode(rootPureNode);
+export namespace Clap {
+  export interface INode {
+    id: string;
+    text: string | null;
+    type: string | null;
+    properties?: any;
+    nodes: INode[] | null;
   }
 
-  if (rootPureNode.nodes !== null) {
-    for (const pureNode of rootPureNode.nodes) {
-      rootNode.nodes.push(createNodeFromPureNode(pureNode));
+  export class Node implements INode {
+    public id: string;
+
+    public text: string;
+
+    public type: string | null;
+
+    public properties: any;
+
+    public nodes: INode[] | null;
+
+    constructor(pureNode?: INode) {
+      this.id = pureNode ? pureNode.id : uuid();
+      this.text = pureNode ? pureNode.text : '';
+      this.type = pureNode ? pureNode.type : null;
+      this.properties = pureNode ? pureNode.properties : null;
+      this.nodes = pureNode ? pureNode.nodes === null ? null : pureNode.nodes.map((pureChildNode: INode) => new Node(pureChildNode)) : [];
+    }
+
+    public toPureNode(rootNode: Node = this): INode {
+      const rootPureNode: INode = {
+        id: rootNode.id,
+        text: rootNode.text,
+        type: rootNode.type,
+        properties: rootNode.properties,
+        nodes: rootNode.nodes,
+      };
+
+      if (rootNode.nodes !== null) {
+        for (const node of rootNode.nodes) {
+          rootPureNode.nodes = rootNode.nodes.map(this.toPureNode);
+        }
+      }
+
+      return rootPureNode;
     }
   }
 
-  return rootNode;
-}
+  export class Document {
+    public id: string;
 
-function createPureNodeFromNode(rootNode: INode): INode {
-  const rootPureNode: INode = {
-    id: rootNode.id,
-    object: rootNode.object,
-    type: rootNode.type,
-    nodes: rootNode.nodes,
-  };
+    public name: string;
 
-  if (rootNode.nodes !== null) {
-    for (const node of rootNode.nodes) {
-      rootPureNode.nodes.push(createPureNodeFromNode(node));
-    }
+    public nodes: INode[];
   }
-
-  return rootPureNode;
 }
 
 /* ------- Traverse ----------- */
-export class Traverse {
-  private tree: TDocumentNode;
-
-  constructor(tree?: TDocumentNode) {
-    this.tree = tree || this.initTree();
-  }
-
-  public getTree(): TDocumentNode {
-    return this.tree;
-  }
-
-  public findNode(id: string, rootNode: TDocumentNode | TBlockNode | TTextNode = this.tree): TDocumentNode | TBlockNode | TTextNode | null {
-    // FYI: とりあえず深さ優先探索。Browserは参考にできそう
-    if (rootNode.id === id) {
-      return rootNode;
-    } else if ((<TDocumentNode | TBlockNode>rootNode).nodes) {
-      for (const node of (<TDocumentNode | TBlockNode>rootNode).nodes) {
-        const res: TDocumentNode | TBlockNode | TTextNode | null = this.findNode(id, node);
-        if (res !== null) {
-          return res;
-        }
-      }
-    }
-
-    return null;
-  }
-
-  public updateText(id: string, text: string): void {
-    const node: TDocumentNode | TBlockNode | TTextNode | null = this.findNode(id);
-    if  (node !== null && (<TTextNode>node).text) {
-      (<TTextNode>node).text = text;
-    }
-  }
-
-  private initTree(): TDocumentNode {
-    const pad: TDocumentNode = {
-      id: uuid(),
-      nodes: [
-        this.createTextBlock(),
-        this.createTextBlock(),
-        this.createTextBlock(),
-      ],
-    };
-
-    pad.nodes[1].nodes.push(this.createTextBlock());
-    pad.nodes[1].nodes[0].nodes.push(this.createTextBlock());
-    pad.nodes[1].nodes.push(this.createTextBlock());
-
-    return pad;
-  }
-
-  private createTextBlock(): TBlockNode {
-    return {
-      id: uuid(),
-      type: 'TEXT',
-      nodes: [{
-        id: uuid(),
-        text: 'text',
-      }],
-    };
-  }
-}
+// export class Traverse {
+//   private tree: TDocumentNode;
+//
+//   constructor(tree?: TDocumentNode) {
+//     this.tree = tree || this.initTree();
+//   }
+//
+//   public getTree(): TDocumentNode {
+//     return this.tree;
+//   }
+//
+//   public findNode(id: string, rootNode: TDocumentNode | TBlockNode | TTextNode = this.tree): TDocumentNode | TBlockNode | TTextNode | null {
+//     // FYI: とりあえず深さ優先探索。Browserは参考にできそう
+//     if (rootNode.id === id) {
+//       return rootNode;
+//     } else if ((<TDocumentNode | TBlockNode>rootNode).nodes) {
+//       for (const node of (<TDocumentNode | TBlockNode>rootNode).nodes) {
+//         const res: TDocumentNode | TBlockNode | TTextNode | null = this.findNode(id, node);
+//         if (res !== null) {
+//           return res;
+//         }
+//       }
+//     }
+//
+//     return null;
+//   }
+//
+//   public updateText(id: string, text: string): void {
+//     const node: TDocumentNode | TBlockNode | TTextNode | null = this.findNode(id);
+//     if  (node !== null && (<TTextNode>node).text) {
+//       (<TTextNode>node).text = text;
+//     }
+//   }
+//
+//   private initTree(): TDocumentNode {
+//     const pad: TDocumentNode = {
+//       id: uuid(),
+//       nodes: [
+//         this.createTextBlock(),
+//         this.createTextBlock(),
+//         this.createTextBlock(),
+//       ],
+//     };
+//
+//     pad.nodes[1].nodes.push(this.createTextBlock());
+//     pad.nodes[1].nodes[0].nodes.push(this.createTextBlock());
+//     pad.nodes[1].nodes.push(this.createTextBlock());
+//
+//     return pad;
+//   }
+//
+//   private createTextBlock(): TBlockNode {
+//     return {
+//       id: uuid(),
+//       type: 'TEXT',
+//       nodes: [{
+//         id: uuid(),
+//         text: 'text',
+//       }],
+//     };
+//   }
+// }
