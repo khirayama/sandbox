@@ -30,6 +30,9 @@ export class BlockItem extends React.Component<any, any> {
   }
 
   public render(): JSX.Element {
+    // TODO: 同じブロックの共同編集はブロックする方針だし、ContentEditableの意味はなさそう？
+    // textareaで普通に行けそう（inputだと1行表示しかできない）
+    // inline表現はmarkdownを踏襲。入力中は全てテキストでよし。
     return (
       <div className="Block" style={{marginLeft: `${this.props.indent}rem`}} onClick={() => {
         const sel = window.document.getSelection();
