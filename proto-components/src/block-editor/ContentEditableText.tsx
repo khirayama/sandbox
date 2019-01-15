@@ -15,18 +15,22 @@ import * as React from 'react';
 
 interface IProps {
   value?: string;
+  onKeyDown?: (event: React.FormEvent<HTMLSpanElement>) => void;
   onInput?: (event: React.FormEvent<HTMLSpanElement>) => void;
+  onKeyUp?: (event: React.FormEvent<HTMLSpanElement>) => void;
 }
 
 export class ContentEditableText extends React.Component<IProps, {}> {
-  private ref: any;
+  public ref: any;
 
   constructor(props: any) {
     super(props);
 
     this.ref = React.createRef();
 
+    this.onKeyDown = this.onKeyDown.bind(this);
     this.onInput = this.onInput.bind(this);
+    this.onKeyUp = this.onKeyUp.bind(this);
   }
 
   public shouldComponentUpdate(nextProps: any): boolean {
@@ -62,14 +66,28 @@ export class ContentEditableText extends React.Component<IProps, {}> {
         ref={this.ref}
         contentEditable={true}
         suppressContentEditableWarning={true}
+        onKeyDown={this.onKeyDown}
         onInput={this.onInput}
+        onKeyUp={this.onKeyUp}
       >{value}</span>
     );
+  }
+
+  private onKeyDown(event: React.KeyboardEvent<HTMLSpanElement>): void {
+    if (this.props.onKeyDown) {
+      this.props.onKeyDown(event);
+    }
   }
 
   private onInput(event: React.FormEvent<HTMLSpanElement>): void {
     if (this.props.onInput) {
       this.props.onInput(event);
+    }
+  }
+
+  private onKeyUp(event: React.KeyboardEvent<HTMLSpanElement>): void {
+    if (this.props.onKeyUp) {
+      this.props.onKeyUp(event);
     }
   }
 }

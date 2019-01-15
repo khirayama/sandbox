@@ -1,31 +1,11 @@
 import * as React from 'react';
 
-import { ContentEditableText } from 'block-editor/ContentEditableText';
-
-export class App extends React.Component<{}, { value: string }> {
-  constructor(props: {}) {
-    super(props);
-
-    this.state = {
-      value: 'value',
-    };
-
-    setInterval(() => {
-      this.setState({
-        // value: '000' + this.state.value + '111',
-        value: this.state.value + '111',
-      });
-    }, 3000);
-  }
-
+import { Pad } from 'block-editor/Pad';
+export class App extends React.Component<{}, {}> {
   public render(): JSX.Element {
     return (
       <div>
-        <ContentEditableText value={this.state.value} onInput={(event: React.FormEvent<HTMLElement>) => {
-          const value: string = event.currentTarget.innerText;
-          console.log(value);
-          this.setState({ value });
-        }} />
+        <Pad />
       </div>
     );
   }

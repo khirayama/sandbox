@@ -6,9 +6,36 @@
     <title>Proto Component</title>
     <script type="text/javascript" src="./bundle.js" defer></script>
     <style>
+    * {
+      padding: 0;
+      margin: 0;
+      border: 0;
+      box-sizing: border-box;
+    }
     [contenteditable] {
         -webkit-user-select: text;
         user-select: text;
+    }
+    .Block {
+      position: relative;
+      word-break: break-all;
+      font-size: 16px;
+      line-height: 1;
+    }
+    .Block--OneLine,
+    .Block--Shadow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      /* opacity: 0; */
+      color: red;
+      display: inherit;
+      pointer-events: none;
+      visibility: hidden;
+      word-break: inherit;
+      font-size: inherit;
+      line-height: inherit;
+      pointer-events: none;
     }
     </style>
   </head>
