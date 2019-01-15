@@ -13,7 +13,8 @@
     "copy:files:watch": "cpx -w src/**/*.html dist",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "keywords": [],
   "author": "",
