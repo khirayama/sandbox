@@ -66,7 +66,7 @@ export class BlockItem extends React.Component<any, any> {
       // It's for moving BlockItem
       const height = this.contentRef.current.ref.current.offsetHeight;
       const currentHeight = this.shadowRef.current.offsetHeight;
-      const oneLineHeight = this.oneLineRef.current.offsetHeight;
+      const oneLineHeight = this.oneLineRef.current.offsetHeight || 1;
       console.log(`今、${Math.floor(height / oneLineHeight)}行中、${Math.floor(currentHeight / oneLineHeight)}行目です。`);
     }, 0);
   }
