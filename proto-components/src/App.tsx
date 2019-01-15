@@ -1,11 +1,15 @@
 import * as React from 'react';
 
-import { Pad } from 'block-editor/Pad';
+import { Document } from 'block-editor/Document';
+import { Traverse } from 'block-editor/traverse';
+
 export class App extends React.Component<{}, {}> {
   public render(): JSX.Element {
+    const traverse: Traverse = new Traverse();
+
     return (
       <div>
-        <Pad />
+        <Document doc={traverse.getNode()} />
       </div>
     );
   }

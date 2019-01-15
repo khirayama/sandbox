@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import { Traverse, TPad } from 'block-editor/traverse';
+import { Traverse } from 'block-editor/traverse';
 import { BlockItem } from 'block-editor/BlockItem';
 
-export class Pad extends React.Component<{}, any> {
+export class Document extends React.Component<{}, any> {
   private traverse: Traverse;
 
   constructor(props: any) {
@@ -12,7 +12,7 @@ export class Pad extends React.Component<{}, any> {
     this.traverse = new Traverse();
 
     this.state = {
-      node: this.traverse.getNode(),
+      node: this.traverse.getTree(),
     };
   }
 
