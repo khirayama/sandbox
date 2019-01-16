@@ -59,7 +59,7 @@ export namespace Clap {
 
     private listeners: ((event: ChangeEvent) => void)[] = [];
 
-    private parentNode: Node | null;
+    public parentNode: Node | null;
 
     constructor(pureNode?: INode, parentNode: Node | null = null) {
       this.id = pureNode ? pureNode.id : uuid();
@@ -107,6 +107,87 @@ export namespace Clap {
       return null;
     }
 
+    public findPrevNode(): Node | null {
+      if (this.parentNode) {
+        for (let i: number = 0; i < this.parentNode.nodes.length; i += 1) {
+          const node: Node = this.parentNode.nodes[i];
+          if (node.id === this.id) {
+            return this.parentNode.nodes[i - 1] || null;
+          }
+        }
+      }
+
+      return null;
+    }
+
+    public findNextNode(): Node | null {
+      if (this.parentNode) {
+        for (let i: number = 0; i < this.parentNode.nodes.length; i += 1) {
+          const node: Node = this.parentNode.nodes[i];
+          if (node.id === this.id) {
+            return this.parentNode.nodes[i + 1] || null;
+          }
+        }
+      }
+
+      return null;
+    }
+
+    public appendNode(node: Node): void {
+      node.parentNode.removeNode(node.id);
+      node.parentNode = this;
+      this.nodes.push(node);
+
+      this.dispatchChange(this);
+    }
+
+    public removeNode(id: string, rootNode: Node = this): void {
+      for (let i: number = 0; i < rootNode.nodes.length; i += 1) {
+        const node: Node = rootNode.nodes[i];
+
+        if (node.id === id) {
+          rootNode.nodes.splice(i, 1);
+          this.dispatchChange(this);
+          break;
+        } else if (node.nodes) {
+          for (const node of rootNode.nodes) {
+            this.removeNode(id, node);
+          }
+        }
+      }
+    }
+
+    public before(node: Node): void {
+      if (this.parentNode) {
+        node.parentNode.removeNode(node.id);
+        node.parentNode = this.parentNode;
+
+        for (let i: number = 0; this.parentNode.nodes.length; i += 1) {
+          if (this.id === this.parentNode.nodes[i].id) {
+            this.parentNode.nodes.splice(i, 0, node);
+            this.dispatchChange(this);
+            break;
+          }
+        }
+      }
+    }
+
+    public after(node: Node): void {
+      if (this.parentNode) {
+        node.parentNode.removeNode(node.id);
+        node.parentNode = this.parentNode;
+
+        for (let i: number = 0; this.parentNode.nodes.length; i += 1) {
+          if (this.id === this.parentNode.nodes[i].id) {
+            this.parentNode.nodes.splice(i + 1, 0, node);
+            this.dispatchChange(this);
+            break;
+          }
+        }
+      }
+    }
+
+    // Command
     public updateText(text): void {
       this.text = text;
 
