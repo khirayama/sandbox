@@ -24,7 +24,49 @@ const pureNode: Clap.INode = {
       type: null,
       properties: null,
       nodes: [],
+    }, {
+      id: uuid(),
+      text: 'Text 3',
+      type: null,
+      properties: null,
+      nodes: [{
+        id: uuid(),
+        text: 'Text 4',
+        type: null,
+        properties: null,
+        nodes: [],
+      }, {
+        id: uuid(),
+        text: 'Text 5',
+        type: null,
+        properties: null,
+        nodes: [],
+      }, {
+        id: uuid(),
+        text: 'Text 6',
+        type: null,
+        properties: null,
+        nodes: [],
+      }],
+    }, {
+      id: uuid(),
+      text: 'Text 7',
+      type: null,
+      properties: null,
+      nodes: [],
     }],
+  }, {
+    id: uuid(),
+    text: 'Text 8',
+    type: null,
+    properties: null,
+    nodes: [],
+  }, {
+    id: uuid(),
+    text: 'Text 9',
+    type: null,
+    properties: null,
+    nodes: [],
   }],
 };
 
