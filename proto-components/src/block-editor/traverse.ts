@@ -23,6 +23,7 @@ interface INode {
 という構造もやったけど、ちょっと違うな。きっとデータ構造的には正しそうだけど、汎用性の高さよりもアプリケーションの要件をちゃんとモデルにした方がいい気がした。
 */
 
+// TODO: typeはpropertiesに入れるべきかも
 export namespace Clap {
   export interface INode {
     id: string;
@@ -30,6 +31,19 @@ export namespace Clap {
     type: string | null;
     properties?: any;
     nodes: INode[] | null;
+  }
+
+  export class ChangeEvent {
+    // Eventが発生したNode
+    public target: Node;
+
+    // Event Listenerが貼られたNode
+    public currentTarget: Node;
+
+    constructor(target: Node, currentTarget: Node) {
+      this.target = target;
+      this.currentTarget = currentTarget;
+    }
   }
 
   export class Node implements INode {
@@ -41,11 +55,13 @@ export namespace Clap {
 
     public properties: any;
 
-    public nodes: INode[] | null;
+    public nodes: Node[] | null;
 
-    private parentNode: INode | null;
+    private listeners: ((event: ChangeEvent) => void)[] = [];
 
-    constructor(pureNode?: INode, parentNode: INode | null = null) {
+    private parentNode: Node | null;
+
+    constructor(pureNode?: INode, parentNode: Node | null = null) {
       this.id = pureNode ? pureNode.id : uuid();
       this.text = pureNode ? pureNode.text : '';
       this.type = pureNode ? pureNode.type : null;
@@ -55,6 +71,7 @@ export namespace Clap {
       this.parentNode = parentNode;
     }
 
+    // Utils
     public toPureNode(rootNode: Node = this): INode {
       const rootPureNode: INode = {
         id: rootNode.id,
@@ -66,11 +83,50 @@ export namespace Clap {
 
       if (rootNode.nodes !== null) {
         for (const node of rootNode.nodes) {
-          rootPureNode.nodes = rootNode.nodes.map(this.toPureNode);
+          rootPureNode.nodes = rootNode.nodes.map(this.toPureNode.bind(this));
         }
       }
 
       return rootPureNode;
+    }
+
+    // Traverse
+    public findNode(id: string, rootNode: Node = this): Node | null {
+      // FYI: とりあえず深さ優先探索。Browserは参考にできそう
+      if (rootNode.id === id) {
+        return rootNode;
+      } else if (rootNode.nodes) {
+        for (const node of rootNode.nodes) {
+          const res: Node | null = this.findNode(id, node);
+          if (res !== null) {
+            return res;
+          }
+        }
+      }
+
+      return null;
+    }
+
+    public updateText(text): void {
+      this.text = text;
+
+      this.dispatchChange(this);
+    }
+
+    // Event Listeners
+    public addChangeListener(listener: (event: ChangeEvent) => void): void {
+      this.listeners.push(listener);
+    }
+
+    public dispatchChange(node: Node): void {
+      if (this.parentNode) {
+        // It's for event propagation
+        this.parentNode.dispatchChange(node);
+      }
+
+      for (const listener of this.listeners) {
+        listener(new ChangeEvent(node, this));
+      }
     }
   }
 
@@ -79,7 +135,11 @@ export namespace Clap {
 
     public name: string;
 
-    public nodes: INode[];
+    public rootNode: Node;
+
+    constructor(pureNode?: INode) {
+      this.rootNode = new Node(pureNode);
+    }
   }
 }
 
