@@ -1,15 +1,15 @@
 import * as React from 'react';
+import * as uuid from 'uuid/v4';
 
+import { doc } from 'block-editor/doc';
 import { Document } from 'block-editor/Document';
-import { Traverse } from 'block-editor/traverse';
 
 export class App extends React.Component<{}, {}> {
   public render(): JSX.Element {
-    const traverse: Traverse = new Traverse();
 
     return (
       <div>
-        <Document doc={traverse.getNode()} />
+        <Document doc={doc} />
       </div>
     );
   }

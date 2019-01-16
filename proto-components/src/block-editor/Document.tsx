@@ -1,39 +1,49 @@
 import * as React from 'react';
 
-import { Traverse } from 'block-editor/traverse';
 import { BlockItem } from 'block-editor/BlockItem';
+import { Clap } from 'block-editor/traverse';
 
-export class Document extends React.Component<{}, any> {
-  private traverse: Traverse;
+interface IProps {
+  doc: Clap.Document;
+}
 
+interface IState {
+  node: Clap.INode;
+}
+
+export class Document extends React.Component<IProps, IState> {
   constructor(props: any) {
     super(props);
 
-    this.traverse = new Traverse();
-
     this.state = {
-      node: this.traverse.getTree(),
+      node: this.props.doc.rootNode.toPureNode(),
     };
+
+    this.props.doc.rootNode.addChangeListener(() => {
+      this.setState({
+        node: this.props.doc.rootNode.toPureNode(),
+      });
+    });
   }
 
   // Reactの特性上、DOMの構造が変わると新しいDOMが生成されてしまう
   // それによって、キャレット位置がリセットされるため、フラットにしてキャレットを維持する
-  public renderChildren(children: any[], indent: number = 0): JSX.Element[] {
-    let childrenElements: JSX.Element[] = [];
+  public renderNodes(nodes: Clap.INode[], indent: number = 0): JSX.Element[] {
+    let nodeElements: JSX.Element[] = [];
 
-    for (const child of children) {
-      childrenElements.push(<BlockItem key={child.id} traverse={this.traverse} indent={indent} block={child} />);
-      if (child.children && child.children.length) {
-        const childChildrenElements: JSX.Element[] = this.renderChildren(child.children, indent + 1);
-        childrenElements = childrenElements.concat(childChildrenElements);
+    for (const node of nodes) {
+      nodeElements.push(<BlockItem key={node.id} indent={indent} node={node} />);
+      if (node.nodes && node.nodes.length) {
+        const childChildrenElements: JSX.Element[] = this.renderNodes(node.nodes, indent + 1);
+        nodeElements = nodeElements.concat(childChildrenElements);
       }
     }
 
-    return childrenElements;
+    return nodeElements;
   }
 
   public render(): JSX.Element {
-    const children: JSX.Element[] = this.renderChildren(this.state.node.children);
+    const children: JSX.Element[] = this.renderNodes(this.state.node.nodes);
 
     return <div>{children}</div>
   }

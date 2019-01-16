@@ -1,8 +1,19 @@
 import * as React from 'react';
 
 import { ContentEditableText } from 'block-editor/ContentEditableText';
+import { doc } from 'block-editor/doc';
+import { Clap } from 'block-editor/traverse';
 
-export class BlockItem extends React.Component<any, any> {
+interface IProps {
+  indent: number;
+  node: Clap.INode;
+}
+
+interface IState {
+  caretPosition: number;
+}
+
+export class BlockItem extends React.Component<IProps, IState> {
   private contentRef: React.RefObject<ContentEditableText>;
 
   private shadowRef: React.RefObject<HTMLSpanElement>;
@@ -40,15 +51,17 @@ export class BlockItem extends React.Component<any, any> {
 
         this.showLineNumberInTextarea();
       }}>
-        <span className="BlockItem--OneLine" ref={this.oneLineRef}>{this.props.block.text.substring(0, 1)}</span>
-        <span className="BlockItem--Shadow" ref={this.shadowRef}>{this.props.block.text.substring(0, this.state.caretPosition || 1)}</span>
+        <span className="BlockItem--OneLine" ref={this.oneLineRef}>{this.props.node.text.substring(0, 1)}</span>
+        <span className="BlockItem--Shadow" ref={this.shadowRef}>{this.props.node.text.substring(0, this.state.caretPosition || 1)}</span>
         <ContentEditableText
           ref={this.contentRef}
-          value={this.props.block.text}
+          value={this.props.node.text}
           onInput={(event: React.FormEvent<HTMLSpanElement>) => {
             const value: string = event.currentTarget.innerText;
-            this.props.traverse.updateText(this.props.block.id, value);
-            this.setState({ node: this.props.traverse.getNode() });
+            // this.props.traverse.updateText(this.props.node.id, value);
+            // this.setState({ node: this.props.node.getNode() });
+            const node: Clap.Node = doc.rootNode.findNode(this.props.node.id);
+            node.updateText(value);
           }}
           onKeyUp={(event) => {
             const sel = window.document.getSelection();
