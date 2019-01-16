@@ -15,9 +15,9 @@ import * as React from 'react';
 
 interface IProps {
   value?: string;
-  onKeyDown?: (event: React.FormEvent<HTMLSpanElement>) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLSpanElement>) => void;
   onInput?: (event: React.FormEvent<HTMLSpanElement>) => void;
-  onKeyUp?: (event: React.FormEvent<HTMLSpanElement>) => void;
+  onKeyUp?: (event: React.KeyboardEvent<HTMLSpanElement>) => void;
 }
 
 export class ContentEditableText extends React.Component<IProps, {}> {

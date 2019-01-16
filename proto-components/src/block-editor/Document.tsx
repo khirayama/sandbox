@@ -8,6 +8,9 @@ interface IProps {
 }
 
 interface IState {
+  ui: {
+    focusId: string;
+  },
   node: Clap.INode;
 }
 
@@ -15,8 +18,12 @@ export class Document extends React.Component<IProps, IState> {
   constructor(props: any) {
     super(props);
 
+    const node = this.props.doc.rootNode.toPureNode();
     this.state = {
-      node: this.props.doc.rootNode.toPureNode(),
+      ui: {
+        focusId: node.nodes[0].id,
+      },
+      node,
     };
 
     this.props.doc.rootNode.addChangeListener(() => {

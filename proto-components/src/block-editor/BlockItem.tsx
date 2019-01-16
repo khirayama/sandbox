@@ -13,6 +13,12 @@ interface IState {
   caretPosition: number;
 }
 
+const keyCodes: any = {
+  TAB: 9,
+  UP: 38,
+  DOWN: 40,
+};
+
 export class BlockItem extends React.Component<IProps, IState> {
   private contentRef: React.RefObject<ContentEditableText>;
 
@@ -48,8 +54,6 @@ export class BlockItem extends React.Component<IProps, IState> {
       <div className="BlockItem" style={{marginLeft: `${this.props.indent}rem`}} onClick={() => {
         const sel = window.document.getSelection();
         this.setState({ caretPosition: sel.anchorOffset });
-
-        this.showLineNumberInTextarea();
       }}>
         <span className="BlockItem--OneLine" ref={this.oneLineRef}>{this.props.node.text.substring(0, 1)}</span>
         <span className="BlockItem--Shadow" ref={this.shadowRef}>{this.props.node.text.substring(0, this.state.caretPosition || 1)}</span>
@@ -58,29 +62,106 @@ export class BlockItem extends React.Component<IProps, IState> {
           value={this.props.node.text}
           onInput={(event: React.FormEvent<HTMLSpanElement>) => {
             const value: string = event.currentTarget.innerText;
-            // this.props.traverse.updateText(this.props.node.id, value);
-            // this.setState({ node: this.props.node.getNode() });
             const node: Clap.Node = doc.rootNode.findNode(this.props.node.id);
             node.updateText(value);
           }}
+          onKeyDown={(event) => {
+            const keyCode: number = event.keyCode;
+            const metaKey: boolean = event.metaKey;
+            const shiftKey: boolean = event.shiftKey;
+
+            this.command(keyCode, metaKey, shiftKey);
+          }}
           onKeyUp={(event) => {
+            // caret位置はKeyUpじゃないと正確な位置が取れない
             const sel = window.document.getSelection();
             this.setState({ caretPosition: sel.anchorOffset });
-
-            this.showLineNumberInTextarea();
           }}
         />
       </div>
     );
   }
 
-  private showLineNumberInTextarea() {
-    setTimeout(() => {
-      // BlockItemを移動するときに、1行目/最終行目の場合、次のBlockItemに移動する
-      const height = this.contentRef.current.ref.current.offsetHeight;
-      const currentHeight = this.shadowRef.current.offsetHeight;
-      const oneLineHeight = this.oneLineRef.current.offsetHeight || 1;
-      console.log(`今、${Math.floor(height / oneLineHeight)}行中、${Math.floor(currentHeight / oneLineHeight)}行目です。`);
-    }, 0);
+  private command(keyCode: number, metaKey: boolean, shiftKey: boolean): void {
+    console.log(keyCode, metaKey, shiftKey);
+    // tab: インデント
+    // tab + shift: インデントを解除
+    switch (true) {
+      case (keyCodes.TAB === keyCode && !shiftKey): {
+        event.preventDefault();
+        this.indent();
+        break;
+      }
+      case (keyCodes.TAB === keyCode && shiftKey): {
+        event.preventDefault();
+        this.unindent();
+        break;
+      }
+      case (keyCodes.UP === keyCode): {
+        const rows = this.getRows();
+        if (rows.current === 1) {
+          event.preventDefault();
+          this.moveUp();
+        }
+        break;
+      }
+      case (keyCodes.DOWN === keyCode): {
+        const rows = this.getRows();
+        if (rows.current === rows.all) {
+          event.preventDefault();
+          this.moveDown();
+        }
+        break;
+      }
+    }
+  }
+
+  // Basic Commands
+  private indent(): void {
+    // - targetNodeをprevNodeに挿入
+    const node: Clap.Node = doc.rootNode.findNode(this.props.node.id);
+    const prevNode: Clap.Node = node.findPrevNode();
+    if (node !== null && prevNode !== null) {
+      prevNode.appendNode(node);
+    }
+  }
+
+  private unindent(): void {
+    // - nextNode以降のnodeをtargetNode.nodesにappend
+    // - targetNode.parentNodeの次に挿入(after)
+    const node: Clap.Node = doc.rootNode.findNode(this.props.node.id);
+    if (node.parentNode && node.parentNode.parentNode) {
+      while(true) {
+        const nextNode: Clap.Node = node.findNextNode();
+        if (nextNode === null) {
+          break;
+        } else {
+          node.appendNode(nextNode);
+        }
+      }
+      node.parentNode.after(node);
+    }
+  }
+
+  private moveUp(): void {
+    console.log('Up!');
+  }
+
+  private moveDown(): void {
+    console.log('Down!');
+  }
+
+  private getRows(): { current: number, all: number } {
+    // BlockItemを移動するときに、1行目/最終行目の場合、次のBlockItemに移動する
+    const height = this.contentRef.current.ref.current.offsetHeight;
+    const currentHeight = this.shadowRef.current.offsetHeight;
+    const oneLineHeight = this.oneLineRef.current.offsetHeight || 1;
+
+    const rows = {
+      current: Math.floor(currentHeight / oneLineHeight),
+      all: Math.floor(height / oneLineHeight),
+    };
+
+    return rows;
   }
 }
