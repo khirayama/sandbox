@@ -7,6 +7,9 @@ import { Clap } from 'block-editor/traverse';
 interface IProps {
   indent: number;
   node: Clap.INode;
+  focus?: boolean;
+  onMoveUp: any;
+  onMoveDown: any;
 }
 
 interface IState {
@@ -15,6 +18,7 @@ interface IState {
 
 const keyCodes: any = {
   TAB: 9,
+  ENTER: 13,
   UP: 38,
   DOWN: 40,
 };
@@ -46,6 +50,15 @@ export class BlockItem extends React.Component<IProps, IState> {
     };
   }
 
+  public componentDidUpdate(): void {
+    if (this.props.focus) {
+      const el = this.contentRef.current.ref.current;
+      if (el) {
+        el.focus();
+      }
+    }
+  }
+
   public render(): JSX.Element {
     // contenteditableを使う理由
     // - textareaの場合、行数を自動で伸びるようにできない
@@ -56,7 +69,7 @@ export class BlockItem extends React.Component<IProps, IState> {
         this.setState({ caretPosition: sel.anchorOffset });
       }}>
         <span className="BlockItem--OneLine" ref={this.oneLineRef}>{this.props.node.text.substring(0, 1)}</span>
-        <span className="BlockItem--Shadow" ref={this.shadowRef}>{this.props.node.text.substring(0, this.state.caretPosition || 1)}</span>
+        <span className="BlockItem--Shadow" ref={this.shadowRef}>{this.props.node.text.substring(0, this.state.caretPosition + 1)}</span>
         <ContentEditableText
           ref={this.contentRef}
           value={this.props.node.text}
@@ -86,6 +99,9 @@ export class BlockItem extends React.Component<IProps, IState> {
     console.log(keyCode, metaKey, shiftKey);
     // tab: インデント
     // tab + shift: インデントを解除
+    // enter: アイテム追加
+    // up: 上移動
+    // down: 下移動
     switch (true) {
       case (keyCodes.TAB === keyCode && !shiftKey): {
         event.preventDefault();
@@ -95,6 +111,9 @@ export class BlockItem extends React.Component<IProps, IState> {
       case (keyCodes.TAB === keyCode && shiftKey): {
         event.preventDefault();
         this.unindent();
+        break;
+      }
+      case (keyCodes.ENTER === keyCode): {
         break;
       }
       case (keyCodes.UP === keyCode): {
@@ -144,11 +163,15 @@ export class BlockItem extends React.Component<IProps, IState> {
   }
 
   private moveUp(): void {
-    console.log('Up!');
+    if (this.props.onMoveUp) {
+      this.props.onMoveUp();
+    }
   }
 
   private moveDown(): void {
-    console.log('Down!');
+    if (this.props.onMoveDown) {
+      this.props.onMoveDown();
+    }
   }
 
   private getRows(): { current: number, all: number } {

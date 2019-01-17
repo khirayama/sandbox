@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { BlockItem } from 'block-editor/BlockItem';
+import { doc } from 'block-editor/doc';
 import { Clap } from 'block-editor/traverse';
 
 interface IProps {
@@ -39,7 +40,67 @@ export class Document extends React.Component<IProps, IState> {
     let nodeElements: JSX.Element[] = [];
 
     for (const node of nodes) {
-      nodeElements.push(<BlockItem key={node.id} indent={indent} node={node} />);
+      nodeElements.push(
+        <BlockItem
+          key={node.id}
+          indent={indent}
+          node={node}
+          focus={this.state.ui.focusId === node.id}
+          onMoveUp={() => {
+            const targetNode: Clap.Node = doc.rootNode.findNode(node.id);
+            let upperNode: Clap.Node | null = null;
+            let prevNode: Clap.Node | null = targetNode.findPrevNode();
+            if (prevNode) {
+              upperNode = prevNode;
+              while (true) {
+                if (upperNode && upperNode.nodes && upperNode.nodes.length) {
+                  upperNode = upperNode.nodes[upperNode.nodes.length - 1];
+                } else {
+                  break;
+                }
+              }
+            } else {
+              upperNode = targetNode.parentNode;
+            }
+            if (upperNode) {
+              this.setState({
+                ui: {
+                  focusId: upperNode.id,
+                },
+              });
+            }
+          }}
+          onMoveDown={() => {
+            const targetNode: Clap.Node = doc.rootNode.findNode(node.id);
+            let downerNode: Clap.Node | null = null;
+            let nextNode: Clap.Node = targetNode.findNextNode();
+            if (targetNode.nodes && targetNode.nodes.length) {
+              downerNode = targetNode.nodes[0];
+            } else if (nextNode) {
+              downerNode = nextNode;
+            } else {
+              downerNode = targetNode.parentNode;
+              while(true) {
+                if (downerNode === null) {
+                  break;
+                } else if (downerNode.findNextNode()) {
+                  downerNode = downerNode.findNextNode();
+                  break;
+                } else {
+                  downerNode = downerNode.parentNode;
+                }
+              }
+            }
+            if (downerNode) {
+              this.setState({
+                ui: {
+                  focusId: downerNode.id,
+                },
+              });
+            }
+          }}
+        />
+      );
       if (node.nodes && node.nodes.length) {
         const childChildrenElements: JSX.Element[] = this.renderNodes(node.nodes, indent + 1);
         nodeElements = nodeElements.concat(childChildrenElements);
