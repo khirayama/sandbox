@@ -1,8 +1,8 @@
 .BlockItem {
   position: relative;
-  word-break: break-all;
   font-size: 16px;
   line-height: 1;
+  min-height: 1em;
 
   .BlockItem--OneLine,
   .BlockItem--Shadow {
