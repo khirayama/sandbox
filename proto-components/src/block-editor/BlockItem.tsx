@@ -53,35 +53,13 @@ export class BlockItem extends React.Component<IProps, IState> {
 
   public componentDidMount(): void {
     if (this.props.focus) {
-      const el = this.contentRef.current.ref.current;
-      if (el && el !== window.document.activeElement) {
-        el.focus();
-        const range: Range = document.createRange();
-        if (el.firstChild) {
-          range.setStart(el.firstChild as Node, el.innerText.length);
-          range.setEnd(el.firstChild as Node, el.innerText.length);
-          const selection: Selection = window.getSelection();
-          selection.removeAllRanges();
-          selection.addRange(range);
-        }
-      }
+      this.focus();
     }
   }
 
   public componentDidUpdate(): void {
     if (this.props.focus) {
-      const el = this.contentRef.current.ref.current;
-      if (el && el !== window.document.activeElement) {
-        el.focus();
-        if (el.firstChild) {
-          const range: Range = document.createRange();
-          range.setStart(el.firstChild as Node, el.innerText.length);
-          range.setEnd(el.firstChild as Node, el.innerText.length);
-          const selection: Selection = window.getSelection();
-          selection.removeAllRanges();
-          selection.addRange(range);
-        }
-      }
+      this.focus();
     }
   }
 
@@ -227,6 +205,21 @@ export class BlockItem extends React.Component<IProps, IState> {
     // TODO: とりあえず
     if (this.props.onAdd) {
       this.props.onAdd(newNode);
+    }
+  }
+
+  private focus(): void {
+    const el = this.contentRef.current.ref.current;
+    if (el && el !== window.document.activeElement) {
+      el.focus();
+      if (el.firstChild) {
+        const range: Range = document.createRange();
+        range.setStart(el.firstChild as Node, el.innerText.length);
+        range.setEnd(el.firstChild as Node, el.innerText.length);
+        const selection: Selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
     }
   }
 }
