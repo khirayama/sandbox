@@ -134,7 +134,9 @@ export namespace Clap {
     }
 
     public appendNode(node: Node): void {
-      node.parentNode.removeNode(node.id);
+      if (node.parentNode) {
+        node.parentNode.removeNode(node.id);
+      }
       node.parentNode = this;
       this.nodes.push(node);
 
@@ -174,7 +176,9 @@ export namespace Clap {
 
     public after(node: Node): void {
       if (this.parentNode) {
-        node.parentNode.removeNode(node.id);
+        if (node.parentNode) {
+          node.parentNode.removeNode(node.id);
+        }
         node.parentNode = this.parentNode;
 
         for (let i: number = 0; this.parentNode.nodes.length; i += 1) {

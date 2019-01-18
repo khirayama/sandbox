@@ -99,6 +99,13 @@ export class Document extends React.Component<IProps, IState> {
               });
             }
           }}
+          onAdd={(newNode) => {
+            this.setState({
+              ui: {
+                focusId: newNode.id,
+              },
+            });
+          }}
         />
       );
       if (node.nodes && node.nodes.length) {

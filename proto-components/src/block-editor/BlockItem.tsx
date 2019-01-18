@@ -10,6 +10,7 @@ interface IProps {
   focus?: boolean;
   onMoveUp: any;
   onMoveDown: any;
+  onAdd: any;
 }
 
 interface IState {
@@ -139,6 +140,8 @@ export class BlockItem extends React.Component<IProps, IState> {
         break;
       }
       case (keyCodes.ENTER === keyCode): {
+        event.preventDefault();
+        this.addNode();
         break;
       }
       case (keyCodes.UP === keyCode): {
@@ -211,5 +214,19 @@ export class BlockItem extends React.Component<IProps, IState> {
     };
 
     return rows;
+  }
+
+  private addNode(): void {
+    const node: Clap.Node = doc.rootNode.findNode(this.props.node.id);
+    const newNode: Clap.Node = new Clap.Node();
+    node.nodes.forEach((childNode) => {
+      newNode.appendNode(childNode);
+    });
+    node.after(newNode);
+
+    // TODO: とりあえず
+    if (this.props.onAdd) {
+      this.props.onAdd(newNode);
+    }
   }
 }
