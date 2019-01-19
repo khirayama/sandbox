@@ -197,9 +197,13 @@ export class BlockItem extends React.Component<IProps, IState> {
   private addNode(): void {
     const node: Clap.Node = doc.rootNode.findNode(this.props.node.id);
     const newNode: Clap.Node = new Clap.Node();
-    node.nodes.forEach((childNode) => {
-      newNode.appendNode(childNode);
-    });
+    while (true) {
+      if (node.nodes[0]) {
+        newNode.appendNode(node.nodes[0]);
+      } else {
+        break;
+      }
+    }
     node.after(newNode);
 
     // TODO: とりあえず
