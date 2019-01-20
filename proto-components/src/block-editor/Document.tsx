@@ -78,7 +78,15 @@ export class Document extends React.Component<IProps, IState> {
             });
           }}
           onRemove={() => {
-            // TODO: Move to upper or downer
+            const targetNode: Clap.Node = doc.rootNode.findNode(node.id);
+            const downerNode: Clap.Node = nodeHelper.q(targetNode).findDownerNode();
+            if (downerNode) {
+              this.setState({
+                ui: {
+                  focusId: downerNode.id,
+                },
+              });
+            }
           }}
         />
       );
