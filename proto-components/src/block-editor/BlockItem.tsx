@@ -11,6 +11,7 @@ interface IProps {
   onMoveUp: any;
   onMoveDown: any;
   onAdd: any;
+  onRemove: any;
 }
 
 interface IState {
@@ -18,6 +19,7 @@ interface IState {
 }
 
 const keyCodes: any = {
+  DELETE: 8,
   TAB: 9,
   ENTER: 13,
   UP: 38,
@@ -122,6 +124,11 @@ export class BlockItem extends React.Component<IProps, IState> {
         this.addNode();
         break;
       }
+      case (keyCodes.DELETE === keyCode && metaKey): {
+        event.preventDefault();
+        this.removeNode();
+        break;
+      }
       case (keyCodes.UP === keyCode): {
         const rows = this.getRows();
         if (rows.current === 1) {
@@ -210,6 +217,16 @@ export class BlockItem extends React.Component<IProps, IState> {
     if (this.props.onAdd) {
       this.props.onAdd(newNode);
     }
+  }
+
+  private removeNode(): void {
+    // TODO: とりあえず
+    if (this.props.onRemove) {
+      this.props.onRemove();
+    }
+
+    // TODO: child nodesは残すべきか
+    doc.rootNode.removeNode(this.props.node.id);
   }
 
   private focus(): void {

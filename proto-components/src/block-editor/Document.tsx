@@ -106,6 +106,9 @@ export class Document extends React.Component<IProps, IState> {
               },
             });
           }}
+          onRemove={() => {
+            // TODO: Move to upper or downer
+          }}
         />
       );
       if (node.nodes && node.nodes.length) {
