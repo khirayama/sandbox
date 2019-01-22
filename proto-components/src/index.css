@@ -2,3 +2,7 @@
 
 @import 'block-editor/BlockItem';
 @import 'block-editor/ContentEditableText';
+
+html {
+  font-family: sans-serif;
+}
