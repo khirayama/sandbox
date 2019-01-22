@@ -11,8 +11,6 @@
     "build:styles:watch": "postcss -c .postcssrc.js -w 'src/index.css' --base src --dir './dist'",
     "copy:files": "cpx src/**/*.html dist",
     "copy:files:watch": "cpx -w src/**/*.html dist",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
     "test": "jest",
     "test:watch": "jest --watch",
     "check": "npx npm-check-updates"
@@ -22,10 +20,6 @@
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.2.2",
-    "@storybook/addon-actions": "^4.1.6",
-    "@storybook/addon-links": "^4.1.6",
-    "@storybook/addons": "^4.1.6",
-    "@storybook/react": "^4.1.6",
     "@types/jest": "23.3.12",
     "@types/node": "10.12.18",
     "@types/react": "16.7.18",
