@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { ContentEditableText } from 'block-editor/ContentEditableText';
-import { doc } from 'block-editor/doc';
-import { Clap } from 'block-editor/traverse';
+import { ContentEditableText } from 'ContentEditableText';
+import { doc } from 'doc';
+import { Clap } from 'traverse';
 
 interface IProps {
   indent: number;

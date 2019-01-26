@@ -1,6 +1,6 @@
 import * as uuid from 'uuid/v4';
 
-import { Clap } from 'block-editor/traverse';
+import { Clap } from 'traverse';
 
 const pureNode: Clap.INode = {
   id: uuid(),

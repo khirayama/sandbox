@@ -1,4 +1,4 @@
-import { Clap } from 'block-editor/traverse';
+import { Clap } from 'traverse';
 
 class NodeWrapper {
   private node: Clap.Node;

@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import { BlockItem } from 'block-editor/BlockItem';
-import { doc } from 'block-editor/doc';
-import { Clap } from 'block-editor/traverse';
-import { nodeHelper } from 'block-editor/nodeHelper';
+import { BlockItem } from 'BlockItem';
+import { doc } from 'doc';
+import { Clap } from 'traverse';
+import { nodeHelper } from 'nodeHelper';
 
 interface IProps {
   doc: Clap.Document;
