@@ -1,7 +1,7 @@
 @import 'reset';
 
-@import 'block-editor/BlockItem';
-@import 'block-editor/ContentEditableText';
+@import 'components/BlockItem';
+@import 'components/ContentEditableText';
 
 html {
   font-family: sans-serif;

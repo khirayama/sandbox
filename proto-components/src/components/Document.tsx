@@ -1,9 +1,8 @@
 import * as React from 'react';
 
-import { BlockItem } from 'BlockItem';
+import { BlockItem } from 'components/BlockItem';
 import { doc } from 'doc';
-import { Clap } from 'traverse';
-import { nodeHelper } from 'nodeHelper';
+import { Clap } from 'clap';
 
 interface IProps {
   doc: Clap.Document;
@@ -50,7 +49,7 @@ export class Document extends React.Component<IProps, IState> {
           focus={this.state.ui.focusId === node.id}
           onMoveUp={() => {
             const targetNode: Clap.Node = doc.rootNode.findNode(node.id);
-            const upperNode: Clap.Node = nodeHelper.q(targetNode).findUpperNode();
+            const upperNode: Clap.Node = Clap.helper.q(targetNode).findUpperNode();
             if (upperNode) {
               this.setState({
                 ui: {
@@ -61,7 +60,7 @@ export class Document extends React.Component<IProps, IState> {
           }}
           onMoveDown={() => {
             const targetNode: Clap.Node = doc.rootNode.findNode(node.id);
-            const downerNode: Clap.Node = nodeHelper.q(targetNode).findDownerNode();
+            const downerNode: Clap.Node = Clap.helper.q(targetNode).findDownerNode();
             if (downerNode) {
               this.setState({
                 ui: {
@@ -79,7 +78,7 @@ export class Document extends React.Component<IProps, IState> {
           }}
           onRemove={() => {
             const targetNode: Clap.Node = doc.rootNode.findNode(node.id);
-            const downerNode: Clap.Node = nodeHelper.q(targetNode).findDownerNode();
+            const downerNode: Clap.Node = Clap.helper.q(targetNode).findDownerNode();
             if (downerNode) {
               this.setState({
                 ui: {
