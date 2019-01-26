@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "open": "open dist/index.html",
     "dev": "concurrently 'npm run build:scripts:watch' 'npm run copy:files:watch' 'npm run build:styles:watch'",
     "build:scripts": "webpack --mode production",
     "build:scripts:watch": "webpack --mode development -w",
