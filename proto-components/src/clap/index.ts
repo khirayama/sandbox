@@ -31,8 +31,9 @@ export namespace Clap {
   export interface INode {
     id: string;
     text: string | null;
-    type: string | null;
-    properties?: any;
+    properties?: {
+      type: string | null;
+    };
     nodes: INode[] | null;
   }
 
@@ -67,7 +68,6 @@ export namespace Clap {
     constructor(pureNode?: INode, parentNode: Node | null = null) {
       this.id = pureNode ? pureNode.id : uuid();
       this.text = pureNode ? pureNode.text : '';
-      this.type = pureNode ? pureNode.type : null;
       this.properties = pureNode ? pureNode.properties : null;
       this.nodes = pureNode ? pureNode.nodes === null ? null : pureNode.nodes.map((pureChildNode: INode) => new Node(pureChildNode, this)) : [];
 
@@ -79,7 +79,6 @@ export namespace Clap {
       const rootPureNode: INode = {
         id: rootNode.id,
         text: rootNode.text,
-        type: rootNode.type,
         properties: rootNode.properties,
         nodes: rootNode.nodes,
       };
