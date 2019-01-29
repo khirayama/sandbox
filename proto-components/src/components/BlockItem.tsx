@@ -225,7 +225,16 @@ export class BlockItem extends React.Component<IProps, IState> {
       this.props.onRemove();
     }
 
-    // TODO: child nodesは残すべきか
+    const targetNode: Clap.Node = doc.rootNode.findNode(this.props.node.id);
+    let i: number = 0;
+    while(true) {
+      if (targetNode.nodes && targetNode.nodes.length) {
+        const firstChildNode: Clap.Node = targetNode.nodes[i];
+        targetNode.before(firstChildNode);
+      } else {
+        break;
+      }
+    }
     doc.rootNode.removeNode(this.props.node.id);
   }
 
