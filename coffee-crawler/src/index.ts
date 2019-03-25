@@ -1,5 +1,6 @@
-import { Crawler } from './Crawler';
+import * as sqlite from 'sqlite3';
 
+import { Crawler } from './Crawler';
 
 /*
  * ページとページの関係、もしくはサイトという関係性をどう示し構築するか。
@@ -19,6 +20,7 @@ import { Crawler } from './Crawler';
  */
 
 console.log('Launch a crawler.');
+const db = new sqlite.Database('db/development');
 
 (async () => {
   const entryUrl: string = 'https://www.saredocoffee.com/';
