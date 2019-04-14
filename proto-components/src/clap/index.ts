@@ -24,6 +24,7 @@ interface INode {
 あくまでItemベースであり、Documentでありつつ、Itemベースのツリー構造である。という意識は必要そう。
 変化は基本的に挿入位置と単体に加える。というイメージがただしそう。標準API（標準APIは木構造の一般的な操作として）にしたがって行う。
 表示モードと編集モードがあると思って良い。Markdown Block的な考え。
+データ構造と表示構造は一致するか？ = childrenとindent
 */
 
 // TODO: typeはpropertiesに入れるべきかも
