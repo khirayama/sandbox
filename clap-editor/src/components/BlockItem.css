@@ -1,0 +1,22 @@
+.BlockItem {
+  position: relative;
+  font-size: 16px;
+  line-height: 1;
+  min-height: 1em;
+
+  .BlockItem--OneLine,
+  .BlockItem--Shadow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    opacity: 0;
+    display: inherit;
+    pointer-events: none;
+    visibility: hidden;
+    word-break: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    pointer-events: none;
+  }
+}
