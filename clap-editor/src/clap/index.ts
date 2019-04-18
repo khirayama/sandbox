@@ -6,28 +6,16 @@ import * as uuid from 'uuid/v4';
  * Ref: https://docs.slatejs.org/guides/data-model
  * Tree: NodeとEdgeの集合
  * Nodeの種類
- *  - Document Node(Line Nodenのみ持てる. Top-Level Node)
- *  - Line Node(BlockとTextを持てる)
- *  - Text Node(stringのみを持つ)
+ *  - Document Node(Block Nodenのみ持てる. Top-Level Node)
+ *  - Block Node
  * PureNode: JSON Object
  * Node: Instance
  */
 
 export namespace Clap {
-  type Style = {
-    type: 'bold' | 'italic' | 'link' | null;
-    properties?: any;
-  };
-
-  export type PureChar = {
+  export type PureBlock = {
     id: string;
-    char: string;
-    styles: Style[];
-  };
-
-  export type PureLine = {
-    id: string;
-    text: PureChar[];
+    text: string;
     type: string | null;
     properties?: any;
   };
@@ -35,7 +23,7 @@ export namespace Clap {
   export type PureDocument = {
     id: string;
     name: string;
-    lines: PureLine[];
+    lines: PureBlock[];
   };
 
   export class ChangeEvent {
@@ -51,32 +39,10 @@ export namespace Clap {
     }
   }
 
-  export class Char {
+  export class Block {
     public id: string;
 
-    public char: string;
-
-    public styles: Style[];
-
-    constructor(pureChar: PureChar) {
-      this.id = pureChar ? pureChar.id : uuid();
-      this.char = pureChar ? pureChar.char : '';
-      this.styles = pureChar ? pureChar.styles : [];
-    }
-
-    public toJSON(): PureChar {
-      return {
-        id: this.id,
-        char: this.char,
-        styles: this.styles,
-      };
-    }
-  }
-
-  export class Line {
-    public id: string;
-
-    public text: Char[];
+    public text: string;
 
     public type: string | null;
 
@@ -84,22 +50,22 @@ export namespace Clap {
 
     private listeners: ((event: ChangeEvent) => void)[] = [];
 
-    constructor(pureLine?: PureLine) {
-      this.id = pureLine ? pureLine.id : uuid();
-      this.text = pureLine ? pureLine.text.map((pureChar) => new Char(pureChar)) : [];
-      this.type = pureLine ? pureLine.type : null;
-      this.properties = pureLine ? pureLine.properties : null;
+    constructor(pureBlock?: PureBlock) {
+      this.id = pureBlock ? pureBlock.id : uuid();
+      this.text = pureBlock ? pureBlock.text : '';
+      this.type = pureBlock ? pureBlock.type : null;
+      this.properties = pureBlock ? pureBlock.properties : null;
     }
 
-    public toJSON(): PureLine {
-      const pureLine: PureLine = {
+    public toJSON(): PureBlock {
+      const pureBlock: PureBlock = {
         id: this.id,
-        text: this.text.map((char: Char) => char.toJSON()),
+        text: this.text,
         type: this.type,
         properties: this.properties,
       };
 
-      return pureLine;
+      return pureBlock;
     }
   }
 
@@ -108,12 +74,12 @@ export namespace Clap {
 
     public name: string;
 
-    public lines: Line[];
+    public lines: Block[];
 
     constructor(pureDocument?: PureDocument) {
       this.id = pureDocument ? pureDocument.id : uuid();
       this.name = pureDocument ? pureDocument.name : '';
-      this.lines = pureDocument ? pureDocument.lines.map((pureLine: PureLine) => new Line(pureLine)) : [];
+      this.lines = pureDocument ? pureDocument.lines.map((pureBlock: PureBlock) => new Block(pureBlock)) : [];
     }
   }
 }
