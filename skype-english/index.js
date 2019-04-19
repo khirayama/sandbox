@@ -7,9 +7,11 @@ function createWindow () {
     width: 800,
     height: 600,
     webPreferences: {
+      // For PDF: https://github.com/electron/electron/pull/17163
       plugins: true,
     },
   });
+  win.maximize();
   win.loadFile('index.html');
 }
 
