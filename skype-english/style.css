@@ -9,6 +9,7 @@ html,
 body {
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 .DocumentView {
@@ -33,6 +34,20 @@ body {
   vertical-align: top;
 }
 
+.DocumentView--PDFView {
+  display:inline-flex;
+  width: 100%;
+  height: calc(100% - 33px);
+  vertical-align: top;
+  overflow: scroll;
+  background: gray;
+}
+
+.DocumentView--PDFView canvas {
+  display: block;
+  margin: 40px auto;
+}
+
 .SkypeView {
   display: inline-block;
   width: 430px;
@@ -40,8 +55,17 @@ body {
   vertical-align: top;
 }
 
+.SkypeView--AdjustButton {
+  display: inline-block;
+  width: 100%;
+  height: 33px;
+  line-height: 33px;
+  font-weight: bold;
+  text-align: center;
+}
+
 .SkypeView--WebView {
   display:inline-flex;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 33px);
 }

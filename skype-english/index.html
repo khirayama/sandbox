@@ -5,14 +5,18 @@
     <title>Skype English</title>
     <link rel="stylesheet" href="style.css">
     <script src="entrypoint.js"></script>
+    <script src="pdf.js"></script>
   </head>
   <body>
     <div class="DocumentView">
-      <input class="DocumentView--Input" type="text" value="https://google.com" />
-      <webview class="DocumentView--WebView" autosize="on"></webview>
+      <input class="DocumentView--Input" type="text" value="https://www.rarejob.com/mypage/" />
+      <webview class="DocumentView--WebView" autosize="on" plugins></webview>
+      <div class="DocumentView--PDFView"></div>
     </div><!--
     --><div class="SkypeView">
+      <button class="SkypeView--AdjustButton">ADJUST SKYPE LAYOUT</button>
       <webview class="SkypeView--WebView" src="https://web.skype.com/" autosize="on" plugins allowpopups useragent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36"></webview>
     </div>
+    <!-- <script>require('/entrypoint.js')</script> -->
   </body>
 </html>
