@@ -1,17 +1,17 @@
 import * as React from 'react';
+import styled from 'styled-components'
 
 import { ContentEditableText } from 'components/ContentEditableText';
 import { doc } from 'doc';
 import { Clap } from 'clap';
 
-interface IProps {
-  indent: number;
+type Props = {
   block: Clap.Block;
-}
+};
 
-interface IState {
+type State = {
   caretPosition: number;
-}
+};
 
 const keyCodes: any = {
   DELETE: 8,
@@ -21,9 +21,14 @@ const keyCodes: any = {
   DOWN: 40,
 };
 
-export class BlockItem extends React.Component<IProps, IState> {
+const Wrapper = styled.div`
+  padding: 4px;
+  margin: 0 0 0 ${props => `${props.indent * 1}em`};
+`;
+
+export class BlockItem extends React.Component<Props, State> {
   public render(): JSX.Element {
     const block = this.props.block;
-    return <div key={block.id}>{block.text}</div>
+    return <Wrapper key={block.id} indent={block.indent}>{block.text}</Wrapper>
   }
 }

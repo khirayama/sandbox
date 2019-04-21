@@ -1,8 +1,5 @@
 @import 'reset';
 
-@import 'components/BlockItem';
-@import 'components/ContentEditableText';
-
 html {
   font-family: sans-serif;
 }

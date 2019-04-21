@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styled from 'styled-components'
 
 import { BlockItem } from 'components/BlockItem';
 import { doc } from 'doc';
@@ -14,6 +15,10 @@ interface IState {
   },
   doc: Clap.PureDocument;
 }
+
+const Wrapper = styled.div`
+  color: red;
+`;
 
 // propsに渡るのはinstance
 // stateに渡るのはpure object
@@ -37,17 +42,11 @@ export class Document extends React.Component<IProps, IState> {
     });
   }
 
-  // Reactの特性上、DOMの構造が変わると新しいDOMが生成されてしまう
-  // それによって、キャレット位置がリセットされるため、フラットにしてキャレットを維持する
-  public renderBlocks(blocks: Clap.Block[]): JSX.Element[] {
-    return blocks.map((block: Clap.Block): JSX.Element => {
-      return <div key={block.id}>{block.text}</div>
-    });
-  }
-
   public render(): JSX.Element {
-    const children: JSX.Element[] = this.renderBlocks(this.props.doc.blocks);
-
-    return <div>{children}</div>
+    return (
+      <Wrapper>
+        {this.props.doc.blocks.map((block: Clap.Block): JSX.Element => <BlockItem key={block.id} block={block} />)}
+      </Wrapper>
+    );
   }
 }
