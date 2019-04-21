@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components'
 
-import { ContentEditableText } from 'components/ContentEditableText';
 import { doc } from 'doc';
 import { Clap } from 'clap';
 
