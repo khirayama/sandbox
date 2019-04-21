@@ -17,13 +17,14 @@ export namespace Clap {
     id: string;
     text: string;
     type: string | null;
+    indent: number;
     properties?: any;
   };
 
   export type PureDocument = {
     id: string;
     name: string;
-    lines: PureBlock[];
+    blocks: PureBlock[];
   };
 
   export class ChangeEvent {
@@ -44,6 +45,8 @@ export namespace Clap {
 
     public text: string;
 
+    public indent: number;
+
     public type: string | null;
 
     public properties: any;
@@ -53,14 +56,16 @@ export namespace Clap {
     constructor(pureBlock?: PureBlock) {
       this.id = pureBlock ? pureBlock.id : uuid();
       this.text = pureBlock ? pureBlock.text : '';
+      this.indent = pureBlock ? pureBlock.indent : 0;
       this.type = pureBlock ? pureBlock.type : null;
       this.properties = pureBlock ? pureBlock.properties : null;
     }
 
-    public toJSON(): PureBlock {
+    public toPureBlock(): PureBlock {
       const pureBlock: PureBlock = {
         id: this.id,
         text: this.text,
+        indent: this.indent,
         type: this.type,
         properties: this.properties,
       };
@@ -74,12 +79,24 @@ export namespace Clap {
 
     public name: string;
 
-    public lines: Block[];
+    public blocks: Block[];
 
     constructor(pureDocument?: PureDocument) {
       this.id = pureDocument ? pureDocument.id : uuid();
       this.name = pureDocument ? pureDocument.name : '';
-      this.lines = pureDocument ? pureDocument.lines.map((pureBlock: PureBlock) => new Block(pureBlock)) : [];
+      this.blocks = pureDocument ? pureDocument.blocks.map((pureBlock: PureBlock) => new Block(pureBlock)) : [];
+    }
+
+    public toPureDocument(): PureDocument {
+      return {
+        id: this.id,
+        name: this.name,
+        blocks: this.blocks.map((block) => block.toPureBlock()),
+      };
+    }
+
+    public addChangeListener(callback: any): void {
+      // noop
     }
   }
 }

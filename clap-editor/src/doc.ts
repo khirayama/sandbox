@@ -2,60 +2,33 @@ import * as uuid from 'uuid/v4';
 
 import { Clap } from 'clap';
 
-const pureNode: Clap.INode = {
+const pureNode: Clap.PureDocument = {
   id: uuid(),
-  text: null,
-  properties: null,
-  nodes: [{
+  name: null,
+  blocks: [{
     id: uuid(),
     text: 'Text 0',
+    indent: 0,
+    type: null,
     properties: null,
-    nodes: [],
   }, {
     id: uuid(),
     text: 'Text 1',
+    indent: 0,
+    type: null,
     properties: null,
-    nodes: [{
-      id: uuid(),
-      text: 'Text 2',
-      properties: null,
-      nodes: [],
-    }, {
-      id: uuid(),
-      text: 'Text 3',
-      properties: null,
-      nodes: [{
-        id: uuid(),
-        text: 'Text 4',
-        properties: null,
-        nodes: [],
-      }, {
-        id: uuid(),
-        text: 'Text 5',
-        properties: null,
-        nodes: [],
-      }, {
-        id: uuid(),
-        text: 'Text 6',
-        properties: null,
-        nodes: [],
-      }],
-    }, {
-      id: uuid(),
-      text: 'Text 7',
-      properties: null,
-      nodes: [],
-    }],
   }, {
     id: uuid(),
-    text: 'Text 8',
+    text: 'Text 2',
+    indent: 1,
+    type: null,
     properties: null,
-    nodes: [],
   }, {
     id: uuid(),
-    text: 'Text 9',
+    text: 'Text 3',
+    indent: 0,
+    type: null,
     properties: null,
-    nodes: [],
   }],
 };
 
