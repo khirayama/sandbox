@@ -23,6 +23,10 @@ const keyCodes: any = {
 const Wrapper = styled.div`
   padding: 4px;
   margin: 0 0 0 ${props => `${props.indent * 1}em`};
+
+  ${props => props.isSelected ? `
+    background: blue;
+  ` : ''}
 `;
 
 export class BlockItem extends React.Component<Props, State> {
