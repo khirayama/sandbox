@@ -182,4 +182,3 @@ $ npm run deploy:storybook
 ## Note
 
 This repository shows how to write and so does not introduce Atomic Design.
-Commit Hash: cddd93726180a52fa7dbfa7a49aced3e7d393cff

@@ -1,6 +1,5 @@
 import { END } from 'redux-saga';
 import { put, call, take, select, takeLatest } from 'redux-saga/effects';
-
 import {
   loadAppProcessSuccess,
   loadAppProcessFailure,
@@ -10,11 +9,11 @@ import {
   loadOrgsPageSuccess,
   loadOrgsPageFailure,
   resetPageStatus
-} from 'client/actions/pages';
-import { setUserName } from 'client/actions/users';
-import { fetchRepos, FetchReposSuccess, FetchReposFailure, resetOrgs } from 'client/actions/orgs';
-import { getOrgs, getUsers } from 'client/sagas/selectors';
-import { State } from 'client/reducers';
+} from '../actions/pages';
+import { setUserName } from '../actions/users';
+import { fetchRepos, FetchReposSuccess, FetchReposFailure, resetOrgs } from '../actions/orgs';
+import { getOrgs, getUsers } from './selectors';
+import { State } from '../reducers';
 
 // don't call `stopSaga`
 function* appProcess() {

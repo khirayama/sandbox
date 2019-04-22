@@ -1,1 +1,1 @@
-export * from 'client/containers/NotFound';
+export * from './NotFound';

@@ -1,4 +1,4 @@
-import { Actions } from 'client/actions/users';
+import { Actions } from '../actions/users';
 
 export interface State {
   name: string;

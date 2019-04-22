@@ -1,1 +1,1 @@
-export * from 'client/containers/Orgs';
+export * from './Orgs';

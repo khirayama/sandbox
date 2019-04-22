@@ -1,1 +1,1 @@
-export * from 'client/hocs/PageComponentWithError';
+export * from './PageComponentWithError';

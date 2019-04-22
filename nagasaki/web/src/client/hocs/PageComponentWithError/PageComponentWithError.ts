@@ -1,7 +1,6 @@
 import { branch, renderComponent, withProps, compose } from 'recompose';
-
-import { NotFound } from 'client/components/pages/NotFound';
-import { InternalServerError } from 'client/components/pages/InternalServerError';
+import { NotFound } from '../../components/pages/NotFound';
+import { InternalServerError } from '../../components/pages/InternalServerError';
 
 export interface ErrorProps {
   error: Error | null;

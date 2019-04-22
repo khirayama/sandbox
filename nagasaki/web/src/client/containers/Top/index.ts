@@ -1,1 +1,1 @@
-export * from 'client/containers/Top';
+export * from './Top';

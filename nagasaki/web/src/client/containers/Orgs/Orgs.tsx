@@ -1,9 +1,8 @@
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-
-import { State } from 'client/reducers';
-import { Orgs as OrgsComponent } from 'client/components/pages/Orgs';
-import { loadOrgsPage } from 'client/actions/pages';
+import { State } from '../../reducers';
+import { Orgs as OrgsComponent } from '../../components/pages/Orgs';
+import { loadOrgsPage } from '../../actions/pages';
 
 const mapStateToProps = (state: State) => ({
   name: state.orgs.name,

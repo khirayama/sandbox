@@ -1,8 +1,7 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import * as octokit from '@octokit/rest';
-
-import { FetchRepos, fetchReposSuccess, fetchReposFailure } from 'client/actions/orgs';
-import { State } from 'client/reducers/orgs';
+import { FetchRepos, fetchReposSuccess, fetchReposFailure } from '../actions/orgs';
+import { State } from '../reducers/orgs';
 
 const github = new octokit();
 

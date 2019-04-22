@@ -1,11 +1,9 @@
 import * as express from 'express';
 import { ApolloServer } from 'apollo-server-express';
-
-import * as health from 'server/controllers/health';
-import * as renderer from 'server/controllers/renderer';
-
-import { resolvers, schema } from 'graphql/schema';
-import { endpoint } from 'graphql/constants';
+import * as health from './controllers/health';
+import * as renderer from './controllers/renderer';
+import { resolvers, schema } from '../graphql/schema';
+import { endpoint } from '../graphql/constants';
 
 const apollo = new ApolloServer({
   debug: process.env.NODE_ENV !== 'production',

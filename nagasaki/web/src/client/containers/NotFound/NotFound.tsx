@@ -1,8 +1,7 @@
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-
-import { NotFound as NotFoundComponent } from 'client/components/pages/NotFound';
-import { stopSaga } from 'client/actions/pages';
+import { NotFound as NotFoundComponent } from '../../components/pages/NotFound';
+import { stopSaga } from '../../actions/pages';
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   stopSaga: () => {

@@ -1,3 +1,6 @@
+// renderToNodeStream
+// https://gist.github.com/hiroppy/1c89d73a12073bad0c187aaab4ca92c2
+
 import { Request, Response } from 'express';
 import * as React from 'react';
 import { Provider } from 'react-redux';
@@ -5,15 +8,16 @@ import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 import Helmet from 'react-helmet';
 import { ServerStyleSheet } from 'styled-components';
-import { ApolloProvider, getDataFromTree } from 'react-apollo';
 //@ts-ignore
 import { getLoadableState } from 'loadable-components/server';
 
-import { createClient } from 'graphql/client';
+// graphql
+import { ApolloProvider, getDataFromTree } from 'react-apollo';
+import { createClient } from '../../../graphql/client';
 
-import { Router } from 'client/Router';
-import { configureStore, runSaga } from 'client/store/configureStore';
-import { renderFullPage } from 'server/renderFullPage';
+import { renderFullPage } from '../../renderFullPage';
+import { Router } from '../../../client/Router';
+import { configureStore, runSaga } from '../../../client/store/configureStore';
 
 const fileName = 'main';
 const main = new RegExp(`^${fileName}~.*\.js$`);

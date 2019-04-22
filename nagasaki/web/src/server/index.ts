@@ -1,22 +1,20 @@
-import * as path from 'path';
+import { join } from 'path';
 import * as cluster from 'cluster';
-import * as os from 'os';
-
-import * as dotenv from 'dotenv';
-
-import { runServer } from 'server/server';
+import { cpus } from 'os';
+import { config } from 'dotenv';
+import { runServer } from './server';
 
 const isProd = process.env.NODE_ENV === 'production';
 
 // If you compile server code with webpack, this is unnecessary.
-dotenv.config({
+config({
   path: isProd
-    ? path.join(__dirname, '..', '..', '..', '.env.prod')
-    : path.join(__dirname, '..', '..', '.env.dev')
+    ? join(__dirname, '..', '..', '..', '.env.prod')
+    : join(__dirname, '..', '..', '.env.dev')
 });
 
 if (isProd) {
-  const numCPUs = os.cpus().length;
+  const numCPUs = cpus().length;
 
   if (cluster.isMaster) {
     [...new Array(numCPUs)].forEach(() => cluster.fork());

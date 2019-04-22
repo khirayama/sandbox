@@ -1,4 +1,4 @@
-import { Actions } from 'client/actions/pages';
+import { Actions } from '../actions/pages';
 
 export interface State {
   isLoadingCompletion: boolean;

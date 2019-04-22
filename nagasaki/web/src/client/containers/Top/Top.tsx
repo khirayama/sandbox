@@ -1,9 +1,8 @@
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-
-import { Top as TopComponent } from 'client/components/pages/Top';
-import { loadTopPage } from 'client/actions/pages';
-import { State } from 'client/reducers';
+import { Top as TopComponent } from '../../components/pages/Top';
+import { loadTopPage } from '../../actions/pages';
+import { State } from '../../reducers';
 
 const mapStateToProps = (state: State) => ({
   error: state.pages.error

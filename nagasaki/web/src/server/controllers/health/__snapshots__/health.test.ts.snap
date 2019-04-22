@@ -2,6 +2,6 @@
 
 exports[`should return the get of health api response 1`] = `
 Object {
-  "heath": "ok",
+  "status": "ok",
 }
 `;

@@ -1,1 +1,1 @@
-export * from 'client/containers/Header';
+export * from './Header';

@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
-
-import { State } from 'client/reducers';
-import { Header as HeaderComponent } from 'client/components/Header';
+import { State } from '../../reducers';
+import { Header as HeaderComponent } from '../../components/Header';
 
 const mapStateToProps = (state: State) => ({
   userName: state.users.name,

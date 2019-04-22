@@ -1,8 +1,7 @@
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
-
-import { App as AppComponent } from 'client/components/App';
-import { loadAppProcess } from 'client/actions/pages';
+import { App as AppComponent } from '../../components/App';
+import { loadAppProcess } from '../../actions/pages';
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   load: () => {
