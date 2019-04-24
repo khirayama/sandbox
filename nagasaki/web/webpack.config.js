@@ -1,6 +1,5 @@
 'use strict';
 
-const { join, resolve } = require('path');
 const webpack = require('webpack');
 const Dotenv = require('dotenv-webpack');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');

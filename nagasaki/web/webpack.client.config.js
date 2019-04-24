@@ -1,7 +1,7 @@
 'use strict';
 
-const { resolve } = require('path');
-const { smart } = require('webpack-merge');
+const path = require('path');
+const webpackMerge = require('webpack-merge');
 const common = require('./webpack.config');
 
 const config =
@@ -11,8 +11,8 @@ const config =
 
 const base = {
   output: {
-    path: resolve('dist', 'client')
+    path: path.resolve('dist', 'client')
   }
 };
 
-module.exports = smart(common, base, config);
+module.exports = webpackMerge.smart(common, base, config);

@@ -1,8 +1,9 @@
-import { createServer } from 'http';
+import * as http from 'http';
+
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
-import * as Loadable from 'react-loadable';
-import { router } from './router';
+// import * as Loadable from 'react-loadable';
+// import { router } from './router';
 
 export function runServer() {
   const app = express();
@@ -28,17 +29,17 @@ export function runServer() {
   }
 
   // register routes
-  router(app);
+  // router(app);
 
-  const server = createServer(app);
+  const server = http.createServer(app);
 
-  Loadable.preloadAll().then(() => {
-    server.listen(port);
-  });
+  // Loadable.preloadAll().then(() => {
+  //   server.listen(port);
+  // });
 
   server.on('listening', () => {
     const addr = server.address();
-    const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
+    const bind = typeof addr === 'string' ? `pipe ${addr}` : addr ? `port ${addr.port}` : '';
 
     console.log(`Listening on ${bind}`);
   });
