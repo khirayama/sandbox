@@ -1,32 +1,10 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Query, Mutation, MutationFunc } from 'react-apollo';
-import { gql } from 'apollo-boost';
-import { Organizations } from '../../../graphql/schema';
 
 interface State {
   currentValue: string;
 }
-
-const GET_ORGS = gql`
-  query {
-    organizations {
-      name
-      uid
-    }
-  }
-`;
-
-const ADD_ORG = gql`
-  mutation addOrganization($name: String!) {
-    addOrganization(name: $name) {
-      name
-      uri
-      uid
-    }
-  }
-`;
 
 const Ul = styled.ul`
   box-shadow: 0px 0px 5px silver;
@@ -51,8 +29,6 @@ const InputBox = styled(Li)`
   justify-content: flex-end;
 `;
 
-class GetOrgsQuery extends Query<{ organizations: Organizations }> {}
-
 export class OrganizationsBox extends React.PureComponent<unknown, State> {
   state = { currentValue: '' };
 
@@ -60,39 +36,29 @@ export class OrganizationsBox extends React.PureComponent<unknown, State> {
     this.setState({ currentValue: e.currentTarget.value });
   };
 
-  onSubmit = (addOrganization: MutationFunc) => {
-    addOrganization({ variables: { name: this.state.currentValue } });
-    this.setState({ currentValue: '' });
-  };
-
   render() {
     return (
-      <GetOrgsQuery query={GET_ORGS}>
-        {({ loading, error, data }) => (
+      <React.Fragment>
+        {({ loading, error, data }: any) => (
           <Ul>
             {error || loading ? <p>{error ? `Error! ${error.message}` : 'loading...'}</p> : null}
             {data &&
               data.organizations &&
-              data.organizations.map(({ name, uid }) => (
+              data.organizations.map(({ name, uid }: any) => (
                 <Li key={uid}>
                   <A to={`/orgs/${name}`}>{name}</A>
                 </Li>
               ))}
-            {/* refetchQueries: GET_ORGS will update when Mutation processing is over */}
-            <Mutation mutation={ADD_ORG} refetchQueries={[{ query: GET_ORGS }]}>
-              {(addOrganization, { error }) => (
-                <React.Fragment>
-                  {error && <p>{`Error! ${error.message}`}</p>}
-                  <InputBox>
-                    <input onChange={this.onChange} value={this.state.currentValue} />
-                    <button onClick={() => this.onSubmit(addOrganization)}>Add</button>
-                  </InputBox>
-                </React.Fragment>
-              )}
-            </Mutation>
+            <React.Fragment>
+              {error && <p>{`Error! ${error.message}`}</p>}
+              <InputBox>
+                <input onChange={this.onChange} value={this.state.currentValue} />
+                <button onClick={() => console.log('submit')}>Add</button>
+              </InputBox>
+            </React.Fragment>
           </Ul>
         )}
-      </GetOrgsQuery>
+      </React.Fragment>
     );
   }
 }

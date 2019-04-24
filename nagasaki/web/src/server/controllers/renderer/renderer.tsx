@@ -11,10 +11,6 @@ import { ServerStyleSheet } from 'styled-components';
 //@ts-ignore
 import { getLoadableState } from 'loadable-components/server';
 
-// graphql
-import { ApolloProvider, getDataFromTree } from 'react-apollo';
-import { createClient } from '../../../graphql/client';
-
 import { renderFullPage } from '../../renderFullPage';
 import { Router } from '../../../client/Router';
 import { configureStore, runSaga } from '../../../client/store/configureStore';
@@ -46,27 +42,23 @@ const assets = (process.env.NODE_ENV === 'production'
 
 export async function get(req: Request, res: Response) {
   const store = configureStore();
-  const client = createClient();
   const sheet = new ServerStyleSheet();
 
   const App = (
-    <ApolloProvider client={client}>
-      <Provider store={store}>
-        <StaticRouter location={req.url} context={{}}>
-          {/* add `div` because of `hydrate` */}
-          <div id="root">
-            <Router />
-          </div>
-        </StaticRouter>
-      </Provider>
-    </ApolloProvider>
+    <Provider store={store}>
+      <StaticRouter location={req.url} context={{}}>
+        {/* add `div` because of `hydrate` */}
+        <div id="root">
+          <Router />
+        </div>
+      </StaticRouter>
+    </Provider>
   );
 
   try {
     const [loadableState] = await Promise.all([
       getLoadableState(App), // kick redux-saga and styled-components
-      runSaga(),
-      getDataFromTree(App)
+      runSaga()
     ]);
 
     const preloadedState = JSON.stringify(store.getState());
@@ -79,9 +71,8 @@ export async function get(req: Request, res: Response) {
     const style = sheet.getStyleTags();
     const body = renderToString(App);
     const scripts = loadableState.getScriptTag();
-    const graphql = JSON.stringify(client.extract());
 
-    res.send(renderFullPage({ meta, assets, body, style, preloadedState, scripts, graphql }));
+    res.send(renderFullPage({ meta, assets, body, style, preloadedState, scripts }));
   } catch (e) {
     res.status(500).send(e.message);
   }

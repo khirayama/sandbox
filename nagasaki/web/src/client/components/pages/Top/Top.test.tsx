@@ -2,8 +2,6 @@ import * as React from 'react';
 import { shallow, mount } from 'enzyme';
 import toJson from 'enzyme-to-json';
 import { MemoryRouter } from 'react-router-dom';
-import { gql } from 'apollo-boost';
-import { MockedProvider } from 'react-apollo/test-utils';
 import { Top } from '.';
 
 const mockedData = {
@@ -32,22 +30,10 @@ const mockedData = {
 };
 
 test('should render self and sub-components', () => {
-  const GET_ORGS = gql`
-    {
-      organizations {
-        name
-        uid
-      }
-    }
-  `;
-  const mocks = [{ request: { query: GET_ORGS }, result: { data: mockedData } }];
-
   const tree = shallow(
-    <MockedProvider mocks={mocks} addTypename={false}>
-      <MemoryRouter initialEntries={[{ pathname: '/', key: 'testKey' }]}>
-        <Top error={null} load={() => {}} />
-      </MemoryRouter>
-    </MockedProvider>
+    <MemoryRouter initialEntries={[{ pathname: '/', key: 'testKey' }]}>
+      <Top error={null} load={() => {}} />
+    </MemoryRouter>
   );
 
   expect(toJson(tree)).toMatchSnapshot();
@@ -57,11 +43,9 @@ test('should call load', () => {
   const load = jest.fn();
 
   mount(
-    <MockedProvider>
-      <MemoryRouter initialEntries={[{ pathname: '/', key: 'testKey' }]}>
-        <Top error={null} load={load} />
-      </MemoryRouter>
-    </MockedProvider>
+    <MemoryRouter initialEntries={[{ pathname: '/', key: 'testKey' }]}>
+      <Top error={null} load={load} />
+    </MemoryRouter>
   );
 
   expect(load).toHaveBeenCalled();
