@@ -1,0 +1,46 @@
+- organizations
+  - id
+  - attributes(person / team / company)
+  - name
+  - description
+  - created_at
+  - updated_at
+
+- clutures
+  - id
+  - attributes(custom / food / craft / activity / shopping / life ...)
+  - name
+  - description
+  - created_at
+  - updated_at
+
+- facilities
+  - id
+  - attributes(cafe / restraunt / musium / park ...)
+  - name
+  - description
+  - position
+    - lat
+    - lng
+  - created_at
+  - updated_at
+
+- events
+  - id
+  - attributes(music / sport / exhibition / market / ceremony / seminar / recital)
+  - name
+  - description
+  - period
+    - start_at
+    - start_time
+    - end_at
+    - end_time
+  - created_at
+  - updated_at
+
+- relations
+  - id
+  - resource1
+  - resource1_id
+  - resource2
+  - resource2_id
