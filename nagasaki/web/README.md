@@ -21,10 +21,6 @@ This repository shows you how to write SSR and SPA code using TypeScript.
   - react-router
   - recompose (error handling, etc...)
   - App Shell and Content (PWA)
-- how to use Apollo(GraphQL) with SSR and SPA
-  - apollo-boost
-  - apollo-server-express
-  - react-apollo
 - how to write test code and storybook
   - express, react, redux, redux-saga, react-router, etc...
 - how to develop in the development env and how to run the production env
@@ -49,7 +45,6 @@ This repository shows you how to write SSR and SPA code using TypeScript.
 | redux-saga          | side effects          | yes | yes |
 | styled-components   | CSS in JS             | yes | yes |
 | loadable-components | dynamic import        | yes | yes |
-| apollo-boost        | GraphQL               | yes | yes |
 | express             | server side framework | N/A | yes |
 
 | Name                | Purpose               |
@@ -75,10 +70,6 @@ an article: https://blog.hiroppy.me/entry/loadable-components
 This variable is used by [loadable-component](https://github.com/smooth-code/loadable-components).  
 It has a JS asset's path of a page used at the page's entry point.
 
-### `window.__APOLLO_STATE__`
-
-This variable has GraphQL data which are fetched at the server.
-
 ### `data-json`
 
 This script tag has data which are fetched via redux-saga, etc at the server.
@@ -88,21 +79,6 @@ This script tag has data which are fetched via redux-saga, etc at the server.
 src: [src/client/components/pages/](src/client/components/pages/).
 
 This application has 2 pages.
-
-### Top
-
-This page runs just graphql application.(excluding `header` and `base`)
-
-src: [src/client/components/pages/Top](src/client/components/pages/Top)
-
-- GraphQL using Apollo
-  - Query: `organizations`, `author`
-  - Mutation: `addOrganization`
-    - [src/client/components/OrganizationsBox/OrganizationsBox.tsx](src/client/components/OrganizationsBox/OrganizationsBox.tsx)
-
-#### SSR
-
-Check `window.__APOLLO_STATE__` in HTML.
 
 ### Orgs
 
@@ -150,13 +126,6 @@ $ npm start                  # use 3000
 $ open http://localhost:3000
 $ npm run start:storybook    # use 6006
 $ open http://localhost:6006
-```
-
-## GraphQL Playground
-
-```sh
-$ npm start
-$ open http://localhost:3000/graphql
 ```
 
 ## Test
