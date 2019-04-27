@@ -3,7 +3,8 @@ import * as http from 'http';
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 // import * as Loadable from 'react-loadable';
-// import { router } from './router';
+
+import { router } from 'server/router';
 
 export function runServer() {
   const app = express();
@@ -29,7 +30,7 @@ export function runServer() {
   }
 
   // register routes
-  // router(app);
+  router(app);
 
   const server = http.createServer(app);
 
