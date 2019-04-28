@@ -1,9 +1,9 @@
 import * as path from 'path';
-import * as cluster from 'cluster';
+import cluster from 'cluster';
 import * as os from 'os';
 
 import * as dotenv from 'dotenv';
-import { runServer } from 'server/server';
+import { runServer } from 'server/runServer';
 
 const isProd = process.env.NODE_ENV === 'production';
 

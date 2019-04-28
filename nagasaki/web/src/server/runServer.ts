@@ -1,10 +1,8 @@
 import * as http from 'http';
 
-import * as express from 'express';
+import express from 'express';
 import * as bodyParser from 'body-parser';
-// import * as Loadable from 'react-loadable';
-
-import { router } from 'server/router';
+import * as helmet from 'helmet';
 
 export function runServer() {
   const app = express();
@@ -12,8 +10,8 @@ export function runServer() {
 
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
+  app.use(helmet());
 
-  // HMR
   if (process.env.NODE_ENV !== 'production') {
     const webpack = require('webpack');
     const webpackHotMiddleware = require('webpack-hot-middleware');
@@ -30,17 +28,13 @@ export function runServer() {
   }
 
   // register routes
-  router(app);
+  // router(app);
 
   const server = http.createServer(app);
 
-  // Loadable.preloadAll().then(() => {
-  //   server.listen(port);
-  // });
-
   server.on('listening', () => {
     const addr = server.address();
-    const bind = typeof addr === 'string' ? `pipe ${addr}` : addr ? `port ${addr.port}` : '';
+    const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
 
     console.log(`Listening on ${bind}`);
   });
@@ -61,4 +55,6 @@ export function runServer() {
         throw err;
     }
   });
+
+  server.listen(port);
 }
