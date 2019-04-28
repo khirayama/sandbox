@@ -4,21 +4,57 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "test:ci": "npm run test && codecov",
+    "type-check": "tsc --noEmit",
+    "start": "cross-env TS_NODE_FILES=true NODE_PATH=src ts-node ./src/server/index.ts",
+    "start:prod": "cross-env NODE_ENV=production node ./dist/server/server/index.js",
+    "start:storybook": "start-storybook -p 6006",
+    "build": "npm run rm:dist && run-p build:client build:server",
+    "build:server": "tsc -p tsconfig.server.json",
+    "build:client": "cross-env NODE_ENV=production webpack --config webpack.client.config.js",
+    "build:storybook": "build-storybook",
+    "deploy:storybook": "npm run build:storybook && storybook-to-ghpages",
+    "benchmark": "autocannon http://localhost:3000 -c100",
+    "benckmark:docker": "clinic docker -- npm run start:prod",
+    "benchmark:bubbleprof": "clinic bubbleprof -- npm run start:prod",
+    "rm:dist": "rimraf dist",
+    "rm:benchmark": "clinic clean",
+    "fmt": "prettier --loglevel warn --write \"**/*.{js,ts,tsx,md,json,css}\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/dotenv": "6.1.1",
+    "@types/express": "4.16.1",
+    "@types/helmet": "0.0.43",
+    "@types/node": "11.13.8",
+    "@types/react": "16.8.14",
+    "@types/react-dom": "16.8.4",
+    "@types/react-redux": "7.0.8",
+    "case-sensitive-paths-webpack-plugin": "2.2.0",
+    "dotenv-webpack": "1.7.0",
+    "fork-ts-checker-webpack-plugin": "1.2.0",
     "ts-node": "8.1.0",
     "tsconfig-paths": "3.8.0",
+    "typescript": "3.4.5",
     "webpack": "4.30.0",
     "webpack-dev-middleware": "3.6.2",
-    "webpack-hot-middleware": "2.24.4"
+    "webpack-hot-middleware": "2.24.4",
+    "webpack-merge": "4.2.1"
   },
   "dependencies": {
+    "@types/jest": "24.0.11",
     "body-parser": "1.19.0",
+    "connected-react-router": "6.4.0",
+    "cross-env": "5.2.0",
+    "dotenv": "7.0.0",
     "express": "4.16.4",
-    "helmet": "3.16.0"
+    "helmet": "3.16.0",
+    "react": "16.8.6",
+    "react-dom": "16.8.6",
+    "react-redux": "7.0.3",
+    "why-did-you-update": "1.0.6"
   }
 }

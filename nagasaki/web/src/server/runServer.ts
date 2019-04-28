@@ -2,7 +2,7 @@ import * as http from 'http';
 
 import express from 'express';
 import * as bodyParser from 'body-parser';
-import * as helmet from 'helmet';
+import helmet from 'helmet';
 
 export function runServer() {
   const app = express();
@@ -34,7 +34,7 @@ export function runServer() {
 
   server.on('listening', () => {
     const addr = server.address();
-    const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
+    const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${(addr || { port: '' }).port}`;
 
     console.log(`Listening on ${bind}`);
   });
