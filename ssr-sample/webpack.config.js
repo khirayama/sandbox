@@ -3,6 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const LoadablePlugin = require('@loadable/webpack-plugin');
 
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -31,6 +32,7 @@ module.exports = (env, argv) => {
           NODE_ENV: process.env.NODE_ENV,
         }),
       }),
+      new LoadablePlugin({ writeToDisk: { filename: path.resolve('dist') } }),
     ],
     optimization: {
       minimize: argv.mode === 'production',
