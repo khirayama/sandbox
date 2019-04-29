@@ -2,7 +2,7 @@
 
 - [x] express
 - [x] react
-- [ ] react-router
+- [x] react-router
 - [ ] redux
 - [ ] @loadable/component
 - [ ] styled-components
