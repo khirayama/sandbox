@@ -6,7 +6,9 @@ import { loadTopPage } from 'client/actions/pages';
 import { State } from 'client/reducers';
 
 const mapStateToProps = (state: State) => {
+  console.log(state);
   return {
+    pathname: state.router.location.pathname,
     error: state.pages.error
   };
 };

@@ -82,10 +82,10 @@ export async function get(req: Request, res: Response) {
   const store = configureStore();
   const sheet = new ServerStyleSheet();
 
+  console.log(req.url);
   const App = (
     <Provider store={store}>
       <StaticRouter location={req.url} context={{}}>
-        {/* add `div` because of `hydrate` */}
         <div id="root">
           <Router />
         </div>

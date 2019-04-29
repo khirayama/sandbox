@@ -1,9 +1,11 @@
 import * as React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 import { ErrorProps, PageComponentWithError } from 'client/hocs/PageComponentWithError';
 
 export interface Props extends ErrorProps {
+  pathname: string;
   load: () => void;
 }
 
@@ -21,10 +23,23 @@ class TopComponent extends React.Component<Props> {
     props.load();
   }
 
-  render() {
+  public render() {
     return (
       <React.Fragment>
         <h1>TOP Page</h1>
+        <p>{this.props.pathname}</p>
+        <ul>
+          <li>
+            {this.props.pathname === '/aaa' ? (
+              <Link to='/'>TOP</Link>
+            ) : (
+              <Link to='/aaa'>aaa</Link>
+            )}
+          </li>
+          <li>
+            <Link to='/casdkjcasdjk'>Not Found</Link>
+          </li>
+        </ul>
         <p>DOTENV_TYPE: {process.env.DOTENV_TYPE}</p>
       </React.Fragment>
     );
