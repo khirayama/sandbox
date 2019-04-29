@@ -8,12 +8,13 @@ const app: express.Application = express();
 
 const PORT = process.env.PORT || 3000;
 
+app.use('/public', express.static('dist/public'));
 app.get('*', (req, res) => {
   const meta = '';
   const assets = [''];
   const body = ReactDOMServer.renderToString(SampleComponent());
   const style = '<style>* { background: gray; }</style>';
-  const scripts = `<script></script>`;
+  const scripts = `<script src="/public/index.bundle.js"></script>`;
 
   res.send(renderFullPage({
     meta,

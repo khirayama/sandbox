@@ -29,11 +29,8 @@ export const renderFullPage = ({
         ${style}
       </head>
       <body>
-        <div id="root">
-          ${body}
-        </div>
+        <div id="root">${body}</div>
         ${scripts}
-        ${assets.map((asset) => `<script src=${asset}></script>`).join('\n')}
       </body>
     </html>
   `.trim();
