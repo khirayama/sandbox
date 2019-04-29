@@ -1,6 +1,6 @@
+import * as os from 'os';
 import * as path from 'path';
 import cluster from 'cluster';
-import * as os from 'os';
 
 import * as dotenv from 'dotenv';
 import { runServer } from 'server/runServer';

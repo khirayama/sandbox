@@ -4,6 +4,8 @@ import express from 'express';
 import * as bodyParser from 'body-parser';
 import helmet from 'helmet';
 
+import { router } from 'server/router';
+
 export function runServer() {
   const app = express();
   const port = process.env.PORT || 3000;
@@ -27,8 +29,7 @@ export function runServer() {
     );
   }
 
-  // register routes
-  // router(app);
+  router(app);
 
   const server = http.createServer(app);
 

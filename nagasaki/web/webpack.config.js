@@ -4,6 +4,7 @@ const webpack = require('webpack');
 const Dotenv = require('dotenv-webpack');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -13,7 +14,12 @@ const common = {
     publicPath: '/public/'
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.mjs']
+    extensions: ['.ts', '.tsx', '.js', '.mjs'],
+    plugins: [
+      new TsconfigPathsPlugin({
+        configFile: './tsconfig.client.json',
+      }),
+    ],
   },
   module: {
     rules: [

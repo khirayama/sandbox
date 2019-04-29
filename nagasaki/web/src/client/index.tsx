@@ -3,8 +3,8 @@ import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 
-import { configureStore, history } from './store/configureStore';
-import { Router } from './Router'; // this needs to be at the top level because it's used by loadable-components
+import { configureStore, his } from 'client/store/configureStore';
+import { Router } from 'client/Router/Router';
 
 declare var module: {
   hot: any;
@@ -29,7 +29,7 @@ const store = configureStore(initialData);
 const render = (RouterComponent: typeof Router) => {
   renderMethod(
     <Provider store={store}>
-      <ConnectedRouter history={history}>
+      <ConnectedRouter history={his}>
         <RouterComponent />
       </ConnectedRouter>
     </Provider>,
@@ -40,8 +40,8 @@ const render = (RouterComponent: typeof Router) => {
 render(Router);
 
 if (module.hot) {
-  module.hot.accept('./Router', () => {
-    const { Router: RouterComponent }: { Router: typeof Router } = require('./Router');
+  module.hot.accept('client/Router/Router', () => {
+    const { Router: RouterComponent }: { Router: typeof Router } = require('client/Router/Router');
 
     render(RouterComponent);
   });
