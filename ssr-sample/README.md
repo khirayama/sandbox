@@ -4,13 +4,13 @@
 - [x] react
 - [x] react-router
 - [ ] redux
-- [ ] @loadable/component
+- [x] @loadable/component
 - [ ] styled-components
 
-- [ ] webpack
-- [ ] typescript
+- [x] webpack
+- [x] typescript
 
-- [ ] Server Side Rendering
+- [x] Server Side Rendering
 - [ ] Hot Module Replacement
 
 ## TODO
