@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_PATH=src nodemon -w ./src -e ts,tsx -x ts-node ./src/server/index.ts"
+    "start": "rm -rf dist && concurrently 'NODE_PATH=src nodemon -w ./src -e ts,tsx -x ts-node ./src/server/index.ts' 'webpack -w --mode development'"
   },
   "keywords": [],
   "author": "",
@@ -14,9 +14,15 @@
     "@types/node": "11.13.8",
     "@types/react": "16.8.14",
     "@types/react-dom": "16.8.4",
+    "concurrently": "4.1.0",
     "nodemon": "1.18.11",
+    "ts-loader": "5.4.4",
     "ts-node": "8.1.0",
-    "typescript": "3.4.5"
+    "tsconfig-paths-webpack-plugin": "3.2.0",
+    "typescript": "3.4.5",
+    "webpack": "4.30.0",
+    "webpack-bundle-analyzer": "3.3.2",
+    "webpack-cli": "3.3.1"
   },
   "dependencies": {
     "express": "4.16.4",
