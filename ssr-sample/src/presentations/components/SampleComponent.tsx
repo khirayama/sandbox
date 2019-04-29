@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Route, Link } from 'react-router-dom';
-import loadable from '@loadable/component'
+import loadable from '@loadable/component';
 
-const LoadableIndex = loadable((): any => import(/* webpackChunkName: "Index" */'presentations/components/Index').then(({ Index }) => Index));
-const LoadableAbout = loadable((): any => import(/* webpackChunkName: "About" */'presentations/components/About').then(({ About }) => About));
-const LoadableUsers = loadable((): any => import(/* webpackChunkName: "Users" */'presentations/components/Users').then(({ Users }) => Users));
+const LoadableIndex = loadable((): any => import(/* webpackChunkName: "home" */'presentations/components/Home').then(({ Home }) => Home));
+const LoadableAbout = loadable((): any => import(/* webpackChunkName: "about" */'presentations/components/About').then(({ About }) => About));
+const LoadableUsers = loadable((): any => import(/* webpackChunkName: "users" */'presentations/components/Users').then(({ Users }) => Users));
 
 export function SampleComponent() {
   return (
