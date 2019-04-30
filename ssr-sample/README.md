@@ -14,6 +14,7 @@
 - [x] typescript
 
 - [x] Server Side Rendering
+- [ ] i18n
 - [ ] Hot Module Replacement
 
 ## TODO
