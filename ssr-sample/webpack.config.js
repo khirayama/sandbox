@@ -35,13 +35,16 @@ module.exports = (env, argv) => {
     optimization: {
       minimize: argv.mode === 'production',
       // splitChunks: {
-      //   name: 'dist/public/commons/index',
-      //   chunks: 'initial',
+      //   minSize: 100000,
+      //   maxSize: 1500000,
+      //   name: 'dist/public/commons',
+      //   chunks: 'all',
       //   cacheGroups: {
       //     vendors: {
       //       test: /node_modules/,
-      //       name: 'dist/public/commons/vendors',
-      //       chunks: 'initial'
+      //       name: 'vendors',
+      //       chunks: 'all',
+      //       enforce: true,
       //     },
       //   },
       // },
