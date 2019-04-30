@@ -3,7 +3,7 @@ import { Route, Link } from 'react-router-dom';
 import loadable from '@loadable/component';
 import * as styled from 'styled-components';
 
-const LoadableIndex = loadable((): any => import(/* webpackChunkName: "home" */'presentations/components/Home').then(({ Home }) => Home));
+const LoadableHome = loadable((): any => import(/* webpackChunkName: "home" */'presentations/components/Home').then(({ Home }) => Home));
 const LoadableAbout = loadable((): any => import(/* webpackChunkName: "about" */'presentations/components/About').then(({ About }) => About));
 const LoadableUsers = loadable((): any => import(/* webpackChunkName: "users" */'presentations/components/Users').then(({ Users }) => Users));
 
@@ -35,7 +35,7 @@ export function SampleComponent() {
             </li>
           </ul>
         </nav>
-        <Route exact path="/" component={LoadableIndex} />
+        <Route exact path="/" component={LoadableHome} />
         <Route exact path="/about/" component={LoadableAbout} />
         <Route exact path="/users/" component={LoadableUsers} />
       </div>
