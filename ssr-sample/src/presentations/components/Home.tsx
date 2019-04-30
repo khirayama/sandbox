@@ -1,5 +1,14 @@
 import * as React from 'react';
+import * as styled from 'styled-components';
+
+const Wrapper = styled.default.div`
+  color: blue;
+`;
 
 export function Home() {
-  return <h2>Home</h2>;
+  return (
+    <Wrapper>
+      <h2>Home</h2>
+    </Wrapper>
+  );
 }

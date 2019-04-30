@@ -1,5 +1,14 @@
 import * as React from 'react';
+import * as styled from 'styled-components';
+
+const Wrapper = styled.default.div`
+  color: yellow;
+`;
 
 export function Users() {
-  return <h2>Users</h2>;
+  return (
+    <Wrapper>
+      <h2>Users</h2>
+    </Wrapper>
+  );
 }
