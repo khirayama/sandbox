@@ -25,9 +25,7 @@ const mapDispatchToProps = (dispatch: any) => {
 }
 
 const mapStateToProps = (state: any) => {
-  return {
-    count: state,
-  }
+  return state;
 }
 
 export function SampleComponent(props: any) {

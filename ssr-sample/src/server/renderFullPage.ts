@@ -4,6 +4,7 @@ type Params = {
   body: string;
   style: string;
   scripts: string;
+  preloadedState: string;
 };
 
 const escape = (str: string) => {
@@ -21,6 +22,7 @@ export const renderFullPage = ({
   body,
   style,
   scripts,
+  preloadedState,
 }: Params) => {
   return `<!DOCTYPE html>
     <html>
@@ -30,6 +32,7 @@ export const renderFullPage = ({
       </head>
       <body>
         <div id="root">${body}</div>
+        <script id="initial-data" type="text/plain" data-json="${escape(preloadedState)}"></script>
         ${scripts}
       </body>
     </html>

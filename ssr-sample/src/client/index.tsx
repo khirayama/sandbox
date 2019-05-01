@@ -12,26 +12,44 @@ import { Sample } from 'presentations/components/SampleComponent';
 //   meta?: any;
 //   error?: any;
 // }
-
-function counter(state = 0, action: Action) {
-  switch (action.type) {
-    case 'INCREMENT':
-      return state + 1
-    case 'DECREMENT':
-      return state - 1
-    default:
-      return state
+//
+function extractInitialState() {
+  const initialDataElement = window.document.querySelector('#initial-data');
+  if (initialDataElement) {
+    const initialDataString = initialDataElement.getAttribute('data-json');
+    if (initialDataString) {
+      return JSON.parse(initialDataString);
+    } else {
+      return {
+        count: 0,
+      };
+    }
   }
 }
 
-const store = createStore(counter);
+function counter(state: any, action: Action) {
+  switch (action.type) {
+    case 'INCREMENT': {
+      state.count + 1;
+    }
+    case 'DECREMENT': {
+      state.count - 1;
+    }
+    default: {
+      return state;
+    }
+    return state;
+  }
+}
+
+const store = createStore(counter, extractInitialState());
 
 window.addEventListener('DOMContentLoaded', () => {
   ReactDOM.hydrate(
-    <Provider store={store}>
-      <BrowserRouter>
+    <BrowserRouter>
+      <Provider store={store}>
         <Sample />
-      </BrowserRouter>
-    </Provider>,
+      </Provider>
+    </BrowserRouter>,
     window.document.querySelector('#root'));
 });

@@ -6,12 +6,30 @@ import * as ReactDOMServer from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 import * as styled from 'styled-components';
 import ReactHelmet from 'react-helmet';
+import { Provider } from 'react-redux';
+import { createStore, Action } from 'redux';
 
 import { renderFullPage } from 'server/renderFullPage';
-import { SampleComponent } from 'presentations/components/SampleComponent';
+import { Sample } from 'presentations/components/SampleComponent';
+
+function counter(state = { count: 1 }, action: Action) {
+  switch (action.type) {
+    case 'INCREMENT': {
+      state.count + 1;
+    }
+    case 'DECREMENT': {
+      state.count - 1;
+    }
+    default: {
+      return state;
+    }
+    return state;
+  }
+}
 
 export function get(req: express.Request, res: express.Response) {
   const context = {};
+  const store = createStore(counter);
 
   const sheet = new styled.ServerStyleSheet();
 
@@ -22,10 +40,13 @@ export function get(req: express.Request, res: express.Response) {
         location={req.url}
         context={context}
       >
-        <SampleComponent />
+        <Provider store={store}>
+          <Sample />
+        </Provider>
       </StaticRouter>
     )
   );
+  const preloadedState = store.getState();
   const helmetContent = ReactHelmet.renderStatic();
   const meta = `
       ${helmetContent.meta.toString()}
@@ -41,5 +62,6 @@ export function get(req: express.Request, res: express.Response) {
     body,
     style,
     scripts,
+    preloadedState: JSON.stringify(preloadedState),
   }));
 }
