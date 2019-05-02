@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as styled from 'styled-components';
 
-import { Head } from 'presentations/components/Head';
+import { Head } from 'client/components/Head';
 
 const Wrapper = styled.default.div`
   color: red;

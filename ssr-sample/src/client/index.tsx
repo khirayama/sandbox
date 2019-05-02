@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createStore, Action } from 'redux';
 
-import { Sample } from 'presentations/components/SampleComponent';
+import { Sample } from 'client/components/SampleComponent';
 
 // type Action = {
 //   type: string;

@@ -10,7 +10,7 @@ import { Provider } from 'react-redux';
 import { createStore, Action } from 'redux';
 
 import { renderFullPage } from 'server/renderFullPage';
-import { Sample } from 'presentations/components/SampleComponent';
+import { Sample } from 'client/components/SampleComponent';
 
 function counter(state = { count: 1 }, action: Action) {
   switch (action.type) {

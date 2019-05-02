@@ -5,13 +5,13 @@ import * as styled from 'styled-components';
 import { IntlProvider, FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 
-import { ResetStyle, GlobalStyle } from 'presentations/components/Styles';
-import { chooseLocale } from 'presentations/components/SampleComponent.locale';
-import { Home } from 'presentations/components/Home';
+import { ResetStyle, GlobalStyle } from 'client/components/Styles';
+import { chooseLocale } from 'client/components/SampleComponent.locale';
+import { Home } from 'client/components/Home';
 
 // const LoadableHome = loadable((): any => import(/* webpackChunkName: "home" */'presentations/components/Home').then(({ Home }) => Home));
-const LoadableAbout = loadable((): any => import(/* webpackChunkName: "about" */'presentations/components/About').then(({ About }) => About));
-const LoadableUsers = loadable((): any => import(/* webpackChunkName: "users" */'presentations/components/Users').then(({ Users }) => Users));
+const LoadableAbout = loadable((): any => import(/* webpackChunkName: "about" */'client/components/About').then(({ About }) => About));
+const LoadableUsers = loadable((): any => import(/* webpackChunkName: "users" */'client/components/Users').then(({ Users }) => Users));
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
