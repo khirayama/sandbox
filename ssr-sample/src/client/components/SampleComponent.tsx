@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { ResetStyle, GlobalStyle } from 'client/components/Styles';
 import { chooseLocale } from 'client/components/SampleComponent.locale';
 import { Home } from 'client/components/Home';
+import { increment, decrement } from 'client/actions';
 
 // const LoadableHome = loadable((): any => import(/* webpackChunkName: "home" */'presentations/components/Home').then(({ Home }) => Home));
 const LoadableAbout = loadable((): any => import(/* webpackChunkName: "about" */'client/components/About').then(({ About }) => About));
@@ -16,10 +17,10 @@ const LoadableUsers = loadable((): any => import(/* webpackChunkName: "users" */
 const mapDispatchToProps = (dispatch: any) => {
   return {
     onCountUpClick: () => {
-      dispatch({ type: 'INCREMENT' });
+      dispatch(increment());
     },
     onCountDownClick: () => {
-      dispatch({ type: 'DECREMENT' });
+      dispatch(decrement());
     }
   }
 }
@@ -67,7 +68,4 @@ export function SampleComponent(props: any) {
   );
 }
 
-export const Sample = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SampleComponent)
+export const Sample = connect(mapStateToProps, mapDispatchToProps)(SampleComponent);

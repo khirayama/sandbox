@@ -7,43 +7,29 @@ import { StaticRouter } from 'react-router-dom';
 import * as styled from 'styled-components';
 import ReactHelmet from 'react-helmet';
 import { Provider } from 'react-redux';
-import { createStore, Action } from 'redux';
+import { createStore } from 'redux';
 
+import { reducer } from 'client/reducers';
 import { renderFullPage } from 'server/renderFullPage';
 import { Sample } from 'client/components/SampleComponent';
 
-function counter(state = { count: 1 }, action: Action) {
-  switch (action.type) {
-    case 'INCREMENT': {
-      state.count + 1;
-    }
-    case 'DECREMENT': {
-      state.count - 1;
-    }
-    default: {
-      return state;
-    }
-    return state;
-  }
-}
-
 export function get(req: express.Request, res: express.Response) {
   const context = {};
-  const store = createStore(counter);
+  const store = createStore(reducer);
 
   const sheet = new styled.ServerStyleSheet();
 
   const assets = [''];
   const body = ReactDOMServer.renderToString(
     sheet.collectStyles(
-      <StaticRouter
-        location={req.url}
-        context={context}
-      >
-        <Provider store={store}>
+      <Provider store={store}>
+        <StaticRouter
+          location={req.url}
+          context={context}
+        >
           <Sample />
-        </Provider>
-      </StaticRouter>
+        </StaticRouter>
+      </Provider>
     )
   );
   const preloadedState = store.getState();

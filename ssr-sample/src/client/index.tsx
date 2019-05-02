@@ -2,17 +2,11 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { createStore, Action } from 'redux';
+import { createStore } from 'redux';
 
+import { reducer } from 'client/reducers';
 import { Sample } from 'client/components/SampleComponent';
 
-// type Action = {
-//   type: string;
-//   payload?: any;
-//   meta?: any;
-//   error?: any;
-// }
-//
 function extractInitialState() {
   const initialDataElement = window.document.querySelector('#initial-data');
   if (initialDataElement) {
@@ -27,22 +21,7 @@ function extractInitialState() {
   }
 }
 
-function counter(state: any, action: Action) {
-  switch (action.type) {
-    case 'INCREMENT': {
-      state.count + 1;
-    }
-    case 'DECREMENT': {
-      state.count - 1;
-    }
-    default: {
-      return state;
-    }
-    return state;
-  }
-}
-
-const store = createStore(counter, extractInitialState());
+const store = createStore(reducer, extractInitialState());
 
 window.addEventListener('DOMContentLoaded', () => {
   ReactDOM.hydrate(
