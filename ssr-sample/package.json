@@ -6,7 +6,8 @@
   "scripts": {
     "start": "rm -rf dist && concurrently 'NODE_PATH=src nodemon -w ./src -e ts,tsx -x ts-node ./src/server/index.ts' 'webpack -w --mode development'",
     "lint": "eslint '{src/**/,cli/**/,}*.{ts,tsx,js,jsx,json}'",
-    "lint:fix": "eslint --fix '{src/**/,cli/**/,}*.{ts,tsx,js,jsx,json}'"
+    "lint:fix": "eslint --fix '{src/**/,cli/**/,}*.{ts,tsx,js,jsx,json}'",
+    "check": "npx npm-check-updates"
   },
   "keywords": [],
   "author": "",
