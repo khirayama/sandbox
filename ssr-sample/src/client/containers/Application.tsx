@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { ResetStyle, GlobalStyle } from 'client/components/Styles';
 import { chooseLocale } from 'client/components/SampleComponent.locale';
 import { IntlProvider } from 'react-intl';
-import { Sample } from 'client/components/SampleComponent';
+import { Routes } from 'client/routes/Routes';
 
 const mapStateToProps = (state: any) => {
   return {
@@ -20,7 +20,7 @@ function Component(props: any) {
       <ResetStyle />
       <GlobalStyle />
       <IntlProvider locale={locale} messages={chooseLocale(locale)}>
-        <Sample />
+        <Routes />
       </IntlProvider>
     </>
   );
