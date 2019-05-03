@@ -13,6 +13,10 @@ import { chooseLocale } from 'client/components/SampleComponent.locale';
 const LoadableAbout = loadable((): any => import(/* webpackChunkName: "about" */'client/components/About').then(({ About }) => About));
 const LoadableUsers = loadable((): any => import(/* webpackChunkName: "users" */'client/components/Users').then(({ Users }) => Users));
 
+const mapStateToProps = (state: any) => {
+  return state;
+}
+
 const mapDispatchToProps = (dispatch: any) => {
   return {
     onCountUpClick: () => {
@@ -22,10 +26,6 @@ const mapDispatchToProps = (dispatch: any) => {
       dispatch(decrement());
     }
   }
-}
-
-const mapStateToProps = (state: any) => {
-  return state;
 }
 
 export function SampleComponent(props: any) {

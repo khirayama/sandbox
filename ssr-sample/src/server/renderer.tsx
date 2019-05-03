@@ -16,6 +16,8 @@ import { Sample } from 'client/components/SampleComponent';
 import { ResetStyle, GlobalStyle } from 'client/components/Styles';
 import { chooseLocale } from 'client/components/SampleComponent.locale';
 
+import { Application } from 'client/components/Application';
+
 export function get(req: express.Request, res: express.Response) {
   const context = {};
   const store = createStore(reducer);
@@ -23,19 +25,14 @@ export function get(req: express.Request, res: express.Response) {
   const sheet = new styled.ServerStyleSheet();
 
   const assets = [''];
-  const locale: string = 'ja';
   const body = ReactDOMServer.renderToString(
     sheet.collectStyles(
       <StaticRouter
         location={req.url}
         context={context}
       >
-        <ResetStyle />
-        <GlobalStyle />
         <Provider store={store}>
-          <IntlProvider locale={locale} messages={chooseLocale(locale)}>
-            <Sample />
-          </IntlProvider>
+          <Application />
         </Provider>
       </StaticRouter>
     )
