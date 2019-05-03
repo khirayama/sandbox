@@ -1,5 +1,3 @@
-import { Action } from 'redux';
-
 export interface State {
   count: number;
   ui: {
@@ -21,14 +19,12 @@ export function reducer(state = initialState, action: any) {
         count: state.count + 1,
         ui: state.ui,
       };
-      break;
     }
     case 'DECREMENT': {
       return {
         count: state.count - 1,
         ui: state.ui,
       };
-      break;
     }
     case 'CHANGE_LOCALE': {
       return {
@@ -37,7 +33,6 @@ export function reducer(state = initialState, action: any) {
           locale: action.payload.locale,
         },
       };
-      break;
     }
     default:
   }

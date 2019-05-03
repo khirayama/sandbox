@@ -27,6 +27,7 @@ export const renderFullPage = ({ meta, assets, body, style, scripts, preloadedSt
         <div id="root">${body}</div>
         <script id="initial-data" type="text/plain" data-json="${escape(preloadedState)}"></script>
         ${scripts}
+        ${assets.map(asset => `<script src=${asset}></script>`).join('\n')}
       </body>
     </html>
   `.trim();

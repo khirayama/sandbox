@@ -1,7 +1,5 @@
 import { Action } from 'redux';
 
-import { State } from 'client/reducers';
-
 export type Actions = Increment | Decrement;
 
 export interface Increment extends Action<'INCREMENT'> {}

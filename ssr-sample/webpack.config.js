@@ -1,3 +1,4 @@
+/* eslint-disable no-console, node/no-unpublished-require */
 const path = require('path');
 
 const webpack = require('webpack');
