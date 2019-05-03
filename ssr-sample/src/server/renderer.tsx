@@ -8,23 +8,15 @@ import * as styled from 'styled-components';
 import ReactHelmet from 'react-helmet';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
-import { IntlProvider } from 'react-intl';
 
 import { reducer } from 'client/reducers';
 import { renderFullPage } from 'server/renderFullPage';
-import { Sample } from 'client/components/SampleComponent';
-import { ResetStyle, GlobalStyle } from 'client/components/Styles';
-import { chooseLocale } from 'client/components/SampleComponent.locale';
-
-import { Application } from 'client/components/Application';
+import { Application } from 'client/containers/Application';
 
 export function get(req: express.Request, res: express.Response) {
   const context = {};
   const store = createStore(reducer);
-
   const sheet = new styled.ServerStyleSheet();
-
-  const assets = [''];
   const body = ReactDOMServer.renderToString(
     sheet.collectStyles(
       <StaticRouter
@@ -46,6 +38,7 @@ export function get(req: express.Request, res: express.Response) {
     `.trim();
   const style = sheet.getStyleTags();
   const scripts = `<script src="/public/index.bundle.js"></script>`;
+  const assets = [''];
 
   res.send(renderFullPage({
     meta,

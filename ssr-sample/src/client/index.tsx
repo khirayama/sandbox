@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 
 import { reducer } from 'client/reducers';
-import { Application } from 'client/components/Application';
+import { Application } from 'client/containers/Application';
 
 function extractInitialState() {
   const initialDataElement = window.document.querySelector('#initial-data');
