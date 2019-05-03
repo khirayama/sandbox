@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Route, Link } from 'react-router-dom';
 import loadable from '@loadable/component';
 import * as styled from 'styled-components';
-import { FormattedMessage, IntlProvider } from 'react-intl';
+import { FormattedMessage, IntlProvider, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
 
 import { Home } from 'client/components/Home';
@@ -29,39 +29,35 @@ const mapStateToProps = (state: any) => {
 }
 
 export function SampleComponent(props: any) {
-  const locale: string = 'ja';
-
   return (
-    <IntlProvider locale={locale} messages={chooseLocale(locale)}>
-      <>
-        <div>
-          <FormattedMessage
-            id="SampleComponent.Hello"
-            values={{name: 'khirayama'}}
-          />
-          <nav>
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
-              </li>
-              <li>
-                <Link to="/about/">About</Link>
-              </li>
-              <li>
-                <Link to="/users/">Users</Link>
-              </li>
-            </ul>
-          </nav>
-          <div onClick={props.onCountUpClick}>COUNT UP</div>
-          <div onClick={props.onCountDownClick}>COUNT DOWN</div>
-          <div>{props.count}</div>
+    <>
+      <div>
+        <FormattedMessage
+          id="SampleComponent.Hello"
+          values={{name: 'khirayama'}}
+        />
+        <nav>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/about/">About</Link>
+            </li>
+            <li>
+              <Link to="/users/">Users</Link>
+            </li>
+          </ul>
+        </nav>
+        <div onClick={props.onCountUpClick}>COUNT UP</div>
+        <div onClick={props.onCountDownClick}>COUNT DOWN</div>
+        <div>{props.count}</div>
 
-          <Route exact path="/" component={Home} />
-          <Route exact path="/about/" component={LoadableAbout} />
-          <Route exact path="/users/" component={LoadableUsers} />
-        </div>
-      </>
-    </IntlProvider>
+        <Route exact path="/" component={Home} />
+        <Route exact path="/about/" component={LoadableAbout} />
+        <Route exact path="/users/" component={LoadableUsers} />
+      </div>
+    </>
   );
 }
 

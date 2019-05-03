@@ -8,11 +8,13 @@ import * as styled from 'styled-components';
 import ReactHelmet from 'react-helmet';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
+import { IntlProvider } from 'react-intl';
 
 import { reducer } from 'client/reducers';
 import { renderFullPage } from 'server/renderFullPage';
 import { Sample } from 'client/components/SampleComponent';
 import { ResetStyle, GlobalStyle } from 'client/components/Styles';
+import { chooseLocale } from 'client/components/SampleComponent.locale';
 
 export function get(req: express.Request, res: express.Response) {
   const context = {};
@@ -21,17 +23,20 @@ export function get(req: express.Request, res: express.Response) {
   const sheet = new styled.ServerStyleSheet();
 
   const assets = [''];
+  const locale: string = 'ja';
   const body = ReactDOMServer.renderToString(
     sheet.collectStyles(
-        <StaticRouter
-          location={req.url}
-          context={context}
-        >
-          <ResetStyle />
-          <GlobalStyle />
-          <Provider store={store}>
-              <Sample />
-          </Provider>
+      <StaticRouter
+        location={req.url}
+        context={context}
+      >
+        <ResetStyle />
+        <GlobalStyle />
+        <Provider store={store}>
+          <IntlProvider locale={locale} messages={chooseLocale(locale)}>
+            <Sample />
+          </IntlProvider>
+        </Provider>
       </StaticRouter>
     )
   );
