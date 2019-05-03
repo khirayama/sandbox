@@ -19,15 +19,12 @@ export function get(req: express.Request, res: express.Response) {
   const sheet = new styled.ServerStyleSheet();
   const body = ReactDOMServer.renderToString(
     sheet.collectStyles(
-      <StaticRouter
-        location={req.url}
-        context={context}
-      >
+      <StaticRouter location={req.url} context={context}>
         <Provider store={store}>
           <Application />
         </Provider>
-      </StaticRouter>
-    )
+      </StaticRouter>,
+    ),
   );
   const preloadedState = store.getState();
   const helmetContent = ReactHelmet.renderStatic();
@@ -40,12 +37,14 @@ export function get(req: express.Request, res: express.Response) {
   const scripts = `<script src="/public/index.bundle.js"></script>`;
   const assets = [''];
 
-  res.send(renderFullPage({
-    meta,
-    assets,
-    body,
-    style,
-    scripts,
-    preloadedState: JSON.stringify(preloadedState),
-  }));
+  res.send(
+    renderFullPage({
+      meta,
+      assets,
+      body,
+      style,
+      scripts,
+      preloadedState: JSON.stringify(preloadedState),
+    }),
+  );
 }

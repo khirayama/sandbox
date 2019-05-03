@@ -16,14 +16,7 @@ const escape = (str: string) => {
     .replace(/>/g, '&gt;');
 };
 
-export const renderFullPage = ({
-  meta,
-  assets,
-  body,
-  style,
-  scripts,
-  preloadedState,
-}: Params) => {
+export const renderFullPage = ({ meta, assets, body, style, scripts, preloadedState }: Params) => {
   return `<!DOCTYPE html>
     <html>
       <head>

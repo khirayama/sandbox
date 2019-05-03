@@ -12,7 +12,9 @@ const Wrapper = styled.default.div`
 
 export const Home = injectIntl(function(props) {
   const title: string = props.intl.formatMessage({ id: 'Home.Title' });
-  const description: string = props.intl.formatMessage({ id: 'Home.Description' });
+  const description: string = props.intl.formatMessage({
+    id: 'Home.Description',
+  });
 
   return (
     <>

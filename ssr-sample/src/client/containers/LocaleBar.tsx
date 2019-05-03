@@ -20,7 +20,10 @@ const mapDispatchToProps = (dispatch: any) => {
     onJapaneseLocaleClick: () => {
       dispatch(changeLocale('ja'));
     },
-  }
-}
+  };
+};
 
-export const LocaleBar = connect(null, mapDispatchToProps)(Component);
+export const LocaleBar = connect(
+  null,
+  mapDispatchToProps,
+)(Component);

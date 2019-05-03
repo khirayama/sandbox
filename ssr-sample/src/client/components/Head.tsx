@@ -14,4 +14,3 @@ export const Head: React.SFC<Props> = (props: Props) => (
     <meta name="description" content={props.description} />
   </ReactHelmet>
 );
-

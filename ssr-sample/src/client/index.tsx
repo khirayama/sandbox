@@ -30,5 +30,6 @@ window.addEventListener('DOMContentLoaded', () => {
         <Application />
       </Provider>
     </BrowserRouter>,
-    window.document.querySelector('#root'));
+    window.document.querySelector('#root'),
+  );
 });

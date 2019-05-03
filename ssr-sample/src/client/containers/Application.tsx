@@ -15,7 +15,7 @@ const mapStateToProps = (state: State) => {
   return {
     locale: state.ui.locale,
   };
-}
+};
 
 function Component(props: Props) {
   const locale: string = props.locale;
@@ -31,4 +31,7 @@ function Component(props: Props) {
   );
 }
 
-export const Application = connect(mapStateToProps, null)(Component);
+export const Application = connect(
+  mapStateToProps,
+  null,
+)(Component);

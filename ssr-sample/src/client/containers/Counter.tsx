@@ -6,7 +6,7 @@ import { increment, decrement } from 'client/actions';
 
 const mapStateToProps = (state: any) => {
   return state;
-}
+};
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
@@ -15,9 +15,9 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     onCountDownClick: () => {
       dispatch(decrement());
-    }
-  }
-}
+    },
+  };
+};
 
 export function Component(props: any) {
   return (
@@ -25,14 +25,14 @@ export function Component(props: any) {
       <div onClick={props.onCountUpClick}>COUNT UP</div>
       <div onClick={props.onCountDownClick}>COUNT DOWN</div>
       <div>
-        <FormattedMessage
-          id="Counter.Label"
-          values={{name: 'khirayama'}}
-        />
+        <FormattedMessage id="Counter.Label" values={{ name: 'khirayama' }} />
         {props.count}
       </div>
     </div>
   );
 }
 
-export const Counter = connect(mapStateToProps, mapDispatchToProps)(Component);
+export const Counter = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Component);

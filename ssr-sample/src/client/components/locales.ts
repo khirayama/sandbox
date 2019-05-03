@@ -26,7 +26,7 @@ export const ja = {
 };
 
 export function chooseLocale(locale: string) {
-  switch(locale) {
+  switch (locale) {
     case 'en':
       return en;
     case 'ja':

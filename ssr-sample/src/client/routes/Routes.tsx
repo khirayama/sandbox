@@ -7,9 +7,12 @@ import { Route } from 'react-router-dom';
 import { Home } from 'client/components/Home';
 
 // const LoadableHome = loadable((): any => import(/* webpackChunkName: "home" */'presentations/components/Home').then(({ Home }) => Home));
-const LoadableAbout = loadable((): any => import(/* webpackChunkName: "about" */'client/components/About').then(({ About }) => About));
-const LoadableUsers = loadable((): any => import(/* webpackChunkName: "users" */'client/components/Users').then(({ Users }) => Users));
-
+const LoadableAbout = loadable(
+  (): any => import(/* webpackChunkName: "about" */ 'client/components/About').then(({ About }) => About),
+);
+const LoadableUsers = loadable(
+  (): any => import(/* webpackChunkName: "users" */ 'client/components/Users').then(({ Users }) => Users),
+);
 
 export function Routes() {
   return (
