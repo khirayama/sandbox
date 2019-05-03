@@ -14,8 +14,8 @@
 - Dev
   - [x] webpack
   - [x] typescript
-  - [ ] eslint
-  - [ ] prettier
+  - [x] eslint
+  - [x] prettier
 - Features
   - [x] Server Side Rendering
   - [x] i18n
