@@ -1,18 +1,10 @@
-import * as React from 'react';
+import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
+import { LocaleBar as Component } from 'client/components/common/LocaleBar';
 import { changeLocale } from 'client/actions';
 
-export function Component(props: any) {
-  return (
-    <ul>
-      <li onClick={props.onEnglishLocaleClick}>English</li>
-      <li onClick={props.onJapaneseLocaleClick}>日本語</li>
-    </ul>
-  );
-}
-
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     onEnglishLocaleClick: () => {
       dispatch(changeLocale('en'));

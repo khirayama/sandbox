@@ -1,14 +1,17 @@
-import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
+import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
+import { Counter as Component } from 'client/components/common/Counter';
 import { increment, decrement } from 'client/actions';
+import { State } from 'client/reducers';
 
-const mapStateToProps = (state: any) => {
-  return state;
+const mapStateToProps = (state: State) => {
+  return {
+    count: state.count,
+  };
 };
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     onCountUpClick: () => {
       dispatch(increment());
@@ -18,19 +21,6 @@ const mapDispatchToProps = (dispatch: any) => {
     },
   };
 };
-
-export function Component(props: any) {
-  return (
-    <div>
-      <div onClick={props.onCountUpClick}>COUNT UP</div>
-      <div onClick={props.onCountDownClick}>COUNT DOWN</div>
-      <div>
-        <FormattedMessage id="Counter.Label" values={{ name: 'khirayama' }} />
-        {props.count}
-      </div>
-    </div>
-  );
-}
 
 export const Counter = connect(
   mapStateToProps,
