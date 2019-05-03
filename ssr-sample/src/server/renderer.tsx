@@ -32,6 +32,7 @@ export function get(req: express.Request, res: express.Response) {
       ${helmetContent.link.toString()}
     `.trim();
   const style = sheet.getStyleTags();
+  // TODO: script file name;
   const scripts = `<script src="/public/index.bundle.js"></script>`;
   const assets = [''];
 
