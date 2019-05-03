@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import { Application as Component } from 'client/components/Application';
+import { Application as Component } from 'client/components/application/Application';
 import { State } from 'client/reducers';
 
 const mapStateToProps = (state: State) => {

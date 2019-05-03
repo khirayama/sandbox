@@ -2,18 +2,18 @@ import * as React from 'react';
 import * as styled from 'styled-components';
 import { injectIntl } from 'react-intl';
 
-import { Head } from 'client/components/Head';
-import { Navigation } from 'client/components/Navigation';
+import { Head } from 'client/components/head/Head';
+import { Navigation } from 'client/components/common/Navigation';
 import { Counter } from 'client/containers/Counter';
 
 const Wrapper = styled.default.div`
-  color: red;
+  color: blue;
 `;
 
-export const About = injectIntl(function(props) {
-  const title: string = props.intl.formatMessage({ id: 'About.Title' });
+export const Home = injectIntl(function(props) {
+  const title: string = props.intl.formatMessage({ id: 'Home.Title' });
   const description: string = props.intl.formatMessage({
-    id: 'About.Description',
+    id: 'Home.Description',
   });
 
   return (
@@ -21,7 +21,7 @@ export const About = injectIntl(function(props) {
       <Head title={title} description={description} />
       <Navigation />
       <Wrapper>
-        <h2>About</h2>
+        <h2>Home</h2>
         <Counter />
       </Wrapper>
     </>

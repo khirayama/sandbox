@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { IntlProvider } from 'react-intl';
 
-import { ResetStyle } from 'client/components/ResetStyle';
-import { GlobalStyle } from 'client/components/GlobalStyle';
+import { ResetStyle } from 'client/components/styles/ResetStyle';
+import { GlobalStyle } from 'client/components/styles/GlobalStyle';
+import { Routes } from 'client/components/routes/Routes';
 import { chooseLocale } from 'client/components/locales';
 import { State } from 'client/reducers';
-import { Routes } from 'client/routes/Routes';
 
 type Props = {
   locale: State['ui']['locale'];
