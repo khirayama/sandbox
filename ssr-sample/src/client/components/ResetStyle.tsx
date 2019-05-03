@@ -97,9 +97,3 @@ export const ResetStyle = styled.createGlobalStyle`
     color: inherit;
   }
 `;
-
-export const GlobalStyle = styled.createGlobalStyle`
-  html {
-    font-family: sans-serif;
-  }
-`;

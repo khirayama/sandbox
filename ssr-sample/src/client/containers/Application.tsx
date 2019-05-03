@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-import { ResetStyle, GlobalStyle } from 'client/components/Styles';
+import { ResetStyle } from 'client/components/ResetStyle';
+import { GlobalStyle } from 'client/components/GlobalStyle';
 import { chooseLocale } from 'client/components/locales';
 import { IntlProvider } from 'react-intl';
 import { Routes } from 'client/routes/Routes';
