@@ -15,7 +15,6 @@ export const initialState: State = {
 };
 
 export function reducer(state = initialState, action: any) {
-  console.log(state, action);
   switch (action.type) {
     case 'INCREMENT': {
       return {

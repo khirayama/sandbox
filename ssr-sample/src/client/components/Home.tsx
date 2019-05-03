@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as styled from 'styled-components';
+import { injectIntl } from 'react-intl';
 
 import { Head } from 'client/components/Head';
 import { Navigation } from 'client/components/Navigation';
@@ -9,11 +10,13 @@ const Wrapper = styled.default.div`
   color: blue;
 `;
 
-export function Home() {
-  // TODO: How to use react-intl for Head
+export const Home = injectIntl(function(props) {
+  const title: string = props.intl.formatMessage({ id: 'Home.Title' });
+  const description: string = props.intl.formatMessage({ id: 'Home.Description' });
+
   return (
     <>
-      <Head title="HOME" description="Home | Sample" />
+      <Head title={title} description={description} />
       <Navigation />
       <Wrapper>
         <h2>Home</h2>
@@ -21,4 +24,4 @@ export function Home() {
       </Wrapper>
     </>
   );
-}
+});
