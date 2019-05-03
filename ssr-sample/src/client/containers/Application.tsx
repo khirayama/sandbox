@@ -2,17 +2,22 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { ResetStyle, GlobalStyle } from 'client/components/Styles';
-import { chooseLocale } from 'client/components/SampleComponent.locale';
+import { chooseLocale } from 'client/components/locales';
 import { IntlProvider } from 'react-intl';
 import { Routes } from 'client/routes/Routes';
+import { State } from 'client/reducers';
 
-const mapStateToProps = (state: any) => {
+type Props = {
+  locale: State['ui']['locale'];
+};
+
+const mapStateToProps = (state: State) => {
   return {
     locale: state.ui.locale,
   };
 }
 
-function Component(props: any) {
+function Component(props: Props) {
   const locale: string = props.locale;
 
   return (

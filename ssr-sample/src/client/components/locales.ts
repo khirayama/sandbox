@@ -6,11 +6,11 @@ addLocaleData(enLocaleData);
 addLocaleData(jaLocaleData);
 
 export const en = {
-  'SampleComponent.Hello': 'Hello, {name}',
+  'Counter.Label': 'Counted by {name}: ',
 };
 
 export const ja = {
-  'SampleComponent.Hello': 'こんにちは、{name}',
+  'Counter.Label': '{name}さんのカウント数: ',
 };
 
 export function chooseLocale(locale: string) {

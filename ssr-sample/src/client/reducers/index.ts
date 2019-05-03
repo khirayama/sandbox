@@ -14,7 +14,8 @@ export const initialState: State = {
   },
 };
 
-export function reducer(state = initialState, action: Action) {
+export function reducer(state = initialState, action: any) {
+  console.log(state, action);
   switch (action.type) {
     case 'INCREMENT': {
       return {
@@ -27,6 +28,15 @@ export function reducer(state = initialState, action: Action) {
       return {
         count: state.count - 1,
         ui: state.ui,
+      };
+      break;
+    }
+    case 'CHANGE_LOCALE': {
+      return {
+        count: state.count,
+        ui: {
+          locale: action.payload.locale,
+        },
       };
       break;
     }
