@@ -2,13 +2,12 @@ import * as React from 'react';
 import { Route, Link } from 'react-router-dom';
 import loadable from '@loadable/component';
 import * as styled from 'styled-components';
-import { IntlProvider, FormattedMessage } from 'react-intl';
+import { FormattedMessage, IntlProvider } from 'react-intl';
 import { connect } from 'react-redux';
 
-import { ResetStyle, GlobalStyle } from 'client/components/Styles';
-import { chooseLocale } from 'client/components/SampleComponent.locale';
 import { Home } from 'client/components/Home';
 import { increment, decrement } from 'client/actions';
+import { chooseLocale } from 'client/components/SampleComponent.locale';
 
 // const LoadableHome = loadable((): any => import(/* webpackChunkName: "home" */'presentations/components/Home').then(({ Home }) => Home));
 const LoadableAbout = loadable((): any => import(/* webpackChunkName: "about" */'client/components/About').then(({ About }) => About));
@@ -35,8 +34,6 @@ export function SampleComponent(props: any) {
   return (
     <IntlProvider locale={locale} messages={chooseLocale(locale)}>
       <>
-        <ResetStyle />
-        <GlobalStyle />
         <div>
           <FormattedMessage
             id="SampleComponent.Hello"

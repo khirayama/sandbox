@@ -6,6 +6,7 @@ import { createStore } from 'redux';
 
 import { reducer } from 'client/reducers';
 import { Sample } from 'client/components/SampleComponent';
+import { ResetStyle, GlobalStyle } from 'client/components/Styles';
 
 function extractInitialState() {
   const initialDataElement = window.document.querySelector('#initial-data');
@@ -26,6 +27,8 @@ const store = createStore(reducer, extractInitialState());
 window.addEventListener('DOMContentLoaded', () => {
   ReactDOM.hydrate(
     <BrowserRouter>
+      <ResetStyle />
+      <GlobalStyle />
       <Provider store={store}>
         <Sample />
       </Provider>

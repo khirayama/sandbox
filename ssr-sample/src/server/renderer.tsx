@@ -12,6 +12,7 @@ import { createStore } from 'redux';
 import { reducer } from 'client/reducers';
 import { renderFullPage } from 'server/renderFullPage';
 import { Sample } from 'client/components/SampleComponent';
+import { ResetStyle, GlobalStyle } from 'client/components/Styles';
 
 export function get(req: express.Request, res: express.Response) {
   const context = {};
@@ -22,14 +23,16 @@ export function get(req: express.Request, res: express.Response) {
   const assets = [''];
   const body = ReactDOMServer.renderToString(
     sheet.collectStyles(
-      <Provider store={store}>
         <StaticRouter
           location={req.url}
           context={context}
         >
-          <Sample />
-        </StaticRouter>
-      </Provider>
+          <ResetStyle />
+          <GlobalStyle />
+          <Provider store={store}>
+              <Sample />
+          </Provider>
+      </StaticRouter>
     )
   );
   const preloadedState = store.getState();
