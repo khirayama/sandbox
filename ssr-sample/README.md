@@ -26,6 +26,15 @@
 - [x] Use http.createServer
 - [ ] Watch React.lazy on server side and loadable/component support typescript.
 
+## Rules
+
+- presentations
+  - Use routes from `presentations/templates`
+    - It is for smooth transition. If you use templates in pages or other layers, you will get blink with dynamic import.
+    - templates is like `AppShell`.
+  - Use head from `presentations/pages`
+  - Not use pages from `containers` and use pages from `routes`
+
 ## Refs
 
 - React-Router

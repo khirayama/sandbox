@@ -2,9 +2,8 @@ import * as React from 'react';
 import * as styled from 'styled-components';
 import { injectIntl } from 'react-intl';
 
-import { Head } from 'client/components/head/Head';
 import { Counter } from 'client/containers/Counter';
-import { Application as ApplicationTemplate } from 'client/components/templates/Application';
+import { Head } from 'client/presentations/head/Head';
 
 const Wrapper = styled.default.div`
   color: green;
@@ -17,12 +16,12 @@ export const Users = injectIntl(function(props) {
   });
 
   return (
-    <ApplicationTemplate>
+    <>
       <Head title={title} description={description} />
       <Wrapper>
         <h2>Users</h2>
         <Counter />
       </Wrapper>
-    </ApplicationTemplate>
+    </>
   );
 });

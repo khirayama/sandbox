@@ -1,7 +1,7 @@
 import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
-import { LocaleBar as Component } from 'client/components/common/LocaleBar';
+import { LocaleBar as Component } from 'client/presentations/components/LocaleBar';
 import { changeLocale } from 'client/actions';
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
