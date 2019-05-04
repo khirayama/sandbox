@@ -1,15 +1,34 @@
-import express from 'express';
+/* eslint-disable no-console, no-process-exit */
+import cluster from 'cluster';
+import * as os from 'os';
 
-import * as renderer from 'server/renderer';
+import { runServer } from 'server/runServer';
 
-const app: express.Application = express();
+const isProd = process.env.NODE_ENV === 'production';
 
-const PORT = process.env.PORT || 3000;
+if (isProd) {
+  const numCPUs = os.cpus().length;
 
-app.use('/public', express.static('dist/public'));
-app.get('*', renderer.get);
+  if (cluster.isMaster) {
+    [...new Array(numCPUs)].forEach(() => cluster.fork());
 
-app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Start app listening at ${PORT}.`);
+    // cluster manager
+    cluster.on('exit', (worker, code, signal) => {
+      console.log(`Restarting ${worker.process.pid}. ${code || signal}`);
+      cluster.fork();
+    });
+  } else {
+    runServer();
+  }
+} else {
+  runServer();
+}
+
+process.on('uncaughtException', err => {
+  console.error(err);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', err => {
+  console.error(err);
 });
