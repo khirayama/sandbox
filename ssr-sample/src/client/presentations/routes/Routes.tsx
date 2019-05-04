@@ -6,7 +6,6 @@ import { Route, Switch } from 'react-router-dom';
 // loadable-components needs a babel plugin to do SSR.
 import { Home } from 'client/presentations/pages/Home';
 
-// const LoadableHome = loadable((): any => import(/* webpackChunkName: "home" */'presentations/components/Home').then(({ Home }) => Home));
 const LoadableAbout = loadable(
   (): any => import(/* webpackChunkName: "about" */ 'client/presentations/pages/About').then(({ About }) => About),
 );
