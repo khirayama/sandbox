@@ -3,8 +3,8 @@ import * as styled from 'styled-components';
 import { injectIntl } from 'react-intl';
 
 import { Head } from 'client/components/head/Head';
-import { Navigation } from 'client/components/common/Navigation';
 import { Counter } from 'client/containers/Counter';
+import { Application as ApplicationTemplate } from 'client/components/templates/Application';
 
 const Wrapper = styled.default.div`
   color: blue;
@@ -17,13 +17,12 @@ export const Home = injectIntl(function(props) {
   });
 
   return (
-    <>
+    <ApplicationTemplate>
       <Head title={title} description={description} />
-      <Navigation />
       <Wrapper>
         <h2>Home</h2>
         <Counter />
       </Wrapper>
-    </>
+    </ApplicationTemplate>
   );
 });
