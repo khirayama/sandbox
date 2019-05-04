@@ -34,6 +34,8 @@
     - templates is like `AppShell`.
   - Use head from `presentations/pages`
   - Not use pages from `containers` and use pages from `routes`
+  - Define async or not in `routes`
+    - That means using `@loadable/components` in routes, not in pages
 
 ## Refs
 
