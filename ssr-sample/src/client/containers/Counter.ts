@@ -5,8 +5,6 @@ import { Counter as Component } from 'client/presentations/components/Counter';
 import { increment, decrement } from 'client/actions';
 import { State } from 'client/reducers';
 
-// TODO: components/Applicationはtemplatesにする。
-// そこでroutesを取ってきて、loadableしてあげればNavigationのちらつきは回避きでそう
 const mapStateToProps = (state: State) => {
   return {
     locale: state.ui.locale, // For react-intl
