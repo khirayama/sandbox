@@ -23,7 +23,6 @@
 
 ## TODO
 
-- [x] Use http.createServer
 - [ ] Watch React.lazy on server side and loadable/component support typescript.
 
 ## Rules
