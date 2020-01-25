@@ -42,6 +42,7 @@ exports.createPages = async ({ graphql, actions }) => {
           edges {
             node {
               fields {
+                locale
                 slug
               }
               frontmatter {
@@ -82,11 +83,16 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
 
   if (node.internal.type === `MarkdownRemark`) {
     const value = createFilePath({ node, getNode });
-    const { path } = extractPath(value);
+    const { path, locale } = extractPath(value);
     createNodeField({
       name: `slug`,
       node,
       value: path,
+    });
+    createNodeField({
+      name: `locale`,
+      node,
+      value: locale,
     });
   }
 };
