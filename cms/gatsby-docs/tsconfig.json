@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "declaration": false,
+    "jsx": "react",
+    "lib": ["es2017", "dom"],
+    "types": ["react", "node"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "allowJs": false,
+    "sourceMap": true,
+    "removeComments": false,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "noUnusedLocals": false,
+    "strictNullChecks": false,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "strict": true,
+    "esModuleInterop": true
+  },
+  "exclude": ["node_modules", "src/**/*.test.ts"],
+  "include": ["src/**/*", "**/*.js", "**/*.json"]
+}
