@@ -1,6 +1,36 @@
 const path = require(`path`);
 const { createFilePath } = require(`gatsby-source-filesystem`);
 
+const localeConfig = {
+  locales: [
+    {
+      value: 'en',
+      label: 'English',
+    },
+    {
+      value: 'ja',
+      label: '日本語',
+    },
+  ],
+};
+
+function extractPath(slug) {
+  const slugArray = slug.split('/').filter(path => !!path);
+  const lastPath = slugArray[slugArray.length - 1];
+  const lastPathArray = lastPath.split('.');
+  // TODO: Make following line flexible
+  const locale = lastPathArray[lastPathArray.length - 1];
+  slugArray.splice(slugArray.length - 1, 1, lastPath.replace(`.${locale}`, ''));
+  slugArray.unshift('', locale);
+  slugArray.push('');
+  const path = slugArray.join('/');
+
+  return {
+    locale,
+    path,
+  };
+}
+
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions;
 
@@ -52,10 +82,11 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
 
   if (node.internal.type === `MarkdownRemark`) {
     const value = createFilePath({ node, getNode });
+    const { path } = extractPath(value);
     createNodeField({
       name: `slug`,
       node,
-      value,
+      value: path,
     });
   }
 };
