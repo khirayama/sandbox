@@ -22,8 +22,10 @@ function extractPath(slug) {
   // TODO: Make following line flexible
   const locale = lastPathArray[lastPathArray.length - 1];
   slugArray.splice(slugArray.length - 1, 1, lastPath.replace(`.${locale}`, '').replace(/^index/, ''));
-  slugArray.unshift('', locale);
-  const path = slugArray.join('/');
+  if (locale !== localeConfig.locales[0].value) {
+    slugArray.unshift('', locale);
+  }
+  const path = slugArray.join('/') || '/';
 
   return {
     locale,
