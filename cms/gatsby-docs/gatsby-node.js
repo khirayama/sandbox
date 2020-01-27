@@ -14,6 +14,36 @@ const localeConfig = {
   ],
 };
 
+const summary = [
+  // FYI: key is dir path. It's for order of sidebar
+  {
+    key: 'welcome',
+    items: [
+      {
+        key: 'part1',
+        items: [],
+      },
+      {
+        key: 'part2',
+        items: [],
+      },
+    ],
+  },
+  {
+    key: 'onboarding',
+    items: [
+      {
+        key: 'part1',
+        items: [],
+      },
+      {
+        key: 'part2',
+        items: [],
+      },
+    ],
+  },
+];
+
 function extractPath(slug) {
   const slugArray = slug.split('/').filter(path => !!path);
   const lastPath = slugArray[slugArray.length - 1];
