@@ -14,7 +14,7 @@ const localeConfig = {
   ],
 };
 
-const summary = [
+const outlines = [
   // FYI: key is dir path. It's for order of sidebar
   {
     key: 'welcome',
@@ -44,12 +44,67 @@ const summary = [
   },
 ];
 
+async function generateItem(outline, keys, locale, options) {
+  const item = {
+    slug: '',
+    title: '',
+    items: [],
+  };
+
+  const slug =
+    locale === options.localeConfig.locales[0].value
+      ? ['', ...keys, outline.key, ''].join('/')
+      : ['', locale, ...keys, outline.key, ''].join('/');
+  const res = await options.graphql(
+    `
+      query GetPost($slug: String) {
+        allMarkdownRemark(filter: { fields: { slug: { eq: $slug } } }) {
+          edges {
+            node {
+              frontmatter {
+                title
+              }
+            }
+          }
+        }
+      }
+    `,
+    { slug },
+  );
+  const post = res.data.allMarkdownRemark.edges[0];
+  const title = post.node.frontmatter.title;
+
+  item.slug = slug;
+  item.title = title;
+  if (outline.items.length) {
+    for (let i = 0; i < outline.items.length; i += 1) {
+      const res = await generateItem(outline.items[i], [...keys, outline.key], locale, options);
+      item.items.push(res);
+    }
+  }
+
+  return item;
+}
+
+async function generateSummary(outlines, options) {
+  const summary = {};
+  for (let i = 0; i < options.localeConfig.locales.length; i += 1) {
+    const locale = options.localeConfig.locales[i].value;
+    summary[locale] = [];
+
+    for (let j = 0; j < outlines.length; j += 1) {
+      const res = await generateItem(outlines[j], [], locale, options);
+      summary[locale].push(res);
+    }
+  }
+  return summary;
+}
+
 function extractPath(slug) {
   const slugArray = slug.split('/').filter(path => !!path);
   const lastPath = slugArray[slugArray.length - 1];
   const lastPathArray = lastPath.split('.');
 
-  // TODO: Make following line flexible
   const locale = lastPathArray[lastPathArray.length - 1];
   slugArray.splice(slugArray.length - 1, 1, lastPath.replace(`.${locale}`, '').replace(/^index/, ''));
   if (locale !== localeConfig.locales[0].value) {
@@ -94,26 +149,23 @@ exports.createPages = async ({ graphql, actions }) => {
 
   // Create blog posts pages.
   const posts = result.data.allMarkdownRemark.edges;
+  const summary = await generateSummary(outlines, { localeConfig, graphql });
 
+  // TODO: outlineからpageをgenerateしたほうがいいな
   posts.forEach((post, index) => {
-    // TODO: Update prev and next
-    const previous = index === posts.length - 1 ? null : posts[index + 1].node;
-    const next = index === 0 ? null : posts[index - 1].node;
-
     const locale = post.node.fields.locale;
     const slug = post.node.fields.slug;
     const slugArray = slug.split('/').filter(path => !!path);
     const keys = slugArray.slice();
     keys[0] === locale ? keys.shift() : null;
-    console.log(keys);
 
     createPage({
       path: post.node.fields.slug,
       component: blogPost,
       context: {
-        slug: post.node.fields.slug,
-        previous,
-        next,
+        locale,
+        slug,
+        summary,
       },
     });
   });
