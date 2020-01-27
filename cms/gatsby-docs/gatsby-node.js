@@ -100,6 +100,13 @@ exports.createPages = async ({ graphql, actions }) => {
     const previous = index === posts.length - 1 ? null : posts[index + 1].node;
     const next = index === 0 ? null : posts[index - 1].node;
 
+    const locale = post.node.fields.locale;
+    const slug = post.node.fields.slug;
+    const slugArray = slug.split('/').filter(path => !!path);
+    const keys = slugArray.slice();
+    keys[0] === locale ? keys.shift() : null;
+    console.log(keys);
+
     createPage({
       path: post.node.fields.slug,
       component: blogPost,
