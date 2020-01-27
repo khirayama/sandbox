@@ -53,8 +53,9 @@ function extractPath(slug) {
   const locale = lastPathArray[lastPathArray.length - 1];
   slugArray.splice(slugArray.length - 1, 1, lastPath.replace(`.${locale}`, '').replace(/^index/, ''));
   if (locale !== localeConfig.locales[0].value) {
-    slugArray.unshift('', locale);
+    slugArray.unshift(locale);
   }
+  slugArray.unshift('');
   const path = slugArray.join('/') || '/';
 
   return {
