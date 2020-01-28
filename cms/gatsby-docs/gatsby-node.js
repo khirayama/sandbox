@@ -152,7 +152,7 @@ exports.createPages = async ({ graphql, actions }) => {
   const summary = await generateSummary(outlines, { localeConfig, graphql });
 
   // TODO: outlineからpageをgenerateしたほうがいいな
-  posts.forEach((post, index) => {
+  posts.forEach(post => {
     const locale = post.node.fields.locale;
     const slug = post.node.fields.slug;
     const slugArray = slug.split('/').filter(path => !!path);
@@ -165,6 +165,21 @@ exports.createPages = async ({ graphql, actions }) => {
       context: {
         locale,
         slug,
+        summary,
+      },
+    });
+  });
+
+  const top = path.resolve(`./src/templates/index.js`);
+
+  localeConfig.locales.forEach((locale, i) => {
+    const path = i === 0 ? '/' : `/${locale.value}`;
+    console.log(path);
+    createPage({
+      path,
+      component: top,
+      context: {
+        locale: locale.value,
         summary,
       },
     });
