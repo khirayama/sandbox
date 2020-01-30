@@ -7,7 +7,6 @@ import SEO from '../components/seo';
 
 class BlogPostTemplate extends React.Component {
   renderItem(summary) {
-    console.log(this.props.location);
     const slug = this.props.pageContext.slug;
 
     return (
@@ -32,7 +31,6 @@ class BlogPostTemplate extends React.Component {
     const siteTitle = this.props.data.site.siteMetadata.title;
     const locale = this.props.pageContext.locale;
     const summary = this.props.pageContext.summary[locale];
-    console.log(this.props);
 
     return (
       <Layout location={this.props.location} title={siteTitle}>
