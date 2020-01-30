@@ -6,15 +6,39 @@ import Layout from '../components/layout';
 import SEO from '../components/seo';
 
 class BlogPostTemplate extends React.Component {
+  renderItem(summary) {
+    console.log(this.props.location);
+    const slug = this.props.pageContext.slug;
+
+    return (
+      <ul>
+        {summary.map(item => {
+          return (
+            <li key={item.slug}>
+              <Link to={item.slug}>
+                {slug === item.slug ? 'here' : ''}
+                {item.title}
+              </Link>
+              {this.renderItem(item.items)}
+            </li>
+          );
+        })}
+      </ul>
+    );
+  }
+
   render() {
     const post = this.props.data.markdownRemark;
     const siteTitle = this.props.data.site.siteMetadata.title;
-    const { previous, next } = this.props.pageContext;
+    const locale = this.props.pageContext.locale;
+    const summary = this.props.pageContext.summary[locale];
+    console.log(this.props);
 
     return (
       <Layout location={this.props.location} title={siteTitle}>
         <SEO title={post.frontmatter.title} description={post.frontmatter.description || post.excerpt} />
         <article>
+          {this.renderItem(summary)}
           <header>
             <h1
               style={{
@@ -30,6 +54,7 @@ class BlogPostTemplate extends React.Component {
             >
               {post.frontmatter.date}
             </p>
+            <Link to="/">Top</Link>
           </header>
           <section dangerouslySetInnerHTML={{ __html: post.html }} />
           <hr />
@@ -37,33 +62,6 @@ class BlogPostTemplate extends React.Component {
             <Bio />
           </footer>
         </article>
-
-        <nav>
-          <ul
-            style={{
-              display: `flex`,
-              flexWrap: `wrap`,
-              justifyContent: `space-between`,
-              listStyle: `none`,
-              padding: 0,
-            }}
-          >
-            <li>
-              {previous && (
-                <Link to={previous.fields.slug} rel="prev">
-                  ← {previous.frontmatter.title}
-                </Link>
-              )}
-            </li>
-            <li>
-              {next && (
-                <Link to={next.fields.slug} rel="next">
-                  {next.frontmatter.title} →
-                </Link>
-              )}
-            </li>
-          </ul>
-        </nav>
       </Layout>
     );
   }
