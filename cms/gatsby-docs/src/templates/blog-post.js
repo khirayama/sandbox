@@ -15,8 +15,8 @@ class BlogPostTemplate extends React.Component {
           return (
             <li key={item.slug}>
               <Link to={item.slug}>
-                {slug === item.slug ? 'here' : ''}
                 {item.title}
+                {slug === item.slug ? '[HERE]' : ''}
               </Link>
               {this.renderItem(item.items)}
             </li>
