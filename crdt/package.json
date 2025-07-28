@@ -15,6 +15,7 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "prettier": "^3.6.2",
     "yjs": "^13.6.27"
   }
 }
