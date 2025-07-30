@@ -12,26 +12,31 @@ function sort(
   }
 }
 
+const ydocS = new Y.Doc();
+const yarrayS: Y.Array<number> = ydocS.getArray("my array type");
+yarrayS.insert(0, [1, 2, 3, 4, 5]);
+
 const ydocA = new Y.Doc();
+Y.applyUpdate(ydocA, Y.encodeStateAsUpdate(ydocS));
 const yarrayA: Y.Array<number> = ydocA.getArray("my array type");
-yarrayA.insert(0, [1, 2, 3, 4, 5]);
 
 const ydocB = new Y.Doc();
 Y.applyUpdate(ydocB, Y.encodeStateAsUpdate(ydocA));
 const yarrayB: Y.Array<number> = ydocB.getArray("my array type");
 
 sort(yarrayA, (a, b) => b - a);
-console.log(yarrayA.toJSON());
 
 yarrayB.insert(0, [6]);
 yarrayB.insert(3, [7]);
-console.log(yarrayB.toJSON());
 
 const updateB = Y.encodeStateAsUpdate(ydocB);
-Y.applyUpdate(ydocA, updateB);
+Y.applyUpdate(ydocS, updateB);
 
 const updateA = Y.encodeStateAsUpdate(ydocA);
-Y.applyUpdate(ydocB, updateA);
+Y.applyUpdate(ydocS, updateA);
+
+Y.applyUpdate(ydocB, Y.encodeStateAsUpdate(ydocS));
+Y.applyUpdate(ydocA, Y.encodeStateAsUpdate(ydocS));
 
 console.log(yarrayA.toJSON());
 console.log(yarrayB.toJSON());
