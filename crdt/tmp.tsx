@@ -55,8 +55,9 @@ class CRDTSortableList {
   }
 
   computeFinalOrder() {
-    const allOps = [...this.operations]
-      .sort((a, b) => a.timestamp - b.timestamp);
+    const allOps = [...this.operations].sort(
+      (a, b) => a.timestamp - b.timestamp
+    );
 
     const lastSortOp = allOps.filter((op) => op.type === "sort").pop();
 
@@ -65,16 +66,16 @@ class CRDTSortableList {
     }
 
     const sortedIds = lastSortOp.sortedIds;
-    const itemMap = new Map(
-      this.items.map((item) => [item.id, item])
-    );
+    const itemMap = new Map(this.items.map((item) => [item.id, item]));
 
     let result = sortedIds
       .map((id) => itemMap.get(id))
       .filter((item) => item !== undefined);
 
     const moveOpsAfterSort = allOps
-      .filter((op) => op.type === "move" && op.timestamp >= lastSortOp.timestamp)
+      .filter(
+        (op) => op.type === "move" && op.timestamp >= lastSortOp.timestamp
+      )
       .sort((a, b) => a.timestamp - b.timestamp);
 
     moveOpsAfterSort.forEach((moveOp) => {
@@ -97,40 +98,49 @@ class CRDTSortableList {
   getState() {
     return {
       items: [...this.items],
-      operations: [...this.operations]
+      operations: [...this.operations],
     };
   }
 
   applyState(otherState) {
     // 他のインスタンスの操作をマージ
     const combinedOps = [...this.operations, ...otherState.operations];
-    
+
     // タイムスタンプでソートして重複を削除
     const uniqueOps = combinedOps
       .filter((op, index, arr) => {
-        return arr.findIndex(o => {
-          if (o.timestamp !== op.timestamp || o.type !== op.type) return false;
-          
-          // 操作の詳細内容も比較
-          if (op.type === 'sort') {
-            return JSON.stringify(o.sortedIds) === JSON.stringify(op.sortedIds);
-          } else if (op.type === 'move') {
-            return o.itemId === op.itemId && o.fromIndex === op.fromIndex && o.toIndex === op.toIndex;
-          }
-          
-          return true;
-        }) === index;
+        return (
+          arr.findIndex((o) => {
+            if (o.timestamp !== op.timestamp || o.type !== op.type)
+              return false;
+
+            // 操作の詳細内容も比較
+            if (op.type === "sort") {
+              return (
+                JSON.stringify(o.sortedIds) === JSON.stringify(op.sortedIds)
+              );
+            } else if (op.type === "move") {
+              return (
+                o.itemId === op.itemId &&
+                o.fromIndex === op.fromIndex &&
+                o.toIndex === op.toIndex
+              );
+            }
+
+            return true;
+          }) === index
+        );
       })
       .sort((a, b) => a.timestamp - b.timestamp);
-    
+
     this.operations = uniqueOps;
-    
+
     // 他のインスタンスのitemsをマージ
     const allItems = new Map();
-    [...this.items, ...otherState.items].forEach(item => {
+    [...this.items, ...otherState.items].forEach((item) => {
       allItems.set(item.id, item);
     });
-    
+
     this.items = Array.from(allItems.values());
   }
 }
