@@ -1,8 +1,5 @@
-import { v4 as uuid } from "uuid";
-
-type App = {
-  taskListIds: string[];
-};
+import assert from "assert";
+import { v7 as uuid } from "uuid";
 
 type TaskList = {
   id: string;
@@ -16,50 +13,74 @@ type Task = {
   completed: boolean;
 };
 
-type TaskLists = {
-  id: string;
-  name: string;
-  tasks: {
-    id: string;
-    text: string;
-    completed: boolean;
-  }[];
-}[];
+type Operation =
+  | {
+      id: string;
+      type: "insertTaskList";
+    }
+  | {
+      id: string;
+      type: "addTaskList";
+    }
+  | {
+      id: string;
+      type: "moveTaskList";
+      payload: {
+        taskListId: string;
+        to: number;
+      };
+    }
+  | {
+      id: string;
+      type: "sortTasks";
+    }
+  | {
+      id: string;
+      type: "moveTask";
+      payload: {
+        taskId: string;
+        to: number;
+      };
+    }
+  | {
+      id: string;
+      type: "insertTask";
+      payload: {
+        taskListId: string;
+        taskId: string;
+        index: number;
+        text: string;
+      };
+    };
 
-function createState() {
-  const app: App = {
-    taskListIds: [],
-  };
-  const taskLists: { [id: string]: TaskList } = {};
-  const tasks: { [id: string]: Task } = {};
+function mergeOperations(a: Operation[], b: Operation[]): Operation[] {
+  const merged = [...a, ...b];
+  const uniqueOperations = new Map<string, Operation>();
+  for (const op of merged) {
+    if (!uniqueOperations.has(op.id)) {
+      uniqueOperations.set(op.id, op);
+    }
+  }
+  return Array.from(uniqueOperations.values()).sort((a, b) =>
+    a.id.localeCompare(b.id)
+  );
+}
 
-  const operations: {
-    [taskListId: string]: (
-      | {
-          type: "sort";
-          timestamp: number;
-          taskIds: string[];
-        }
-      | {
-          type: "move";
-          timestamp: number;
-          taskId: string;
-          to: number;
-        }
-    )[];
-  } = {};
-
-  return {
-    // getters
-    get: (): TaskLists => {
-      // console.log(app, taskLists, tasks);
-      return app.taskListIds.map((id) => {
-        const taskList = taskLists[id];
+const server = {
+  apps: {},
+  taskLists: {},
+  tasks: {},
+  sessions: {},
+  operations: {},
+  fetch: async (userId: string) => {
+    return {
+      taskLists: server.apps[userId]?.taskListIds.map((tlid: string) => {
+        const taskList = server.taskLists[tlid];
         return {
           id: taskList.id,
           name: taskList.name,
-          tasks: taskList.taskIds.map((taskId) => {
-            const task = tasks[taskId];
+          tasks: taskList.taskIds.map((tid: string) => {
+            const task = server.tasks[tid];
             return {
               id: task.id,
               text: task.text,
@@ -67,18 +88,95 @@ function createState() {
             };
           }),
         };
-      });
+      }),
+    };
+  },
+  startSession: async (taskListId: string) => {
+    server.sessions[taskListId] = {
+      snapshot: {
+        taskList: server.taskLists[taskListId],
+        tasks: server.taskLists[taskListId].taskIds.reduce(
+          (acc, tid) => {
+            acc[tid] = server.tasks[tid];
+            return acc;
+          },
+          {} as { [taskId: string]: Task }
+        ),
+      },
+      operations: [],
+    };
+  },
+  sync: async (taskListId: string, operations: Operation[]) => {
+    server.operations[taskListId] = server.operations[taskListId] || [];
+    server.operations[taskListId].push(...operations);
+    return mergeOperations(server.operations[taskListId], operations);
+  },
+};
+
+async function createState(userId: string) {
+  const { taskLists } = await server.fetch(userId);
+  taskLists.forEach((tl: TaskList) => server.startSession(tl.id));
+
+  const operations: {
+    [taskListId: string]: Operation[];
+  } = {};
+
+  return {
+    debug: () => {
+      return {
+        operations,
+      };
+    },
+    get: () => {
+      return {
+        taskLists: taskLists.map((tl) => {
+          const taskList = { ...tl, tasks: [...tl.tasks] };
+          for (const op of operations[tl.id] || []) {
+            switch (op.type) {
+              case "insertTaskList":
+                // Insert task list logic
+                break;
+              case "addTaskList":
+                // Add task list logic
+                break;
+              case "moveTaskList":
+                // Move task list logic
+                break;
+              case "sortTasks":
+                // Sort tasks logic
+                break;
+              case "moveTask":
+                // Move task logic
+                break;
+              case "insertTask":
+                const p = op.payload;
+                const task: Task = {
+                  id: p.taskId,
+                  text: p.text,
+                  completed: false,
+                };
+                taskList.tasks.splice(p.index, 0, task);
+                break;
+            }
+          }
+          return taskList;
+        }),
+      };
     },
     // mutations - tasklists
-    insertTaskList: (taskListId: string) => {
-      app.taskListIds.push(taskListId);
-      return taskLists[taskListId];
-    },
-    createTaskList: (name: string): TaskList => {
+    insertTaskList: (name: string, idx: number = -1) => {
       const id = uuid();
-      app.taskListIds.push(id);
+      if (idx === -1) {
+        app.taskListIds.push(id);
+      } else {
+        app.taskListIds.splice(idx, 0, id);
+      }
       taskLists[id] = { id, name, taskIds: [] };
       return taskLists[id];
+    },
+    addTaskList: (taskListId: string) => {
+      app.taskListIds.push(taskListId);
+      return taskLists[taskListId];
     },
     sortTasks: (taskListId: string) => {
       const fn = (a: Task, b: Task) => {
@@ -95,77 +193,125 @@ function createState() {
 
       operations[taskListId] = operations[taskListId] || [];
       operations[taskListId].push({
-        type: "sort",
-        timestamp: Date.now(),
-        taskIds: taskList.taskIds.slice(),
+        id: uuid(),
+        type: "sortTasks",
       });
     },
     moveTask: (taskListId: string, taskId: string, to: number) => {
       const taskList = taskLists[taskListId];
       const from = taskList.taskIds.indexOf(taskId);
-      if (from === -1) {
-        throw new Error(
-          `Task with id ${taskId} not found in task list ${taskListId}`
-        );
-      }
-      if (to < 0 || to >= taskList.taskIds.length) {
-        throw new Error(
-          `Invalid target index ${to} for task list ${taskListId}`
-        );
-      }
-
       taskList.taskIds.splice(from, 1);
       taskList.taskIds.splice(to, 0, taskId);
 
       operations[taskListId] = operations[taskListId] || [];
       operations[taskListId].push({
-        type: "move",
-        timestamp: Date.now(),
-        taskId,
-        to,
+        id: uuid(),
+        type: "moveTask",
+        payload: {
+          taskId,
+          to,
+        },
       });
     },
     // mutations - tasks
-    insertTask: (taskListId: string, text: string, idx: number = -1): Task => {
-      const id = uuid();
-      const task: Task = { id, text, completed: false };
-      tasks[id] = task;
-      if (idx === -1) {
-        taskLists[taskListId].taskIds.push(id);
-      } else {
-        const taskList = taskLists[taskListId];
-        taskList.taskIds.splice(idx, 0, id);
-      }
-      return task;
+    insertTask: (taskListId: string, index: number, text: string) => {
+      operations[taskListId] = operations[taskListId] || [];
+      operations[taskListId].push({
+        id: uuid(),
+        type: "insertTask",
+        payload: {
+          taskListId,
+          taskId: uuid(),
+          index,
+          text,
+        },
+      });
     },
     updateTask: (taskId: string, newTask: Partial<Task>) => {
       const task = tasks[taskId];
       tasks[taskId] = { ...task, ...newTask };
     },
     // mutations - sync
-    sync: () => {},
+    sync: async (taskListId: string) => {
+      const ops = await server.sync(taskListId, operations[taskListId]);
+      operations[taskListId] = mergeOperations(operations[taskListId], ops);
+    },
   };
 }
 
-function main() {
-  const stateA = createState();
-  const tl = stateA.createTaskList("個人");
+function seed() {
+  const taskList0: TaskList = {
+    id: uuid(),
+    name: "個人",
+    taskIds: [],
+  };
+  const taskList1: TaskList = {
+    id: uuid(),
+    name: "家族",
+    taskIds: [],
+  };
 
-  const stateB = createState();
-  stateB.insertTaskList(tl.id);
+  const task0: Task = {
+    id: uuid(),
+    text: "買い出し",
+    completed: false,
+  };
+  const task1: Task = {
+    id: uuid(),
+    text: "掃除",
+    completed: false,
+  };
 
-  stateA.insertTask(tl.id, "買い出し");
-  stateA.insertTask(tl.id, "掃除");
-  stateA.insertTask(tl.id, "洗濯");
-  stateA.moveTask(tl.id, tl.taskIds[2], 0); // 洗濯, 買い出し, 掃除
-  stateA.moveTask(tl.id, tl.taskIds[1], 2); // 洗濯, 掃除, 買い出し
-  stateA.updateTask(tl.taskIds[0], { completed: true });
-  stateA.sortTasks(tl.id); // 完了済みを後ろに移動, 掃除, 買い出し, 洗濯
-  stateA.sync();
+  taskList1.taskIds.push(task0.id, task1.id);
 
-  console.log(
-    JSON.stringify(stateA.get(), null, 2) === JSON.stringify(stateB.get())
-  );
+  const uidA = uuid();
+  const appA = {
+    taskListIds: [taskList0.id, taskList1.id],
+  };
+
+  const uidB = uuid();
+  const appB = {
+    taskListIds: [taskList1.id],
+  };
+
+  server.apps[uidA] = appA;
+  server.apps[uidB] = appB;
+  server.taskLists[taskList0.id] = taskList0;
+  server.taskLists[taskList1.id] = taskList1;
+  server.tasks[task0.id] = task0;
+  server.tasks[task1.id] = task1;
+
+  return [uidA, uidB];
+}
+
+async function main() {
+  const [uidA, uidB] = seed();
+
+  const stateA = await createState(uidA);
+  const stateB = await createState(uidB);
+
+  const tl = stateA.get().taskLists[1];
+  stateA.insertTask(tl.id, tl.tasks.length, "洗濯");
+  stateB.insertTask(tl.id, tl.tasks.length, "炊事");
+
+  await stateA.sync(tl.id);
+  await stateB.sync(tl.id);
+  await stateA.sync(tl.id);
+  // console.log(JSON.stringify(stateA.get(), null, 2));
+  // console.log(JSON.stringify(stateB.get(), null, 2));
+
+  // stateA.moveTask(tl.id, tl.taskIds[2], 0); // 洗濯, 買い出し, 掃除
+  // stateA.moveTask(tl.id, tl.taskIds[1], 2); // 洗濯, 掃除, 買い出し
+  // stateA.updateTask(tl.taskIds[0], { completed: true });
+  // stateA.sortTasks(tl.id); // 完了済みを後ろに移動, 掃除, 買い出し, 洗濯
+  // stateA.sync();
+
+  assert.deepEqual(stateA.get().taskLists[1], stateB.get().taskLists[0]);
+  // console.log(stateA.debug().operations);
+  console.log(stateB.get().taskLists[0]);
+  console.log(stateA.get().taskLists[1], stateA.debug().operations);
+  // console.log(stateA.get().taskLists[1], stateA.debug().operations);
+  // console.log(stateA.get().taskLists[1], stateA.debug().operations);
 }
 
 main();
