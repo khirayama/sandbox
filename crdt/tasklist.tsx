@@ -17,10 +17,12 @@ type Operation =
   | {
       id: string;
       type: "insertTaskList";
+      payload: any;
     }
   | {
       id: string;
       type: "addTaskList";
+      payload: any;
     }
   | {
       id: string;
@@ -33,6 +35,7 @@ type Operation =
   | {
       id: string;
       type: "sortTasks";
+      payload: any;
     }
   | {
       id: string;
@@ -47,9 +50,8 @@ type Operation =
       type: "insertTask";
       payload: {
         taskListId: string;
-        taskId: string;
         index: number;
-        text: string;
+        task: Task;
       };
     };
 
@@ -132,6 +134,7 @@ async function createState(userId: string) {
         taskLists: taskLists.map((tl) => {
           const taskList = { ...tl, tasks: [...tl.tasks] };
           for (const op of operations[tl.id] || []) {
+            const p = op.payload;
             switch (op.type) {
               case "insertTaskList":
                 // Insert task list logic
@@ -149,13 +152,13 @@ async function createState(userId: string) {
                 // Move task logic
                 break;
               case "insertTask":
-                const p = op.payload;
-                const task: Task = {
-                  id: p.taskId,
-                  text: p.text,
-                  completed: false,
-                };
-                taskList.tasks.splice(p.index, 0, task);
+                if (p.taskListId === taskList.id) {
+                  const i = Math.max(
+                    0,
+                    Math.min(p.index, taskList.tasks.length)
+                  );
+                  taskList.tasks.splice(i, 0, p.task);
+                }
                 break;
             }
           }
@@ -221,9 +224,12 @@ async function createState(userId: string) {
         type: "insertTask",
         payload: {
           taskListId,
-          taskId: uuid(),
           index,
-          text,
+          task: {
+            id: uuid(),
+            text,
+            completed: false,
+          },
         },
       });
     },
