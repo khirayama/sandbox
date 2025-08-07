@@ -16,12 +16,17 @@ type Task = {
 type Operation =
   | {
       id: string;
+      type: "addTaskList";
+      payload: any;
+    }
+  | {
+      id: string;
       type: "insertTaskList";
       payload: any;
     }
   | {
       id: string;
-      type: "addTaskList";
+      type: "updateTaskList";
       payload: any;
     }
   | {
@@ -34,14 +39,9 @@ type Operation =
     }
   | {
       id: string;
-      type: "sortTasks";
-      payload: any;
-    }
-  | {
-      id: string;
-      type: "moveTask";
+      type: "deleteTaskList";
       payload: {
-        taskId: string;
+        taskListId: string;
         to: number;
       };
     }
@@ -53,6 +53,34 @@ type Operation =
         index: number;
         task: Task;
       };
+    }
+  | {
+      id: string;
+      type: "updateTask";
+      payload: {
+        taskListId: string;
+        taskId: string;
+        task: Partial<Task>;
+      };
+    }
+  | {
+      id: string;
+      type: "moveTask";
+      payload: {
+        taskListId: string;
+        taskId: string;
+        to: number;
+      };
+    }
+  | {
+      id: string;
+      type: "sortTasks";
+      payload: any;
+    }
+  | {
+      id: string;
+      type: "deleteTask";
+      payload: any;
     };
 
 function mergeOperations(a: Operation[], b: Operation[]): Operation[] {
@@ -136,20 +164,20 @@ async function createState(userId: string) {
           for (const op of operations[tl.id] || []) {
             const p = op.payload;
             switch (op.type) {
+              case "addTaskList":
+                // Add task list logic
+                break;
               case "insertTaskList":
                 // Insert task list logic
                 break;
-              case "addTaskList":
-                // Add task list logic
+              case "updateTaskList":
+                // Update task list logic
                 break;
               case "moveTaskList":
                 // Move task list logic
                 break;
-              case "sortTasks":
+              case "deleteTaskList":
                 // Sort tasks logic
-                break;
-              case "moveTask":
-                // Move task logic
                 break;
               case "insertTask":
                 if (p.taskListId === taskList.id) {
@@ -159,6 +187,34 @@ async function createState(userId: string) {
                   );
                   taskList.tasks.splice(i, 0, p.task);
                 }
+                break;
+              case "updateTask":
+                if (p.taskListId === taskList.id) {
+                  const task = taskList.tasks.find((t) => t.id === p.taskId);
+                  if (task) {
+                    Object.assign(task, p.task);
+                  }
+                }
+                break;
+              case "moveTask":
+                if (p.taskListId === taskList.id) {
+                  const task = taskList.tasks.find((t) => t.id === p.taskId);
+                  if (task) {
+                    const fromIndex = taskList.tasks.indexOf(task);
+                    taskList.tasks.splice(fromIndex, 1);
+                    const toIndex = Math.max(
+                      0,
+                      Math.min(p.to, taskList.tasks.length)
+                    );
+                    taskList.tasks.splice(toIndex, 0, task);
+                  }
+                }
+                break;
+              case "sortTasks":
+                // Sort tasks logic
+                break;
+              case "deleteTask":
+                // Delete tasks logic
                 break;
             }
           }
