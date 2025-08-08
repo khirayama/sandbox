@@ -257,16 +257,12 @@ async function createState(userId: string) {
       });
     },
     moveTask: (taskListId: string, taskId: string, to: number) => {
-      const taskList = taskLists[taskListId];
-      const from = taskList.taskIds.indexOf(taskId);
-      taskList.taskIds.splice(from, 1);
-      taskList.taskIds.splice(to, 0, taskId);
-
       operations[taskListId] = operations[taskListId] || [];
       operations[taskListId].push({
         id: uuid(),
         type: "moveTask",
         payload: {
+          taskListId,
           taskId,
           to,
         },
@@ -289,9 +285,21 @@ async function createState(userId: string) {
         },
       });
     },
-    updateTask: (taskId: string, newTask: Partial<Task>) => {
-      const task = tasks[taskId];
-      tasks[taskId] = { ...task, ...newTask };
+    updateTask: (
+      taskListId: string,
+      taskId: string,
+      newTask: Partial<Task>
+    ) => {
+      operations[taskListId] = operations[taskListId] || [];
+      operations[taskListId].push({
+        id: uuid(),
+        type: "updateTask",
+        payload: {
+          taskListId,
+          taskId,
+          task: newTask,
+        },
+      });
     },
     // mutations - sync
     sync: async (taskListId: string) => {
@@ -352,26 +360,31 @@ async function main() {
   const stateA = await createState(uidA);
   const stateB = await createState(uidB);
 
-  const tl = stateA.get().taskLists[1];
+  let tl = stateA.get().taskLists[1];
   stateA.insertTask(tl.id, tl.tasks.length, "洗濯");
   stateB.insertTask(tl.id, tl.tasks.length, "炊事");
+  // 買い出し、掃除、炊事、洗濯
 
   await stateA.sync(tl.id);
   await stateB.sync(tl.id);
   await stateA.sync(tl.id);
-  // console.log(JSON.stringify(stateA.get(), null, 2));
-  // console.log(JSON.stringify(stateB.get(), null, 2));
+  tl = stateA.get().taskLists[1];
 
-  // stateA.moveTask(tl.id, tl.taskIds[2], 0); // 洗濯, 買い出し, 掃除
-  // stateA.moveTask(tl.id, tl.taskIds[1], 2); // 洗濯, 掃除, 買い出し
-  // stateA.updateTask(tl.taskIds[0], { completed: true });
+  stateA.moveTask(tl.id, tl.tasks[2].id, 0); // 炊事、買い出し、掃除、洗濯
+  stateB.moveTask(tl.id, tl.tasks[1].id, 2); // 買い出し、炊事、掃除、洗濯
+
+  stateA.updateTask(tl.id, tl.tasks[0].id, { completed: true });
   // stateA.sortTasks(tl.id); // 完了済みを後ろに移動, 掃除, 買い出し, 洗濯
   // stateA.sync();
+  await stateA.sync(tl.id);
+  await stateB.sync(tl.id);
+  await stateA.sync(tl.id);
+  tl = stateA.get().taskLists[1];
 
   assert.deepEqual(stateA.get().taskLists[1], stateB.get().taskLists[0]);
-  // console.log(stateA.debug().operations);
+  console.log(JSON.stringify(stateA.debug().operations, null, 2));
   console.log(stateB.get().taskLists[0]);
-  console.log(stateA.get().taskLists[1], stateA.debug().operations);
+  // console.log(stateA.get().taskLists[1], stateA.debug().operations);
   // console.log(stateA.get().taskLists[1], stateA.debug().operations);
   // console.log(stateA.get().taskLists[1], stateA.debug().operations);
 }
