@@ -75,7 +75,9 @@ type Operation =
   | {
       id: string;
       type: "sortTasks";
-      payload: any;
+      payload: {
+        taskListId: string;
+      };
     }
   | {
       id: string;
@@ -211,7 +213,15 @@ async function createState(userId: string) {
                 }
                 break;
               case "sortTasks":
-                // Sort tasks logic
+                taskList.tasks.sort((a, b) => {
+                  if (a.completed && !b.completed) {
+                    return 1;
+                  }
+                  if (!a.completed && b.completed) {
+                    return -1;
+                  }
+                  return 0;
+                });
                 break;
               case "deleteTask":
                 // Delete tasks logic
@@ -238,22 +248,13 @@ async function createState(userId: string) {
       return taskLists[taskListId];
     },
     sortTasks: (taskListId: string) => {
-      const fn = (a: Task, b: Task) => {
-        if (a.completed && !b.completed) {
-          return 1;
-        }
-        if (!a.completed && b.completed) {
-          return -1;
-        }
-        return 0;
-      };
-      const taskList = taskLists[taskListId];
-      taskList.taskIds.sort((ida, idb) => fn(tasks[ida], tasks[idb]));
-
       operations[taskListId] = operations[taskListId] || [];
       operations[taskListId].push({
         id: uuid(),
         type: "sortTasks",
+        payload: {
+          taskListId,
+        },
       });
     },
     moveTask: (taskListId: string, taskId: string, to: number) => {
@@ -374,7 +375,7 @@ async function main() {
   stateB.moveTask(tl.id, tl.tasks[1].id, 2); // 買い出し、炊事、掃除、洗濯
 
   stateA.updateTask(tl.id, tl.tasks[0].id, { completed: true });
-  // stateA.sortTasks(tl.id); // 完了済みを後ろに移動, 掃除, 買い出し, 洗濯
+  stateA.sortTasks(tl.id); // 完了済みを後ろに移動, 掃除, 買い出し, 洗濯
   // stateA.sync();
   await stateA.sync(tl.id);
   await stateB.sync(tl.id);
