@@ -167,19 +167,19 @@ async function createState(userId: string) {
             const p = op.payload;
             switch (op.type) {
               case "addTaskList":
-                // Add task list logic
+                // TODO: Add task list logic
                 break;
               case "insertTaskList":
-                // Insert task list logic
+                // TODO: Insert task list logic
                 break;
               case "updateTaskList":
-                // Update task list logic
+                // TODO: Update task list logic
                 break;
               case "moveTaskList":
-                // Move task list logic
+                // TODO: Move task list logic
                 break;
               case "deleteTaskList":
-                // Sort tasks logic
+                // TODO: Sort tasks logic
                 break;
               case "insertTask":
                 if (p.taskListId === taskList.id) {
@@ -224,7 +224,7 @@ async function createState(userId: string) {
                 });
                 break;
               case "deleteTask":
-                // Delete tasks logic
+                // TODO: Delete tasks logic
                 break;
             }
           }
