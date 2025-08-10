@@ -14,16 +14,24 @@ type Task = {
 };
 
 type Operation =
+  // App
   | {
       id: string;
       type: "addTaskList";
-      payload: any;
+      payload: {
+        index: number;
+        taskListId: string;
+      };
     }
   | {
       id: string;
       type: "insertTaskList";
-      payload: any;
+      payload: {
+        index: number;
+        taskList: Partial<TaskList>;
+      };
     }
+  // TaskList
   | {
       id: string;
       type: "updateTaskList";
@@ -81,8 +89,10 @@ type Operation =
     }
   | {
       id: string;
-      type: "deleteTask";
-      payload: any;
+      type: "deleteCompletedTasks";
+      payload: {
+        taskListId: string;
+      };
     };
 
 function mergeOperations(a: Operation[], b: Operation[]): Operation[] {
@@ -103,7 +113,10 @@ const server = {
   taskLists: {},
   tasks: {},
   sessions: {},
-  operations: {},
+  operations: {
+    apps: {},
+    taskLists: {},
+  },
   fetch: async (userId: string) => {
     return {
       taskLists: server.apps[userId]?.taskListIds.map((tlid: string) => {
@@ -135,13 +148,21 @@ const server = {
           {} as { [taskId: string]: Task }
         ),
       },
-      operations: [],
+      operations: {
+        app: [],
+        taskLists: {},
+      },
     };
   },
-  sync: async (taskListId: string, operations: Operation[]) => {
-    server.operations[taskListId] = server.operations[taskListId] || [];
-    server.operations[taskListId].push(...operations);
-    return mergeOperations(server.operations[taskListId], operations);
+  syncApp: async (userId: string, operations: Operation[]) => {
+    server.operations.apps[userId].push(...operations);
+    return mergeOperations(server.operations.apps[userId], operations);
+  },
+  syncTaskList: async (taskListId: string, operations: Operation[]) => {
+    server.operations.taskLists[taskListId] =
+      server.operations.taskLists[taskListId] || [];
+    server.operations.taskLists[taskListId].push(...operations);
+    return mergeOperations(server.operations.taskLists[taskListId], operations);
   },
 };
 
@@ -150,8 +171,14 @@ async function createState(userId: string) {
   taskLists.forEach((tl: TaskList) => server.startSession(tl.id));
 
   const operations: {
-    [taskListId: string]: Operation[];
-  } = {};
+    app: Operation[];
+    taskLists: {
+      [taskListId: string]: Operation[];
+    };
+  } = {
+    app: [],
+    taskLists: {},
+  };
 
   return {
     debug: () => {
@@ -160,96 +187,130 @@ async function createState(userId: string) {
       };
     },
     get: () => {
+      const app = {
+        ...server.apps[userId],
+        taskListIds: [...server.apps[userId].taskListIds],
+      };
+      const tls = [...taskLists.map((tl) => ({ ...tl, tasks: [...tl.tasks] }))];
+
+      for (const op of operations.app) {
+        const p = op.payload;
+        switch (op.type) {
+          case "addTaskList": {
+            const idx = Math.max(0, Math.min(p.index, app.taskListIds.length));
+            app.taskListids.splice(idx, 0, p.taskListId);
+            break;
+          }
+          case "insertTaskList": {
+            const idx = Math.max(0, Math.min(p.index, app.taskListIds.length));
+            app.taskListIds.splice(idx, 0, p.taskList.id);
+            tls.splice(idx, 0, { tasks: [], ...p.taskList });
+            break;
+          }
+        }
+      }
+
       return {
-        taskLists: taskLists.map((tl) => {
-          const taskList = { ...tl, tasks: [...tl.tasks] };
-          for (const op of operations[tl.id] || []) {
+        taskLists: tls.map((tl) => {
+          for (const op of operations.taskLists[tl.id] || []) {
             const p = op.payload;
             switch (op.type) {
-              case "addTaskList":
-                // TODO: Add task list logic
-                break;
-              case "insertTaskList":
-                // TODO: Insert task list logic
-                break;
-              case "updateTaskList":
+              case "updateTaskList": {
                 // TODO: Update task list logic
                 break;
-              case "moveTaskList":
+              }
+              case "moveTaskList": {
                 // TODO: Move task list logic
                 break;
-              case "deleteTaskList":
+              }
+              case "deleteTaskList": {
                 // TODO: Sort tasks logic
                 break;
-              case "insertTask":
-                if (p.taskListId === taskList.id) {
-                  const i = Math.max(
-                    0,
-                    Math.min(p.index, taskList.tasks.length)
-                  );
-                  taskList.tasks.splice(i, 0, p.task);
+              }
+              case "insertTask": {
+                if (p.taskListId === tl.id) {
+                  const i = Math.max(0, Math.min(p.index, tl.tasks.length));
+                  tl.tasks.splice(i, 0, p.task);
                 }
                 break;
-              case "updateTask":
-                if (p.taskListId === taskList.id) {
-                  const task = taskList.tasks.find((t) => t.id === p.taskId);
+              }
+              case "updateTask": {
+                if (p.taskListId === tl.id) {
+                  const task = tl.tasks.find((t) => t.id === p.taskId);
                   if (task) {
                     Object.assign(task, p.task);
                   }
                 }
                 break;
-              case "moveTask":
-                if (p.taskListId === taskList.id) {
-                  const task = taskList.tasks.find((t) => t.id === p.taskId);
+              }
+              case "moveTask": {
+                if (p.taskListId === tl.id) {
+                  const task = tl.tasks.find((t) => t.id === p.taskId);
                   if (task) {
-                    const fromIndex = taskList.tasks.indexOf(task);
-                    taskList.tasks.splice(fromIndex, 1);
+                    const fromIndex = tl.tasks.indexOf(task);
+                    tl.tasks.splice(fromIndex, 1);
                     const toIndex = Math.max(
                       0,
-                      Math.min(p.to, taskList.tasks.length)
+                      Math.min(p.to, tl.tasks.length)
                     );
-                    taskList.tasks.splice(toIndex, 0, task);
+                    tl.tasks.splice(toIndex, 0, task);
                   }
                 }
                 break;
-              case "sortTasks":
-                taskList.tasks.sort((a, b) => {
-                  if (a.completed && !b.completed) {
-                    return 1;
-                  }
-                  if (!a.completed && b.completed) {
-                    return -1;
-                  }
-                  return 0;
-                });
+              }
+              case "sortTasks": {
+                if (p.taskListId === tl.id) {
+                  tl.tasks.sort((a, b) => {
+                    if (a.completed && !b.completed) {
+                      return 1;
+                    }
+                    if (!a.completed && b.completed) {
+                      return -1;
+                    }
+                    return 0;
+                  });
+                }
                 break;
-              case "deleteTask":
-                // TODO: Delete tasks logic
+              }
+              case "deleteCompletedTasks": {
+                if (p.taskListId === tl.id) {
+                  tl.tasks = tl.tasks.filter((t) => !t.completed);
+                }
                 break;
+              }
             }
           }
-          return taskList;
+          return tl;
         }),
       };
     },
     // mutations - tasklists
-    insertTaskList: (name: string, idx: number = -1) => {
-      const id = uuid();
-      if (idx === -1) {
-        app.taskListIds.push(id);
-      } else {
-        app.taskListIds.splice(idx, 0, id);
-      }
-      taskLists[id] = { id, name, taskIds: [] };
-      return taskLists[id];
+    insertTaskList: (index: number, name: string) => {
+      operations.app.push({
+        id: uuid(),
+        type: "insertTaskList",
+        payload: {
+          index,
+          taskList: {
+            id: uuid(),
+            name,
+          },
+        },
+      });
     },
     addTaskList: (taskListId: string) => {
-      app.taskListIds.push(taskListId);
-      return taskLists[taskListId];
+      operations.app.push({
+        id: uuid(),
+        type: "addTaskList",
+        payload: {
+          index: operations.app.length,
+          taskListId,
+        },
+      });
     },
     sortTasks: (taskListId: string) => {
-      operations[taskListId] = operations[taskListId] || [];
-      operations[taskListId].push({
+      operations.taskLists[taskListId] = operations.taskLists[taskListId] || [];
+      operations.taskLists[taskListId].push({
         id: uuid(),
         type: "sortTasks",
         payload: {
@@ -257,9 +318,19 @@ async function createState(userId: string) {
         },
       });
     },
+    deleteCompletedTasks: (taskListId: string) => {
+      operations.taskLists[taskListId] = operations.taskLists[taskListId] || [];
+      operations.taskLists[taskListId].push({
+        id: uuid(),
+        type: "deleteCompletedTasks",
+        payload: {
+          taskListId,
+        },
+      });
+    },
     moveTask: (taskListId: string, taskId: string, to: number) => {
-      operations[taskListId] = operations[taskListId] || [];
-      operations[taskListId].push({
+      operations.taskLists[taskListId] = operations.taskLists[taskListId] || [];
+      operations.taskLists[taskListId].push({
         id: uuid(),
         type: "moveTask",
         payload: {
@@ -271,8 +342,8 @@ async function createState(userId: string) {
     },
     // mutations - tasks
     insertTask: (taskListId: string, index: number, text: string) => {
-      operations[taskListId] = operations[taskListId] || [];
-      operations[taskListId].push({
+      operations.taskLists[taskListId] = operations.taskLists[taskListId] || [];
+      operations.taskLists[taskListId].push({
         id: uuid(),
         type: "insertTask",
         payload: {
@@ -291,8 +362,8 @@ async function createState(userId: string) {
       taskId: string,
       newTask: Partial<Task>
     ) => {
-      operations[taskListId] = operations[taskListId] || [];
-      operations[taskListId].push({
+      operations.taskLists[taskListId] = operations.taskLists[taskListId] || [];
+      operations.taskLists[taskListId].push({
         id: uuid(),
         type: "updateTask",
         payload: {
@@ -303,9 +374,19 @@ async function createState(userId: string) {
       });
     },
     // mutations - sync
-    sync: async (taskListId: string) => {
-      const ops = await server.sync(taskListId, operations[taskListId]);
-      operations[taskListId] = mergeOperations(operations[taskListId], ops);
+    syncApp: async () => {
+      const ops = await server.syncApp(userId, operations.app);
+      operations.app = mergeOperations(operations.app, ops);
+    },
+    syncTaskList: async (taskListId: string) => {
+      const ops = await server.syncTaskList(
+        taskListId,
+        operations.taskLists[taskListId]
+      );
+      operations.taskLists[taskListId] = mergeOperations(
+        operations.taskLists[taskListId],
+        ops
+      );
     },
   };
 }
@@ -366,9 +447,9 @@ async function main() {
   stateB.insertTask(tl.id, tl.tasks.length, "炊事");
   // 買い出し、掃除、炊事、洗濯
 
-  await stateA.sync(tl.id);
-  await stateB.sync(tl.id);
-  await stateA.sync(tl.id);
+  await stateA.syncTaskList(tl.id);
+  await stateB.syncTaskList(tl.id);
+  await stateA.syncTaskList(tl.id);
   tl = stateA.get().taskLists[1];
 
   stateA.moveTask(tl.id, tl.tasks[2].id, 0); // 炊事、買い出し、掃除、洗濯
@@ -376,15 +457,18 @@ async function main() {
 
   stateA.updateTask(tl.id, tl.tasks[0].id, { completed: true });
   stateA.sortTasks(tl.id); // 完了済みを後ろに移動, 掃除, 買い出し, 洗濯
-  // stateA.sync();
-  await stateA.sync(tl.id);
-  await stateB.sync(tl.id);
-  await stateA.sync(tl.id);
+  stateB.insertTaskList(0, "仕事"); // 仕事のタスクリストを先頭に追加
+  stateB.deleteCompletedTasks(tl.id);
+  // stateA.syncTaskList();
+  await stateA.syncTaskList(tl.id);
+  await stateB.syncTaskList(tl.id);
+  await stateA.syncTaskList(tl.id);
   tl = stateA.get().taskLists[1];
 
-  assert.deepEqual(stateA.get().taskLists[1], stateB.get().taskLists[0]);
-  console.log(JSON.stringify(stateA.debug().operations, null, 2));
-  console.log(stateB.get().taskLists[0]);
+  assert.deepEqual(stateA.get().taskLists[1], stateB.get().taskLists[1]);
+  console.log(stateB.get().taskLists[1]);
+  // console.log(stateB.get());
+  // console.log(JSON.stringify(stateA.debug().operations, null, 2));
   // console.log(stateA.get().taskLists[1], stateA.debug().operations);
   // console.log(stateA.get().taskLists[1], stateA.debug().operations);
   // console.log(stateA.get().taskLists[1], stateA.debug().operations);
