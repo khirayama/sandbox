@@ -216,7 +216,9 @@ async function createState(userId: string) {
             const p = op.payload;
             switch (op.type) {
               case "updateTaskList": {
-                // TODO: Update task list logic
+                if (p.taskListId === tl.id) {
+                  Object.assign(tl, p.taskList);
+                }
                 break;
               }
               case "moveTaskList": {
