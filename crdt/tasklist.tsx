@@ -1,4 +1,4 @@
-import assert from "assert";
+import * as assert from "assert";
 import { v7 as uuid } from "uuid";
 
 type TaskList = {
@@ -11,6 +11,12 @@ type Task = {
   id: string;
   text: string;
   completed: boolean;
+};
+
+type FetchedTaskList = {
+  id: string;
+  name: string;
+  tasks: Task[];
 };
 
 type Operation =
@@ -35,7 +41,10 @@ type Operation =
   | {
       id: string;
       type: "updateTaskList";
-      payload: any;
+      payload: {
+        taskListId: string;
+        taskList: Partial<TaskList>;
+      };
     }
   | {
       id: string;
@@ -155,6 +164,7 @@ const server = {
     };
   },
   syncApp: async (userId: string, operations: Operation[]) => {
+    server.operations.apps[userId] = server.operations.apps[userId] || [];
     server.operations.apps[userId].push(...operations);
     return mergeOperations(server.operations.apps[userId], operations);
   },
@@ -168,7 +178,7 @@ const server = {
 
 async function createState(userId: string) {
   const { taskLists } = await server.fetch(userId);
-  taskLists.forEach((tl: TaskList) => server.startSession(tl.id));
+  taskLists.forEach((tl: FetchedTaskList) => server.startSession(tl.id));
 
   const operations: {
     app: Operation[];
@@ -187,23 +197,28 @@ async function createState(userId: string) {
       };
     },
     get: () => {
+      const userApp = server.apps[userId];
+      if (!userApp) {
+        throw new Error(`User ${userId} not found`);
+      }
       const app = {
-        ...server.apps[userId],
-        taskListIds: [...server.apps[userId].taskListIds],
+        ...userApp,
+        taskListIds: [...userApp.taskListIds],
       };
       const tls = [...taskLists.map((tl) => ({ ...tl, tasks: [...tl.tasks] }))];
 
       for (const op of operations.app) {
-        const p = op.payload;
         switch (op.type) {
           case "addTaskList": {
+            const p = op.payload;
             const idx = Math.max(0, Math.min(p.index, app.taskListIds.length));
-            app.taskListids.splice(idx, 0, p.taskListId);
+            app.taskListIds.splice(idx, 0, p.taskListId);
             break;
           }
           case "insertTaskList": {
+            const p = op.payload;
             const idx = Math.max(0, Math.min(p.index, app.taskListIds.length));
-            app.taskListIds.splice(idx, 0, p.taskList.id);
+            app.taskListIds.splice(idx, 0, p.taskList.id!);
             tls.splice(idx, 0, { tasks: [], ...p.taskList });
             break;
           }
@@ -213,9 +228,9 @@ async function createState(userId: string) {
       return {
         taskLists: tls.map((tl) => {
           for (const op of operations.taskLists[tl.id] || []) {
-            const p = op.payload;
             switch (op.type) {
               case "updateTaskList": {
+                const p = op.payload;
                 if (p.taskListId === tl.id) {
                   Object.assign(tl, p.taskList);
                 }
@@ -230,6 +245,7 @@ async function createState(userId: string) {
                 break;
               }
               case "insertTask": {
+                const p = op.payload;
                 if (p.taskListId === tl.id) {
                   const i = Math.max(0, Math.min(p.index, tl.tasks.length));
                   tl.tasks.splice(i, 0, p.task);
@@ -237,6 +253,7 @@ async function createState(userId: string) {
                 break;
               }
               case "updateTask": {
+                const p = op.payload;
                 if (p.taskListId === tl.id) {
                   const task = tl.tasks.find((t) => t.id === p.taskId);
                   if (task) {
@@ -246,6 +263,7 @@ async function createState(userId: string) {
                 break;
               }
               case "moveTask": {
+                const p = op.payload;
                 if (p.taskListId === tl.id) {
                   const task = tl.tasks.find((t) => t.id === p.taskId);
                   if (task) {
@@ -261,6 +279,7 @@ async function createState(userId: string) {
                 break;
               }
               case "sortTasks": {
+                const p = op.payload;
                 if (p.taskListId === tl.id) {
                   tl.tasks.sort((a, b) => {
                     if (a.completed && !b.completed) {
@@ -275,9 +294,18 @@ async function createState(userId: string) {
                 break;
               }
               case "deleteCompletedTasks": {
+                const p = op.payload;
                 if (p.taskListId === tl.id) {
                   tl.tasks = tl.tasks.filter((t) => !t.completed);
                 }
+                break;
+              }
+              case "addTaskList": {
+                // This operation should not be processed at task list level
+                break;
+              }
+              case "insertTaskList": {
+                // This operation should not be processed at task list level
                 break;
               }
             }
@@ -307,6 +335,17 @@ async function createState(userId: string) {
         payload: {
           index: operations.app.length,
           taskListId,
+        },
+      });
+    },
+    updateTaskList: (taskListId: string, newTaskList: Partial<TaskList>) => {
+      operations.taskLists[taskListId] = operations.taskLists[taskListId] || [];
+      operations.taskLists[taskListId].push({
+        id: uuid(),
+        type: "updateTaskList",
+        payload: {
+          taskListId,
+          taskList: newTaskList,
         },
       });
     },
