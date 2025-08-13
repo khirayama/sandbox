@@ -59,7 +59,6 @@ type Operation =
       type: "deleteTaskList";
       payload: {
         taskListId: string;
-        to: number;
       };
     }
   | {
@@ -222,6 +221,15 @@ async function createState(userId: string) {
             tls.splice(idx, 0, { tasks: [], ...p.taskList });
             break;
           }
+          case "deleteTaskList": {
+            const p = op.payload;
+            const idx = app.taskListIds.indexOf(p.taskListId);
+            if (idx !== -1) {
+              app.taskListIds.splice(idx, 1);
+              tls.splice(idx, 1);
+            }
+            break;
+          }
         }
       }
 
@@ -238,10 +246,6 @@ async function createState(userId: string) {
               }
               case "moveTaskList": {
                 // TODO: Move task list logic
-                break;
-              }
-              case "deleteTaskList": {
-                // TODO: Sort tasks logic
                 break;
               }
               case "insertTask": {
@@ -300,14 +304,6 @@ async function createState(userId: string) {
                 }
                 break;
               }
-              case "addTaskList": {
-                // This operation should not be processed at task list level
-                break;
-              }
-              case "insertTaskList": {
-                // This operation should not be processed at task list level
-                break;
-              }
             }
           }
           return tl;
@@ -346,6 +342,15 @@ async function createState(userId: string) {
         payload: {
           taskListId,
           taskList: newTaskList,
+        },
+      });
+    },
+    deleteTaskList: (taskListId: string) => {
+      operations.app.push({
+        id: uuid(),
+        type: "deleteTaskList",
+        payload: {
+          taskListId,
         },
       });
     },
@@ -499,6 +504,7 @@ async function main() {
   stateA.updateTask(tl.id, tl.tasks[0].id, { completed: true });
   stateA.sortTasks(tl.id); // 完了済みを後ろに移動, 掃除, 買い出し, 洗濯
   stateB.insertTaskList(0, "仕事"); // 仕事のタスクリストを先頭に追加
+  stateB.deleteTaskList(stateB.get().taskLists[0].id);
   stateB.deleteCompletedTasks(tl.id);
   // stateA.syncTaskList();
   await stateA.syncTaskList(tl.id);
@@ -506,8 +512,8 @@ async function main() {
   await stateA.syncTaskList(tl.id);
   tl = stateA.get().taskLists[1];
 
-  assert.deepEqual(stateA.get().taskLists[1], stateB.get().taskLists[1]);
-  console.log(stateB.get().taskLists[1]);
+  assert.deepEqual(stateA.get().taskLists[1], stateB.get().taskLists[0]);
+  console.log(stateB.get().taskLists[0]);
   // console.log(stateB.get());
   // console.log(JSON.stringify(stateA.debug().operations, null, 2));
   // console.log(stateA.get().taskLists[1], stateA.debug().operations);
