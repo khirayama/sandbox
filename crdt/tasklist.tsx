@@ -221,6 +221,14 @@ async function createState(userId: string) {
             tls.splice(idx, 0, { tasks: [], ...p.taskList });
             break;
           }
+          case "moveTaskList": {
+            const p = op.payload;
+            const fromIndex = app.taskListIds.indexOf(p.taskListId);
+            app.taskListIds.splice(fromIndex, 1);
+            const toIndex = Math.max(0, Math.min(p.to, app.taskListIds.length));
+            app.taskListIds.splice(toIndex, 0, p.taskListId);
+            break;
+          }
           case "deleteTaskList": {
             const p = op.payload;
             const idx = app.taskListIds.indexOf(p.taskListId);
@@ -233,6 +241,10 @@ async function createState(userId: string) {
         }
       }
 
+      tls.sort((a, b) => {
+        return app.taskListIds.indexOf(a.id) - app.taskListIds.indexOf(b.id);
+      });
+
       return {
         taskLists: tls.map((tl) => {
           for (const op of operations.taskLists[tl.id] || []) {
@@ -242,10 +254,6 @@ async function createState(userId: string) {
                 if (p.taskListId === tl.id) {
                   Object.assign(tl, p.taskList);
                 }
-                break;
-              }
-              case "moveTaskList": {
-                // TODO: Move task list logic
                 break;
               }
               case "insertTask": {
@@ -342,6 +350,16 @@ async function createState(userId: string) {
         payload: {
           taskListId,
           taskList: newTaskList,
+        },
+      });
+    },
+    moveTaskList: (taskListId: string, to: number) => {
+      operations.app.push({
+        id: uuid(),
+        type: "moveTaskList",
+        payload: {
+          taskListId,
+          to,
         },
       });
     },
@@ -506,13 +524,15 @@ async function main() {
   stateB.insertTaskList(0, "仕事"); // 仕事のタスクリストを先頭に追加
   stateB.deleteTaskList(stateB.get().taskLists[0].id);
   stateB.deleteCompletedTasks(tl.id);
-  // stateA.syncTaskList();
+  stateA.moveTaskList(tl.id, 0);
+  await stateA.syncApp();
+  await stateB.syncApp();
   await stateA.syncTaskList(tl.id);
   await stateB.syncTaskList(tl.id);
   await stateA.syncTaskList(tl.id);
   tl = stateA.get().taskLists[1];
 
-  assert.deepEqual(stateA.get().taskLists[1], stateB.get().taskLists[0]);
+  assert.deepEqual(stateA.get().taskLists[0], stateB.get().taskLists[0]);
   console.log(stateB.get().taskLists[0]);
   // console.log(stateB.get());
   // console.log(JSON.stringify(stateA.debug().operations, null, 2));
