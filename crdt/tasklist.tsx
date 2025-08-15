@@ -192,7 +192,7 @@ async function createState(userId: string) {
     taskLists: {},
   };
 
-  return {
+  const tmp = {
     debug: () => {
       return {
         operations,
@@ -455,7 +455,15 @@ async function createState(userId: string) {
         ops
       );
     },
+    sync: async () => {
+      await tmp.syncApp();
+      const taskListIds = Object.keys(operations.taskLists);
+      for (const taskListId of taskListIds) {
+        await tmp.syncTaskList(taskListId);
+      }
+    }
   };
+  return tmp;
 }
 
 function seed() {
@@ -528,11 +536,9 @@ async function main() {
   stateB.deleteTaskList(stateB.get().taskLists[0].id);
   stateB.deleteCompletedTasks(tl.id);
   stateA.moveTaskList(tl.id, 0);
-  await stateA.syncApp();
-  await stateB.syncApp();
-  await stateA.syncTaskList(tl.id);
-  await stateB.syncTaskList(tl.id);
-  await stateA.syncTaskList(tl.id);
+  await stateA.sync();
+  await stateB.sync();
+  await stateA.sync();
   tl = stateA.get().taskLists[1];
 
   assert.deepEqual(stateA.get().taskLists[0], stateB.get().taskLists[0]);
