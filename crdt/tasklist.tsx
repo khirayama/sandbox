@@ -125,6 +125,9 @@ const server = {
     apps: {},
     taskLists: {},
   },
+};
+
+const api = {
   fetch: async (userId: string) => {
     return {
       taskLists: server.apps[userId]?.taskListIds.map((tlid: string) => {
@@ -176,8 +179,8 @@ const server = {
 };
 
 async function createState(userId: string) {
-  const { taskLists } = await server.fetch(userId);
-  taskLists.forEach((tl: FetchedTaskList) => server.startSession(tl.id));
+  const { taskLists } = await api.fetch(userId);
+  taskLists.forEach((tl: FetchedTaskList) => api.startSession(tl.id));
 
   const operations: {
     app: Operation[];
@@ -439,11 +442,11 @@ async function createState(userId: string) {
     },
     // mutations - sync
     syncApp: async () => {
-      const ops = await server.syncApp(userId, operations.app);
+      const ops = await api.syncApp(userId, operations.app);
       operations.app = mergeOperations(operations.app, ops);
     },
     syncTaskList: async (taskListId: string) => {
-      const ops = await server.syncTaskList(
+      const ops = await api.syncTaskList(
         taskListId,
         operations.taskLists[taskListId]
       );
