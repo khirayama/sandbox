@@ -192,7 +192,7 @@ async function createState(userId: string) {
     taskLists: {},
   };
 
-  const tmp = {
+  const state = {
     debug: () => {
       return {
         operations,
@@ -456,14 +456,14 @@ async function createState(userId: string) {
       );
     },
     sync: async () => {
-      await tmp.syncApp();
+      await state.syncApp();
       const taskListIds = Object.keys(operations.taskLists);
       for (const taskListId of taskListIds) {
-        await tmp.syncTaskList(taskListId);
+        await state.syncTaskList(taskListId);
       }
     }
   };
-  return tmp;
+  return state;
 }
 
 function seed() {
