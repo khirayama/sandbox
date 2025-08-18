@@ -12,6 +12,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "hash-sum": "^2.0.0",
     "next": "^15.4.6",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
