@@ -34,12 +34,25 @@ class MCPWeatherServer {
       {
         name: getWeatherTool.name,
         description: getWeatherTool.description,
-        inputSchema: getWeatherTool.inputSchema,
+        inputSchema: {
+          type: "object",
+          properties: {
+            place: {
+              type: "string",
+              description: "天気を取得したい場所"
+            }
+          },
+          required: ["place"]
+        },
       },
       {
         name: getTimeTool.name,
         description: getTimeTool.description,
-        inputSchema: getTimeTool.inputSchema,
+        inputSchema: {
+          type: "object",
+          properties: {},
+          required: []
+        },
       }
     ];
 

@@ -24,7 +24,9 @@ class MCPClient {
     });
 
     const transport = new StdioClientTransport({
-      spawn: () => serverProcess
+      command: 'tsx',
+      args: ['src/server.ts'],
+      env: { ...process.env, MCP_MODE: 'stdio' }
     });
 
     await this.client.connect(transport);
@@ -47,15 +49,7 @@ class MCPClient {
       return data.tools;
     } else {
       // MCP経由でツール一覧を取得
-      const response = await this.client.request(
-        {
-          method: "tools/list",
-        },
-        {
-          // タイムアウト設定
-          timeout: 5000,
-        }
-      );
+      const response = await this.client.listTools();
       return response.tools;
     }
   }
@@ -74,19 +68,11 @@ class MCPClient {
       return data.result;
     } else {
       // MCP経由でツールを呼び出し
-      const response = await this.client.request(
-        {
-          method: "tools/call",
-          params: {
-            name: toolName,
-            arguments: args,
-          },
-        },
-        {
-          timeout: 5000,
-        }
-      );
-      return response.content[0].text;
+      const response = await this.client.callTool({
+        name: toolName,
+        arguments: args,
+      });
+      return (response.content as Array<{ text: string }>)[0].text;
     }
   }
 
