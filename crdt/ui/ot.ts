@@ -218,12 +218,16 @@ const server: {
   tasks: { [taskId: string]: Task };
   appOperations: { [userId: string]: AppOperation[] };
   taskListOperations: { [taskListId: string]: TaskListOperation[] };
+  appCheckpoints: { [userId: string]: string[] };
+  taskListCheckpoints: { [taskListId: string]: string[] };
 } = {
   apps: {},
   taskLists: {},
   tasks: {},
   appOperations: {},
   taskListOperations: {},
+  appCheckpoints: {},
+  taskListCheckpoints: {},
 };
 
 const api = {
