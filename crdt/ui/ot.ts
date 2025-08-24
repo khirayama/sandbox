@@ -5,7 +5,6 @@ import {
   App,
   TaskList,
   Task,
-  TaskListWithTasks,
   Operations,
   TaskListOperation,
   AppOperation,
@@ -101,10 +100,10 @@ export function applyAppOperations(
 }
 
 export function applyTaskListOperations(
-  initialTaskLists: TaskListWithTasks[],
+  initialTaskLists: TaskList[],
   operations: TaskListOperation[]
-): { taskLists: TaskListWithTasks[] } {
-  const taskLists: TaskListWithTasks[] = [
+): { taskLists: TaskList[] } {
+  const taskLists: TaskList[] = [
     ...initialTaskLists.map((tl) => ({ ...tl, tasks: [...tl.tasks] })),
   ];
 
@@ -272,6 +271,12 @@ export function createState(userId: string) {
       listener();
     }
   };
+  const checkpoints = [
+    {
+      app: { taskListIds: [] },
+      taskLists: {},
+    },
+  ];
   const operations: Operations = {
     app: [],
     taskLists: {},
@@ -286,7 +291,7 @@ export function createState(userId: string) {
         operations.app
       );
 
-      let taskLists: TaskListWithTasks[] = app.taskListIds.map((id: string) => {
+      let taskLists: TaskList[] = app.taskListIds.map((id: string) => {
         return (
           taskListPool[id] || {
             id,

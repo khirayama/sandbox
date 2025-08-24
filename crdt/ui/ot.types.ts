@@ -5,19 +5,13 @@ export type App = {
 export type TaskList = {
   id: string;
   name: string;
-  taskIds: string[];
+  tasks: Task[];
 };
 
 export type Task = {
   id: string;
   text: string;
   completed: boolean;
-};
-
-export type TaskListWithTasks = {
-  id: string;
-  name: string;
-  tasks: Task[];
 };
 
 export type AppOperation =
@@ -34,7 +28,7 @@ export type AppOperation =
       type: "insertTaskList";
       payload: {
         index: number;
-        taskList: Partial<TaskListWithTasks> & { id: string };
+        taskList: Partial<TaskList> & { id: string };
       };
     }
   | {
@@ -108,4 +102,16 @@ export type TaskListOperation =
 export type Operations = {
   app: AppOperation[];
   taskLists: { [taskListId: string]: TaskListOperation[] };
+};
+
+export type Checkpoint<T> = {
+  version: number;
+  hash: string;
+  value: T;
+  lastOperationId: string | null;
+};
+
+export type Checkpoints = {
+  app: Checkpoint<App>;
+  taskLists: { [taskListId: string]: Checkpoint<TaskList> };
 };
