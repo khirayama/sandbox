@@ -33,7 +33,7 @@ function initServer(docId: string) {
 
 // 保存
 function saveToDB(docId: string, doc: LoroDoc) {
-  const snapshot = doc.save({ shallow: true, gc: true });
+  const snapshot = doc.export({ mode: 'snapshot' });
   fakeDB.set(docId, Buffer.from(snapshot));
   console.log(`📦 Saved snapshot for ${docId}, size=${snapshot.byteLength} bytes`);
 }
@@ -42,13 +42,16 @@ function saveToDB(docId: string, doc: LoroDoc) {
 function loadFromDB(docId: string): LoroDoc | null {
   const buf = fakeDB.get(docId);
   if (!buf) return null;
-  return LoroDoc.load(buf);
+  const doc = new LoroDoc();
+  doc.import(buf);
+  return doc;
 }
 
 // クライアントから受信して即マージ & 保存
 function receiveFromClient(docId: string, clientDoc: LoroDoc) {
   if (!serverDoc) throw new Error("Server not initialized");
-  serverDoc.merge(clientDoc.export());
+  const updates = clientDoc.export({ mode: 'update' });
+  serverDoc.import(updates);
   saveToDB(docId, serverDoc);
 }
 
@@ -71,53 +74,57 @@ function clientEdit(docId: string, editFn: (doc: LoroDoc) => void) {
 // ------------------- Task 操作用ユーティリティ -------------------
 
 function addTask(doc: LoroDoc, taskId: string, text: string) {
-  const tasks = doc.getMovableList("tasks") as LoroMovableList;
-  const taskMap = doc.createMap() as LoroMap;
-  taskMap.set("id", taskId);
-  taskMap.set("text", text);
-  taskMap.set("completed", false);
-  tasks.push(taskMap);
+  const tasks = doc.getMovableList("tasks");
+  const taskData = {
+    id: taskId,
+    text: text,
+    completed: false
+  };
+  tasks.push(taskData);
 }
 
 function toggleTask(doc: LoroDoc, taskId: string, completed: boolean) {
-  const tasks = doc.getMovableList("tasks") as LoroMovableList;
-  for (const t of tasks.toArray() as LoroMap[]) {
-    if (t.get("id") === taskId) {
-      t.set("completed", completed);
+  const tasks = doc.getMovableList("tasks");
+  const tasksData = tasks.toJSON() as any[];
+  
+  for (let i = 0; i < tasksData.length; i++) {
+    if (tasksData[i].id === taskId) {
+      // タスクを削除して新しいものを同じ位置に挿入
+      tasks.delete(i, 1);
+      tasks.insert(i, {
+        id: taskId,
+        text: tasksData[i].text,
+        completed: completed
+      });
+      break;
     }
   }
 }
 
 function moveTask(doc: LoroDoc, taskId: string, beforeTaskId: string | null) {
-  const tasks = doc.getMovableList("tasks") as LoroMovableList;
-  const taskEntries = tasks.toArray() as LoroMap[];
-
-  const task = taskEntries.find((t) => t.get("id") === taskId);
-  const before = beforeTaskId
-    ? taskEntries.find((t) => t.get("id") === beforeTaskId)
-    : null;
-
-  if (task) {
-    if (before) {
-      tasks.moveBefore(task, before);
-    } else {
-      tasks.push(task); // move to end
-    }
+  const tasks = doc.getMovableList("tasks");
+  const tasksData = tasks.toJSON() as any[];
+  
+  const taskIndex = tasksData.findIndex((t: any) => t.id === taskId);
+  const beforeIndex = beforeTaskId 
+    ? tasksData.findIndex((t: any) => t.id === beforeTaskId)
+    : tasksData.length;
+    
+  if (taskIndex !== -1) {
+    const taskData = tasksData[taskIndex];
+    tasks.delete(taskIndex, 1);
+    const insertIndex = beforeIndex > taskIndex ? beforeIndex - 1 : beforeIndex;
+    tasks.insert(insertIndex, taskData);
   }
 }
 
 // 表示用
 function dump(doc: LoroDoc): TaskList {
-  const root = doc.getMap("root") as LoroMap;
-  const tasks = root.get("tasks") as LoroMovableList;
+  const docData = doc.toJSON() as any;
   return {
-    id: root.get("id"),
-    name: root.get("name"),
-    tasks: (tasks.toArray() as LoroMap[]).map((t) => ({
-      id: t.get("id"),
-      text: t.get("text"),
-      completed: t.get("completed"),
-    })),
+    id: docData.root.id,
+    name: docData.root.name,
+    tasks: docData.tasks || [],
   };
 }
 
