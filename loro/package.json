@@ -6,17 +6,19 @@
   "scripts": {
     "start": "tsx index.ts",
     "dev": "tsx index.ts",
+    "yjs": "npx tsc yjs.ts --target es2022 --module commonjs --noCheck && node yjs.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
   "devDependencies": {
+    "@types/node": "^24.3.0",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2"
   },
   "dependencies": {
-    "loro-crdt": "^1.5.12"
+    "loro-crdt": "^1.5.12",
+    "yjs": "^13.6.27"
   }
 }
