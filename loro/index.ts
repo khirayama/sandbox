@@ -1,5 +1,5 @@
 // tasklist-demo.tsx
-import { LoroDoc, LoroMap, LoroMovableList } from "loro-crdt";
+import { LoroDoc, LoroMap } from "loro-crdt";
 
 // 型定義
 type TaskList = {
@@ -9,6 +9,7 @@ type TaskList = {
     id: string;
     text: string;
     completed: boolean;
+    date: string;
   }[];
 };
 
@@ -118,6 +119,88 @@ function moveTask(doc: LoroDoc, taskId: string, beforeTaskId: string | null) {
   }
 }
 
+function sortTasks(doc: LoroDoc) {
+  const tasks = doc.getMovableList("tasks");
+  const tasksData = tasks.toJSON() as any[];
+  
+  // ソート: 完了状態 -> 日付 -> 現在の順序
+  const sortedTasks = [...tasksData].sort((a, b) => {
+    // 1. 完了状態でソート（未完了が先）
+    if (a.completed !== b.completed) {
+      return a.completed ? 1 : -1;
+    }
+    
+    // 2. 日付でソート（古い順、日付がない場合は後）
+    const dateA = a.date ? new Date(a.date).getTime() : Infinity;
+    const dateB = b.date ? new Date(b.date).getTime() : Infinity;
+    if (dateA !== dateB) {
+      return dateA - dateB;
+    }
+    
+    // 3. 現在の順序を保持
+    return tasksData.indexOf(a) - tasksData.indexOf(b);
+  });
+  
+  // 全てのタスクを削除して、ソート済みで再挿入
+  tasks.delete(0, tasksData.length);
+  sortedTasks.forEach((task) => tasks.push(task));
+}
+
+function deleteCompletedTasks(doc: LoroDoc) {
+  const tasks = doc.getMovableList("tasks");
+  const tasksData = tasks.toJSON() as any[];
+  
+  // 未完了のタスクのみフィルタリング
+  const incompleteTasks = tasksData.filter((task: any) => !task.completed);
+  
+  // 全てのタスクを削除して、未完了のもののみ再挿入
+  tasks.delete(0, tasksData.length);
+  incompleteTasks.forEach((task) => tasks.push(task));
+}
+
+function updateTaskText(doc: LoroDoc, taskId: string, newText: string) {
+  const tasks = doc.getMovableList("tasks");
+  const tasksData = tasks.toJSON() as any[];
+  
+  for (let i = 0; i < tasksData.length; i++) {
+    if (tasksData[i].id === taskId) {
+      // タスクを削除して新しいテキストで同じ位置に挿入
+      tasks.delete(i, 1);
+      tasks.insert(i, {
+        id: taskId,
+        text: newText,
+        completed: tasksData[i].completed,
+        date: tasksData[i].date
+      });
+      break;
+    }
+  }
+}
+
+function setTaskDate(doc: LoroDoc, taskId: string, date: string) {
+  const tasks = doc.getMovableList("tasks");
+  const tasksData = tasks.toJSON() as any[];
+  
+  for (let i = 0; i < tasksData.length; i++) {
+    if (tasksData[i].id === taskId) {
+      // タスクを削除して新しい日付で同じ位置に挿入
+      tasks.delete(i, 1);
+      tasks.insert(i, {
+        id: taskId,
+        text: tasksData[i].text,
+        completed: tasksData[i].completed,
+        date: date
+      });
+      break;
+    }
+  }
+}
+
+function updateTaskListName(doc: LoroDoc, newName: string) {
+  const root = doc.getMap("root");
+  root.set("name", newName);
+}
+
 // 表示用
 function dump(doc: LoroDoc): TaskList {
   const docData = doc.toJSON() as any;
@@ -134,28 +217,54 @@ async function main() {
 
   // Server 初期化
   initServer(docId);
+  console.log("📋 初期状態:");
+  console.dir(dump(loadFromDB(docId)!), { depth: null });
 
-  // UserA: タスク追加 & 名前変更
+  // UserA: タスク追加 & 名前変更（新機能: updateTaskListName使用）
   clientEdit(docId, (doc) => {
     addTask(doc, "t1", "Buy milk");
     addTask(doc, "t2", "Write report");
-    doc.getMap("root").set("name", "UserA's TaskList");
+    updateTaskListName(doc, "UserA's TaskList");
   });
+  console.log("📝 UserA: タスク追加 & リスト名変更後:");
+  console.dir(dump(loadFromDB(docId)!), { depth: null });
 
-  // UserB: タスク追加 & 完了チェック
+  // UserB: タスク追加 & 日付設定（新機能: setTaskDate使用）
   clientEdit(docId, (doc) => {
     addTask(doc, "t3", "Clean desk");
-    toggleTask(doc, "t1", true);
+    setTaskDate(doc, "t1", "2024-01-15");
+    setTaskDate(doc, "t2", "2024-01-20");
+    setTaskDate(doc, "t3", "2024-01-10");
   });
+  console.log("🗓️ UserB: タスク追加 & 日付設定後:");
+  console.dir(dump(loadFromDB(docId)!), { depth: null });
 
-  // UserA: 並び替え
+  // UserA: タスクテキスト変更 & 完了チェック（新機能: updateTaskText使用）
   clientEdit(docId, (doc) => {
-    moveTask(doc, "t3", "t1");
+    updateTaskText(doc, "t1", "Buy organic milk");
+    toggleTask(doc, "t1", true);
+    toggleTask(doc, "t3", true);
   });
+  console.log("✏️ UserA: テキスト変更 & 完了チェック後:");
+  console.dir(dump(loadFromDB(docId)!), { depth: null });
+
+  // UserB: タスクソート（新機能: sortTasks使用）
+  clientEdit(docId, (doc) => {
+    sortTasks(doc);
+  });
+  console.log("🔄 UserB: タスクソート後（未完了→完了、日付順）:");
+  console.dir(dump(loadFromDB(docId)!), { depth: null });
+
+  // UserA: 完了済みタスク削除（新機能: deleteCompletedTasks使用）
+  clientEdit(docId, (doc) => {
+    deleteCompletedTasks(doc);
+  });
+  console.log("🗑️ UserA: 完了済みタスク削除後:");
+  console.dir(dump(loadFromDB(docId)!), { depth: null });
 
   // 最終状態をサーバーから取得して表示
   const finalDoc = loadFromDB(docId)!;
-  console.log("✅ Final TaskList:");
+  console.log("✅ 最終状態:");
   console.dir(dump(finalDoc), { depth: null });
 }
 
