@@ -2,15 +2,17 @@
 import { LoroDoc, LoroMap } from "loro-crdt";
 
 // 型定義
+type Task = {
+  id: string;
+  text: string;
+  completed: boolean;
+  date: string;
+}
+
 type TaskList = {
   id: string;
   name: string;
-  tasks: {
-    id: string;
-    text: string;
-    completed: boolean;
-    date: string;
-  }[];
+  tasks: Task[];
 };
 
 // 擬似DB (PostgreSQL BYTEA の代わり)
@@ -28,7 +30,7 @@ function initServer(docId: string) {
   root.set("id", docId);
   root.set("name", "New TaskList");
   const tasks = serverDoc.getMovableList("tasks");
-  root.set("tasks", tasks);
+  root.set("tasks", tasks as any);
   saveToDB(docId, serverDoc);
 }
 
@@ -86,7 +88,7 @@ function addTask(doc: LoroDoc, taskId: string, text: string) {
 
 function toggleTask(doc: LoroDoc, taskId: string, completed: boolean) {
   const tasks = doc.getMovableList("tasks");
-  const tasksData = tasks.toJSON() as any[];
+  const tasksData = tasks.toJSON() as Task[];
   
   for (let i = 0; i < tasksData.length; i++) {
     if (tasksData[i].id === taskId) {
@@ -104,11 +106,11 @@ function toggleTask(doc: LoroDoc, taskId: string, completed: boolean) {
 
 function moveTask(doc: LoroDoc, taskId: string, beforeTaskId: string | null) {
   const tasks = doc.getMovableList("tasks");
-  const tasksData = tasks.toJSON() as any[];
+  const tasksData = tasks.toJSON() as Task[];
   
-  const taskIndex = tasksData.findIndex((t: any) => t.id === taskId);
+  const taskIndex = tasksData.findIndex((t) => t.id === taskId);
   const beforeIndex = beforeTaskId 
-    ? tasksData.findIndex((t: any) => t.id === beforeTaskId)
+    ? tasksData.findIndex((t) => t.id === beforeTaskId)
     : tasksData.length;
     
   if (taskIndex !== -1) {
@@ -121,7 +123,7 @@ function moveTask(doc: LoroDoc, taskId: string, beforeTaskId: string | null) {
 
 function sortTasks(doc: LoroDoc) {
   const tasks = doc.getMovableList("tasks");
-  const tasksData = tasks.toJSON() as any[];
+  const tasksData = tasks.toJSON() as Task[];
   
   // ソート: 完了状態 -> 日付 -> 現在の順序
   const sortedTasks = [...tasksData].sort((a, b) => {
@@ -148,10 +150,10 @@ function sortTasks(doc: LoroDoc) {
 
 function deleteCompletedTasks(doc: LoroDoc) {
   const tasks = doc.getMovableList("tasks");
-  const tasksData = tasks.toJSON() as any[];
+  const tasksData = tasks.toJSON() as Task[];
   
   // 未完了のタスクのみフィルタリング
-  const incompleteTasks = tasksData.filter((task: any) => !task.completed);
+  const incompleteTasks = tasksData.filter((task) => !task.completed);
   
   // 全てのタスクを削除して、未完了のもののみ再挿入
   tasks.delete(0, tasksData.length);
@@ -160,7 +162,7 @@ function deleteCompletedTasks(doc: LoroDoc) {
 
 function updateTaskText(doc: LoroDoc, taskId: string, newText: string) {
   const tasks = doc.getMovableList("tasks");
-  const tasksData = tasks.toJSON() as any[];
+  const tasksData = tasks.toJSON() as Task[];
   
   for (let i = 0; i < tasksData.length; i++) {
     if (tasksData[i].id === taskId) {
@@ -179,7 +181,7 @@ function updateTaskText(doc: LoroDoc, taskId: string, newText: string) {
 
 function setTaskDate(doc: LoroDoc, taskId: string, date: string) {
   const tasks = doc.getMovableList("tasks");
-  const tasksData = tasks.toJSON() as any[];
+  const tasksData = tasks.toJSON() as Task[];
   
   for (let i = 0; i < tasksData.length; i++) {
     if (tasksData[i].id === taskId) {
@@ -203,7 +205,7 @@ function updateTaskListName(doc: LoroDoc, newName: string) {
 
 // 表示用
 function dump(doc: LoroDoc): TaskList {
-  const docData = doc.toJSON() as any;
+  const docData = doc.toJSON() as { root: TaskList, tasks: Task[] };
   return {
     id: docData.root.id,
     name: docData.root.name,
@@ -253,6 +255,14 @@ async function main() {
     sortTasks(doc);
   });
   console.log("🔄 UserB: タスクソート後（未完了→完了、日付順）:");
+  console.dir(dump(loadFromDB(docId)!), { depth: null });
+
+  // UserA: タスクの順序変更（新機能: moveTask使用）
+  clientEdit(docId, (doc) => {
+    // "Write report"タスク(t2)を末尾に移動
+    moveTask(doc, "t2", null);
+  });
+  console.log("🔄 UserA: タスク順序変更後（Write reportを末尾に移動）:");
   console.dir(dump(loadFromDB(docId)!), { depth: null });
 
   // UserA: 完了済みタスク削除（新機能: deleteCompletedTasks使用）
