@@ -22,13 +22,19 @@
       "mcp__serena__find_file",
       "mcp__serena__get_symbols_overview",
       "mcp__serena__find_symbol",
-      "mcp__serena__find_referencing_symbols"
+      "mcp__serena__find_referencing_symbols",
+      "mcp__serena__search_for_pattern",
+      "Bash(npx tsc:*)",
+      "mcp__serena__think_about_collected_information",
+      "mcp__serena__check_onboarding_performed",
+      "Bash(npx:*)",
+      "mcp__serena__replace_symbol_body",
+      "mcp__serena__onboarding",
+      "mcp__serena__write_memory"
     ],
     "deny": [],
     "ask": []
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": [
-    "context7"
-  ]
+  "enabledMcpjsonServers": ["context7"]
 }
