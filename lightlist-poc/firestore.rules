@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid} {
+      allow read, write: if request.auth.uid == uid;
+    }
+
+    match /settings/{uid} {
+      allow read: if request.auth.uid == uid;
+      allow write: if request.auth.uid == uid
+        && request.resource.data.keys().hasAll(['theme', 'language', 'taskInsertPosition', 'autoSort'])
+        && request.resource.data.theme in ['system', 'light', 'dark']
+        && request.resource.data.language in ['ja', 'en']
+        && request.resource.data.taskInsertPosition in ['bottom', 'top']
+        && request.resource.data.autoSort is bool;
+    }
+
+    match /todoLists/{listId} {
+      allow read, write: if request.auth.uid == resource.data.owner;
+      allow create: if request.auth.uid == request.resource.data.owner;
+
+      match /tasks/{taskId} {
+        allow read, write: if request.auth.uid == get(/databases/$(database)/documents/todoLists/$(listId)).data.owner;
+      }
+    }
+  }
+}
