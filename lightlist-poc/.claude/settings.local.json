@@ -30,7 +30,12 @@
       "Bash(npx:*)",
       "mcp__serena__replace_symbol_body",
       "mcp__serena__onboarding",
-      "mcp__serena__write_memory"
+      "mcp__serena__write_memory",
+      "mcp__serena__read_memory",
+      "WebFetch(domain:firebase.google.com)",
+      "Bash(npm run format:*)",
+      "Bash(npm run:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []
