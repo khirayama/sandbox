@@ -37,14 +37,7 @@ import {
   TaskListOrderStore,
   User,
 } from "./types";
-import i18n from "./i18n";
 
-/* 関数一覧
- * createStore
- *
- */
-
-// Store
 type DataStore = {
   user: User | null;
   settings: SettingsStore | null;
@@ -52,6 +45,26 @@ type DataStore = {
   taskLists: {
     [taskListId: string]: TaskListStore;
   };
+};
+
+type StoreListener = (state: AppState) => void;
+
+const deepEqual = (a: unknown, b: unknown): boolean => {
+  if (a === b) return true;
+  if (a == null || b == null) return a === b;
+  if (typeof a !== "object" || typeof b !== "object") return false;
+
+  const keysA = Object.keys(a);
+  const keysB = Object.keys(b);
+
+  if (keysA.length !== keysB.length) return false;
+
+  return keysA.every((key) =>
+    deepEqual(
+      (a as Record<string, unknown>)[key],
+      (b as Record<string, unknown>)[key],
+    ),
+  );
 };
 
 const transform = (d: DataStore): AppState => {
@@ -71,8 +84,8 @@ const transform = (d: DataStore): AppState => {
             .filter(([key]) => key !== "createdAt" && key !== "updatedAt")
             .sort(
               (a, b) =>
-                (a[1] as { order: number }).order -
-                (b[1] as { order: number }).order,
+                (a[1] as unknown as { order: number }).order -
+                (b[1] as unknown as { order: number }).order,
             )
             .map(([listId]) => {
               const listData = d.taskLists[listId];
@@ -98,8 +111,27 @@ function createStore() {
     taskLists: {},
   };
 
-  const listeners = new Set<Function>();
+  const listeners = new Set<StoreListener>();
   const unsubscribers: (() => void)[] = [];
+
+  const emit = (() => {
+    let emitScheduled = false;
+    let prevState: AppState | null = null;
+
+    return () => {
+      if (emitScheduled) return;
+      emitScheduled = true;
+
+      requestAnimationFrame(() => {
+        emitScheduled = false;
+        const nextState = transform(data);
+        if (!prevState || !deepEqual(prevState, nextState)) {
+          prevState = nextState;
+          listeners.forEach((listener) => listener(nextState));
+        }
+      });
+    };
+  })();
 
   const subscribeToUserData = (uid: string) => {
     unsubscribers.forEach((unsub) => unsub());
@@ -111,7 +143,7 @@ function createStore() {
       } else {
         data.settings = null;
       }
-      listeners.forEach((listener) => listener(transform(data)));
+      emit();
     });
     unsubscribers.push(settingsUnsub);
 
@@ -123,8 +155,7 @@ function createStore() {
         } else {
           data.taskListOrder = null;
         }
-        listeners.forEach((listener) => listener(transform(data)));
-
+        emit();
         subscribeToTaskLists(data.taskListOrder);
       },
     );
@@ -137,7 +168,7 @@ function createStore() {
 
     if (!taskListOrder) {
       data.taskLists = {};
-      listeners.forEach((listener) => listener(transform(data)));
+      emit();
       return;
     }
 
@@ -147,7 +178,7 @@ function createStore() {
 
     if (taskListIds.length === 0) {
       data.taskLists = {};
-      listeners.forEach((listener) => listener(transform(data)));
+      emit();
       return;
     }
 
@@ -165,7 +196,7 @@ function createStore() {
             lists[doc.id] = doc.data() as TaskListStore;
           });
           data.taskLists = { ...data.taskLists, ...lists };
-          listeners.forEach((listener) => listener(transform(data)));
+          emit();
         },
       );
       unsubscribers.push(taskListsUnsub);
@@ -183,12 +214,12 @@ function createStore() {
       data.taskListOrder = null;
       data.taskLists = {};
     }
-    listeners.forEach((listener) => listener(transform(data)));
+    emit();
   });
 
   const store = {
     getState: (): AppState => transform(data),
-    subscribe: (listener: Function) => {
+    subscribe: (listener: StoreListener) => {
       listeners.add(listener);
       return () => listeners.delete(listener);
     },
@@ -257,25 +288,25 @@ function createStore() {
       const uid = auth.currentUser?.uid;
       if (!uid) throw new Error("No user logged in");
 
-      // 1. ローカルの状態を即座に更新
+      const now = Date.now();
+
       if (data.settings) {
         data.settings = {
           ...data.settings,
           ...settings,
-          updatedAt: Date.now(),
+          updatedAt: now,
         };
       }
 
-      // 2. リスナーに通知（UIを即座に更新）
-      listeners.forEach((listener) => listener(transform(data)));
+      emit();
 
-      // 3. Firestoreへ非同期更新
       try {
-        const updates: Record<string, unknown> = { ...settings };
-        updates.updatedAt = Date.now();
+        const updates: Record<string, unknown> = {
+          ...settings,
+          updatedAt: now,
+        };
         await updateDoc(doc(db, "settings", uid), updates as any);
       } catch (error) {
-        // エラー時は onSnapshot が自動的に正しい状態に戻す
         throw error;
       }
     },
@@ -285,25 +316,25 @@ function createStore() {
       const uid = auth.currentUser?.uid;
       if (!uid) throw new Error("No user logged in");
 
-      // 1. ローカルの状態を即座に更新
+      const now = Date.now();
+
       if (data.taskListOrder) {
         data.taskListOrder = {
           ...data.taskListOrder,
           ...taskListOrder,
-          updatedAt: Date.now(),
+          updatedAt: now,
         } as TaskListOrderStore;
       }
 
-      // 2. リスナーに通知（UIを即座に更新）
-      listeners.forEach((listener) => listener(transform(data)));
+      emit();
 
-      // 3. Firestoreへ非同期更新
       try {
-        const updates: Record<string, unknown> = { ...taskListOrder };
-        updates.updatedAt = Date.now();
+        const updates: Record<string, unknown> = {
+          ...taskListOrder,
+          updatedAt: now,
+        };
         await updateDoc(doc(db, "taskListOrder", uid), updates as any);
       } catch (error) {
-        // エラー時は onSnapshot が自動的に正しい状態に戻す
         throw error;
       }
     },
@@ -311,10 +342,8 @@ function createStore() {
       const uid = auth.currentUser?.uid;
       if (!uid) throw new Error("No user logged in");
 
-      // 1. Firestoreが自動生成するIDを事前取得
       const taskListId = doc(collection(db, "taskLists")).id;
 
-      // 2. maxOrder を計算
       const maxOrder =
         Object.values(data.taskListOrder || {})
           .filter(
@@ -324,7 +353,6 @@ function createStore() {
           .map((item) => (item as { order: number }).order)
           .reduce((max, order) => Math.max(max, order), -1) + 1;
 
-      // 3. ローカルの状態を即座に更新
       const now = Date.now();
       const newTaskList: TaskListStore = {
         id: taskListId,
@@ -341,10 +369,8 @@ function createStore() {
         data.taskListOrder.updatedAt = now;
       }
 
-      // 4. リスナーに通知（UIを即座に更新）
-      listeners.forEach((listener) => listener(transform(data)));
+      emit();
 
-      // 5. Firestoreへ非同期更新
       try {
         const batch = writeBatch(db);
         batch.set(doc(db, "taskLists", taskListId), newTaskList);
@@ -354,7 +380,6 @@ function createStore() {
         });
         await batch.commit();
       } catch (error) {
-        // エラー時は onSnapshot が自動的に正しい状態に戻す
         throw error;
       }
 
@@ -364,25 +389,25 @@ function createStore() {
       taskListId: string,
       updates: Partial<Omit<TaskListStore, "id" | "createdAt" | "updatedAt">>,
     ) => {
-      // 1. ローカルの状態を即座に更新
+      const now = Date.now();
+
       if (data.taskLists[taskListId]) {
         data.taskLists[taskListId] = {
           ...data.taskLists[taskListId],
           ...updates,
-          updatedAt: Date.now(),
+          updatedAt: now,
         };
       }
 
-      // 2. リスナーに通知（UIを即座に更新）
-      listeners.forEach((listener) => listener(transform(data)));
+      emit();
 
-      // 3. Firestoreへ非同期更新
       try {
-        const updateData: Record<string, unknown> = { ...updates };
-        updateData.updatedAt = Date.now();
+        const updateData: Record<string, unknown> = {
+          ...updates,
+          updatedAt: now,
+        };
         await updateDoc(doc(db, "taskLists", taskListId), updateData as any);
       } catch (error) {
-        // エラー時は onSnapshot が自動的に正しい状態に戻す
         throw error;
       }
     },
@@ -390,47 +415,41 @@ function createStore() {
       const uid = auth.currentUser?.uid;
       if (!uid) throw new Error("No user logged in");
 
-      // 1. ローカルの状態を即座に更新
+      const now = Date.now();
+
       delete data.taskLists[taskListId];
       if (data.taskListOrder) {
         const newTaskListOrder = { ...data.taskListOrder };
         delete newTaskListOrder[taskListId];
-        newTaskListOrder.updatedAt = Date.now();
+        newTaskListOrder.updatedAt = now;
         data.taskListOrder = newTaskListOrder;
       }
 
-      // 2. リスナーに通知（UIを即座に更新）
-      listeners.forEach((listener) => listener(transform(data)));
+      emit();
 
-      // 3. Firestoreへ非同期更新
       try {
         const batch = writeBatch(db);
         batch.delete(doc(db, "taskLists", taskListId));
         batch.update(doc(db, "taskListOrder", uid), {
           [taskListId]: deleteField(),
-          updatedAt: Date.now(),
+          updatedAt: now,
         });
         await batch.commit();
       } catch (error) {
-        // エラー時は onSnapshot が自動的に正しい状態に戻す
         throw error;
       }
     },
     addTask: async (taskListId: string, text: string, date: string = "") => {
-      // 1. Firestoreが自動生成するIDを事前取得
       const taskId = doc(collection(db, "taskLists")).id;
 
-      // 2. 現在のタスクリストデータを取得
       const taskListData = data.taskLists[taskListId];
       if (!taskListData) throw new Error("Task list not found");
 
-      // 3. maxOrder を計算
       const maxOrder =
         Object.values(taskListData.tasks)
           .map((task) => task.order)
           .reduce((max, order) => Math.max(max, order), -1) + 1;
 
-      // 4. ローカルの状態を即座に更新
       const now = Date.now();
       const newTask = {
         id: taskId,
@@ -442,10 +461,8 @@ function createStore() {
       data.taskLists[taskListId].tasks[taskId] = newTask;
       data.taskLists[taskListId].updatedAt = now;
 
-      // 5. リスナーに通知（UIを即座に更新）
-      listeners.forEach((listener) => listener(transform(data)));
+      emit();
 
-      // 6. Firestoreへ非同期更新
       try {
         const taskListRef = doc(db, "taskLists", taskListId);
         await updateDoc(taskListRef, {
@@ -453,7 +470,6 @@ function createStore() {
           updatedAt: now,
         });
       } catch (error) {
-        // エラー時は onSnapshot が自動的に正しい状態に戻す
         throw error;
       }
 
@@ -464,7 +480,8 @@ function createStore() {
       taskId: string,
       updates: Partial<Task>,
     ) => {
-      // 1. ローカルの状態を即座に更新
+      const now = Date.now();
+
       if (
         data.taskLists[taskListId] &&
         data.taskLists[taskListId].tasks[taskId]
@@ -473,47 +490,41 @@ function createStore() {
           ...data.taskLists[taskListId].tasks[taskId],
           ...updates,
         };
-        data.taskLists[taskListId].updatedAt = Date.now();
+        data.taskLists[taskListId].updatedAt = now;
       }
 
-      // 2. リスナーに通知（UIを即座に更新）
-      listeners.forEach((listener) => listener(transform(data)));
+      emit();
 
-      // 3. Firestoreへ非同期更新
       try {
         const taskListRef = doc(db, "taskLists", taskListId);
-        const updateData: Record<string, unknown> = {};
+        const updateData: Record<string, unknown> = { updatedAt: now };
         Object.entries(updates).forEach(([key, value]) => {
           updateData[`tasks.${taskId}.${key}`] = value;
         });
-        updateData.updatedAt = Date.now();
         await updateDoc(taskListRef, updateData as any);
       } catch (error) {
-        // エラー時は onSnapshot が自動的に正しい状態に戻す
         throw error;
       }
     },
     deleteTask: async (taskListId: string, taskId: string) => {
-      // 1. ローカルの状態を即座に更新
+      const now = Date.now();
+
       if (data.taskLists[taskListId]) {
         const newTasks = { ...data.taskLists[taskListId].tasks };
         delete newTasks[taskId];
         data.taskLists[taskListId].tasks = newTasks;
-        data.taskLists[taskListId].updatedAt = Date.now();
+        data.taskLists[taskListId].updatedAt = now;
       }
 
-      // 2. リスナーに通知（UIを即座に更新）
-      listeners.forEach((listener) => listener(transform(data)));
+      emit();
 
-      // 3. Firestoreへ非同期更新
       try {
         const taskListRef = doc(db, "taskLists", taskListId);
         await updateDoc(taskListRef, {
           [`tasks.${taskId}`]: deleteField(),
-          updatedAt: Date.now(),
+          updatedAt: now,
         });
       } catch (error) {
-        // エラー時は onSnapshot が自動的に正しい状態に戻す
         throw error;
       }
     },
