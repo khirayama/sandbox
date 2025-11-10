@@ -35,7 +35,11 @@
       "WebFetch(domain:firebase.google.com)",
       "Bash(npm run format:*)",
       "Bash(npm run:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(find:*)",
+      "Bash(git checkout:*)",
+      "WebFetch(domain:docs.expo.dev)",
+      "WebFetch(domain:react-swipeable-views.com)"
     ],
     "deny": [],
     "ask": []
