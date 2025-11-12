@@ -1,0 +1,127 @@
+{
+  "common": {
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "success": "成功",
+    "retry": "再試行",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "delete": "削除",
+    "edit": "編集",
+    "add": "追加",
+    "create": "作成",
+    "close": "閉じる",
+    "confirm": "確認",
+    "back": "戻る"
+  },
+  "errors": {
+    "emptyCredentials": "メールアドレスとパスワードを入力してください",
+    "emptyEmail": "メールアドレスを入力してください",
+    "emptyPassword": "パスワードを入力してください",
+    "emptyListName": "リスト名を入力してください",
+    "emptyItemTitle": "タスク名を入力してください",
+    "passwordMismatch": "パスワードが一致しません",
+    "passwordTooShort": "パスワードは6文字以上である必要があります",
+    "loginFailed": "ログインに失敗しました。認証情報を確認してください",
+    "signupFailed": "登録に失敗しました。もう一度試してください",
+    "signOutFailed": "ログアウトに失敗しました。もう一度試してください",
+    "resetPasswordFailed": "パスワードリセットに失敗しました。もう一度試してください",
+    "invalidEmail": "無効なメールアドレスです",
+    "invalidResetLink": "無効なパスワードリセットリンクです",
+    "invalidOrExpiredCode": "パスワードリセットコードが無効か、期限切れです",
+    "expiredResetCode": "パスワードリセットコードが期限切れです。新しいリセットリンクをリクエストしてください",
+    "invalidResetCode": "無効なパスワードリセットコードです。新しいリセットリンクをリクエストしてください",
+    "weakPassword": "パスワードが弱すぎます。もっと強いパスワードを使用してください",
+    "failedToCreateList": "リストの作成に失敗しました。もう一度試してください",
+    "failedToAddItem": "タスクの追加に失敗しました。もう一度試してください"
+  },
+  "auth": {
+    "email": "メールアドレス",
+    "emailPlaceholder": "example@email.com",
+    "password": "パスワード",
+    "passwordPlaceholder": "パスワードを入力",
+    "confirmPassword": "パスワード（確認）",
+    "confirmPasswordPlaceholder": "パスワードを再入力",
+    "displayName": "表示名",
+    "displayNamePlaceholder": "お名前を入力",
+    "login": {
+      "title": "ログイン",
+      "subtitle": "アカウントにログインしてください",
+      "button": "ログイン",
+      "noAccount": "アカウントをお持ちでない方",
+      "signupLink": "新規登録",
+      "forgotPasswordLink": "パスワードをお忘れですか？"
+    },
+    "signup": {
+      "title": "新規登録",
+      "subtitle": "アカウントを作成してください",
+      "button": "アカウント作成",
+      "haveAccount": "すでにアカウントをお持ちの方",
+      "loginLink": "ログイン"
+    },
+    "forgotPassword": {
+      "title": "パスワードをお忘れですか？",
+      "subtitle": "アカウント復旧",
+      "description": "登録されたメールアドレスにパスワードリセットのリンクが送信されます",
+      "button": "リセットリンク送信",
+      "successMessage": "パスワードリセットのメールが送信されました。メールのリンクからパスワードをリセットしてください",
+      "haveAccount": "アカウントをお持ちの方",
+      "loginLink": "ログインに戻る"
+    },
+    "resetPassword": {
+      "title": "パスワードをリセット",
+      "subtitle": "新しいパスワードを入力してください",
+      "newPassword": "新しいパスワード",
+      "newPasswordPlaceholder": "新しいパスワードを入力",
+      "confirmPassword": "パスワード（確認）",
+      "confirmPasswordPlaceholder": "新しいパスワードを再入力",
+      "button": "パスワードをリセット",
+      "successMessage": "パスワードが正常にリセットされました。新しいパスワードでログインしてください。",
+      "loginLink": "ログイン"
+    }
+  },
+  "tabs": {
+    "lists": "リスト",
+    "settings": "設定"
+  },
+  "lists": {
+    "title": "TODOリスト",
+    "empty": "リストがありません",
+    "itemCount": "{{count}}件のタスク",
+    "newListPlaceholder": "リスト名を入力"
+  },
+  "todos": {
+    "title": "タスク",
+    "empty": "タスクがありません"
+  },
+  "settings": {
+    "title": "設定",
+    "sections": {
+      "account": "アカウント",
+      "appearance": "表示設定",
+      "tasks": "タスク設定",
+      "about": "アプリについて"
+    },
+    "theme": {
+      "label": "テーマ",
+      "system": "システム設定",
+      "light": "ライト",
+      "dark": "ダーク"
+    },
+    "language": {
+      "label": "言語"
+    },
+    "taskInsertPosition": {
+      "label": "新しいタスクの挿入位置",
+      "bottom": "下に追加",
+      "top": "上に追加"
+    },
+    "autoSort": {
+      "label": "自動ソート"
+    },
+    "about": {
+      "version": "バージョン"
+    },
+    "signOut": "ログアウト"
+  }
+}

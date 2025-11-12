@@ -1,0 +1,127 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "create": "Create",
+    "close": "Close",
+    "confirm": "Confirm",
+    "back": "Back"
+  },
+  "errors": {
+    "emptyCredentials": "Please enter your email and password",
+    "emptyEmail": "Please enter your email address",
+    "emptyPassword": "Please enter a password",
+    "emptyListName": "Please enter a list name",
+    "emptyItemTitle": "Please enter a task title",
+    "passwordMismatch": "Passwords do not match",
+    "passwordTooShort": "Password must be at least 6 characters long",
+    "loginFailed": "Login failed. Please check your credentials",
+    "signupFailed": "Sign up failed. Please try again",
+    "signOutFailed": "Sign out failed. Please try again",
+    "resetPasswordFailed": "Password reset failed. Please try again",
+    "invalidEmail": "Invalid email address",
+    "invalidResetLink": "Invalid password reset link",
+    "invalidOrExpiredCode": "Password reset code is invalid or has expired",
+    "expiredResetCode": "Password reset code has expired. Please request a new password reset link",
+    "invalidResetCode": "Invalid password reset code. Please request a new password reset link",
+    "weakPassword": "Password is too weak. Please use a stronger password",
+    "failedToCreateList": "Failed to create list. Please try again",
+    "failedToAddItem": "Failed to add task. Please try again"
+  },
+  "auth": {
+    "email": "Email",
+    "emailPlaceholder": "example@email.com",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Re-enter your password",
+    "displayName": "Display Name",
+    "displayNamePlaceholder": "Enter your name",
+    "login": {
+      "title": "Login",
+      "subtitle": "Sign in to your account",
+      "button": "Sign In",
+      "noAccount": "Don't have an account?",
+      "signupLink": "Sign Up",
+      "forgotPasswordLink": "Forgot your password?"
+    },
+    "signup": {
+      "title": "Sign Up",
+      "subtitle": "Create your account",
+      "button": "Create Account",
+      "haveAccount": "Already have an account?",
+      "loginLink": "Sign In"
+    },
+    "forgotPassword": {
+      "title": "Forgot Your Password?",
+      "subtitle": "Account Recovery",
+      "description": "We'll send a password reset link to your registered email address",
+      "button": "Send Reset Link",
+      "successMessage": "Password reset email has been sent. Please check your email and reset your password using the link provided",
+      "haveAccount": "Remember your password?",
+      "loginLink": "Back to Login"
+    },
+    "resetPassword": {
+      "title": "Reset Your Password",
+      "subtitle": "Enter your new password",
+      "newPassword": "New Password",
+      "newPasswordPlaceholder": "Enter new password",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Re-enter new password",
+      "button": "Reset Password",
+      "successMessage": "Your password has been successfully reset. Please log in with your new password.",
+      "loginLink": "Sign In"
+    }
+  },
+  "tabs": {
+    "lists": "Lists",
+    "settings": "Settings"
+  },
+  "lists": {
+    "title": "TODO Lists",
+    "empty": "No lists yet",
+    "itemCount": "{{count}} tasks",
+    "newListPlaceholder": "Enter list name"
+  },
+  "todos": {
+    "title": "Tasks",
+    "empty": "No tasks yet"
+  },
+  "settings": {
+    "title": "Settings",
+    "sections": {
+      "account": "Account",
+      "appearance": "Appearance",
+      "tasks": "Task Settings",
+      "about": "About"
+    },
+    "theme": {
+      "label": "Theme",
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "language": {
+      "label": "Language"
+    },
+    "taskInsertPosition": {
+      "label": "New Task Insert Position",
+      "bottom": "Add to Bottom",
+      "top": "Add to Top"
+    },
+    "autoSort": {
+      "label": "Auto Sort"
+    },
+    "about": {
+      "version": "Version"
+    },
+    "signOut": "Sign Out"
+  }
+}
