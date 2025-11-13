@@ -1,0 +1,31 @@
+{
+  "name": "lightlist-web-poc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "emu": "firebase emulators:start",
+    "emu:import": "firebase emulators:start --import=./emulator-export",
+    "emu:export": "firebase emulators:export ./emulator-export",
+    "emu:clear": "rm -rf ./emulator-export"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "firebase": "^12.5.0",
+    "next": "^16.0.1",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.3",
+    "@types/react-dom": "^19.2.3",
+    "firebase-tools": "^14.24.2",
+    "typescript": "^5.9.3"
+  }
+}

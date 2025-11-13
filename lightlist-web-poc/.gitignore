@@ -1,0 +1,54 @@
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.Spotlight-V100
+.Trashes
+
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Firebase
+firebase-export-*/
+emulator-export/
+.firebase-emulator-data/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+
+# Build
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# Next.js
+.next/
+.vercel
+.turbo
+
+# Testing
+coverage/
+.nyc_output/
+
+# Project-specific
+.serena/
+.claude/
