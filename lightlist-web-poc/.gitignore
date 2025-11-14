@@ -44,6 +44,7 @@ out/
 .next/
 .vercel
 .turbo
+next-env.d.ts
 
 # Testing
 coverage/
