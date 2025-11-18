@@ -13,24 +13,17 @@ import {
   doc,
   setDoc,
   updateDoc,
-  deleteDoc,
   deleteField,
   collection,
   query,
   where,
-  orderBy,
   onSnapshot,
-  serverTimestamp,
-  getDocs,
   writeBatch,
-  QuerySnapshot,
-  DocumentData,
 } from "firebase/firestore";
 import { auth, db } from "./firebase";
 import {
   AppState,
   Settings,
-  TaskList,
   Task,
   SettingsStore,
   TaskListStore,
@@ -114,24 +107,15 @@ function createStore() {
   const listeners = new Set<StoreListener>();
   const unsubscribers: (() => void)[] = [];
 
-  const emit = (() => {
-    let emitScheduled = false;
-    let prevState: AppState | null = null;
+  let prevState: AppState | null = null;
 
-    return () => {
-      if (emitScheduled) return;
-      emitScheduled = true;
-
-      requestAnimationFrame(() => {
-        emitScheduled = false;
-        const nextState = transform(data);
-        if (!prevState || !deepEqual(prevState, nextState)) {
-          prevState = nextState;
-          listeners.forEach((listener) => listener(nextState));
-        }
-      });
-    };
-  })();
+  const emit = () => {
+    const nextState = transform(data);
+    if (!prevState || !deepEqual(prevState, nextState)) {
+      prevState = nextState;
+      listeners.forEach((listener) => listener(nextState));
+    }
+  };
 
   const subscribeToUserData = (uid: string) => {
     unsubscribers.forEach((unsub) => unsub());
@@ -260,8 +244,10 @@ function createStore() {
       await firebaseSignOut(auth);
     },
     sendPasswordResetEmail: async (email: string) => {
+      const resetUrl =
+        process.env.NEXT_PUBLIC_PASSWORD_RESET_URL || "http://localhost:3000";
       const actionCodeSettings: ActionCodeSettings = {
-        url: "https://lightlist.example.com",
+        url: resetUrl,
         handleCodeInApp: false,
       };
       await firebaseSendPasswordResetEmail(auth, email, actionCodeSettings);
@@ -279,6 +265,11 @@ function createStore() {
       const batch = writeBatch(db);
       batch.delete(doc(db, "settings", uid));
       batch.delete(doc(db, "taskListOrder", uid));
+
+      const taskListIds = Object.keys(data.taskLists);
+      taskListIds.forEach((id) => {
+        batch.delete(doc(db, "taskLists", id));
+      });
 
       await batch.commit();
       await deleteUser(auth.currentUser!);
@@ -305,7 +296,7 @@ function createStore() {
           ...settings,
           updatedAt: now,
         };
-        await updateDoc(doc(db, "settings", uid), updates as any);
+        await updateDoc(doc(db, "settings", uid), updates);
       } catch (error) {
         throw error;
       }
@@ -333,7 +324,7 @@ function createStore() {
           ...taskListOrder,
           updatedAt: now,
         };
-        await updateDoc(doc(db, "taskListOrder", uid), updates as any);
+        await updateDoc(doc(db, "taskListOrder", uid), updates);
       } catch (error) {
         throw error;
       }
@@ -406,7 +397,7 @@ function createStore() {
           ...updates,
           updatedAt: now,
         };
-        await updateDoc(doc(db, "taskLists", taskListId), updateData as any);
+        await updateDoc(doc(db, "taskLists", taskListId), updateData);
       } catch (error) {
         throw error;
       }
@@ -501,7 +492,7 @@ function createStore() {
         Object.entries(updates).forEach(([key, value]) => {
           updateData[`tasks.${taskId}.${key}`] = value;
         });
-        await updateDoc(taskListRef, updateData as any);
+        await updateDoc(taskListRef, updateData);
       } catch (error) {
         throw error;
       }
@@ -542,6 +533,7 @@ export const {
   sendPasswordResetEmail,
   verifyPasswordResetCode,
   confirmPasswordReset,
+  deleteAccount,
   createTaskList,
   updateSettings,
   addTask,

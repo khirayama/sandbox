@@ -34,7 +34,7 @@ if (process.env.NEXT_PUBLIC_USE_EMULATOR === "true") {
       `http://localhost:${FIREBASE_EMULATOR_PORTS.auth}`,
       {
         disableWarnings: true,
-      }
+      },
     );
   }
 
@@ -43,7 +43,11 @@ if (process.env.NEXT_PUBLIC_USE_EMULATOR === "true") {
   const dbSettings = db as any;
   if (!dbSettings._settings?.host?.includes("localhost")) {
     try {
-      connectFirestoreEmulator(db, "localhost", FIREBASE_EMULATOR_PORTS.firestore);
+      connectFirestoreEmulator(
+        db,
+        "localhost",
+        FIREBASE_EMULATOR_PORTS.firestore,
+      );
     } catch (error) {
       // Emulator already connected or another error occurred
     }
