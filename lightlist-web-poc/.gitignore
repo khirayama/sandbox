@@ -53,3 +53,5 @@ coverage/
 # Project-specific
 .serena/
 .claude/
+
+NOTE.md
