@@ -60,10 +60,14 @@ LightList は Firebase Authentication を使用したメール/パスワード�
 
 1. ユーザーがメールアドレスを入力（signin/signup タブから切り替えた場合、以前入力したアドレスが保持される）
 2. フォームバリデーション実行
-3. `sendPasswordResetEmail(email)` を呼び出し
-4. Firebase がメールアドレス確認メールを送信
-5. メール内のリセットリンクにはクエリパラメータ `oobCode` が含まれる
-6. ユーザーに成功メッセージを表示
+3. `sendPasswordResetEmail(email, language?)` を呼び出し（言語はオプション）
+4. 指定された言語でメールを送信するため、Firebase Auth インスタンスの言語を設定
+   - パラメータで言語が指定されている場合はその言語を使用
+   - 指定されていない場合は現在のユーザーの言語設定を使用
+   - デフォルトは日本語（`ja`）
+5. Firebase がメールアドレス確認メールを指定された言語で送信
+6. メール内のリセットリンクにはクエリパラメータ `oobCode` が含まれる
+7. ユーザーに成功メッセージを表示
 
 **ユーザー体験:**
 
@@ -144,19 +148,23 @@ Firebase Authentication でメール/パスワード認証によるログイン�
 **例外:**
 Firebase 認証エラーをスロー
 
-### sendPasswordResetEmail(email: string): Promise<void>
+### sendPasswordResetEmail(email: string, language?: Language): Promise<void>
 
-パスワードリセットメールを送信します。
+パスワードリセットメールを指定された言語で送信します。
 
 **パラメータ:**
 
 - `email`: メールアドレス
+- `language`: メールの言語（オプション）。`"ja"` または `"en"`
+  - 指定されない場合は、現在のユーザーの言語設定（`settings.language`）を使用
+  - ユーザーがログインしていない場合はデフォルトの日本語（`"ja"`）を使用
 
 **動作:**
 
-1. Firebase がパスワードリセットメールを送信
-2. メール内のリンクに `oobCode` クエリパラメータが含まれる
-3. デフォルトではプロジェクトの Firebase ホスティング URL にリダイレクト
+1. 指定された言語でメール送信するため、Firebase Auth インスタンスの言語コードを設定
+2. Firebase がパスワードリセットメールを指定された言語で送信
+3. メール内のリンクに `oobCode` クエリパラメータが含まれる
+4. デフォルトではプロジェクトの Firebase ホスティング URL にリダイレクト
 
 **環境変数:**
 
