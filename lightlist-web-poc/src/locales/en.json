@@ -1,0 +1,80 @@
+{
+  "title": "LightList",
+  "copyright": "© 2024 LightList. All rights reserved.",
+  "auth": {
+    "tabs": {
+      "signin": "Sign In",
+      "signup": "Sign Up"
+    },
+    "form": {
+      "email": "Email Address",
+      "password": "Password",
+      "confirmPassword": "Confirm Password"
+    },
+    "validation": {
+      "email": {
+        "required": "Please enter an email address",
+        "invalid": "Please enter a valid email address"
+      },
+      "password": {
+        "required": "Please enter a password",
+        "tooShort": "Password must be at least 6 characters"
+      },
+      "confirmPassword": {
+        "required": "Please enter a confirmation password",
+        "notMatch": "Passwords do not match"
+      }
+    },
+    "error": {
+      "invalidCredential": "Email or password is incorrect",
+      "userNotFound": "No account found with this email address",
+      "emailAlreadyInUse": "This email address is already registered",
+      "weakPassword": "Password is too weak (6 characters or more recommended)",
+      "invalidEmail": "Email address format is invalid",
+      "operationNotAllowed": "This authentication method is not available",
+      "tooManyRequests": "Too many login attempts. Please try again later",
+      "general": "Authentication failed. Please try again",
+      "noUserLoggedIn": "No user is logged in",
+      "taskListNotFound": "Task list not found"
+    },
+    "button": {
+      "signin": "Sign In",
+      "signingIn": "Signing in...",
+      "signup": "Sign Up",
+      "signingUp": "Signing up...",
+      "forgotPassword": "Forgot Password?",
+      "resetPassword": "Reset Password",
+      "sendResetEmail": "Send Reset Email",
+      "sending": "Sending...",
+      "backToSignIn": "Back to Sign In",
+      "signOut": "Sign Out",
+      "deleteAccount": "Delete Account",
+      "cancel": "Cancel",
+      "delete": "Delete"
+    },
+    "passwordReset": {
+      "instruction": "Enter the email address associated with your account. We will send you a password reset email.",
+      "success": "Password reset email sent. Please check your email.",
+      "title": "Reset Password",
+      "newPassword": "New Password",
+      "confirmNewPassword": "Confirm New Password",
+      "setNewPassword": "Reset Password",
+      "settingNewPassword": "Resetting...",
+      "invalidCode": "Password reset link is invalid",
+      "expiredCode": "Password reset link has expired",
+      "resetSuccess": "Password changed successfully"
+    },
+    "placeholder": {
+      "email": "example@email.com",
+      "password": "••••••••"
+    },
+    "signOutConfirm": {
+      "title": "Sign Out",
+      "message": "Are you sure you want to sign out?"
+    },
+    "deleteAccountConfirm": {
+      "title": "Delete Account",
+      "message": "Deleting your account will permanently remove all your data. This action cannot be undone. Are you sure?"
+    }
+  }
+}

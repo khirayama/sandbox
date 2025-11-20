@@ -1,0 +1,80 @@
+{
+  "title": "LightList",
+  "copyright": "© 2024 LightList. All rights reserved.",
+  "auth": {
+    "tabs": {
+      "signin": "ログイン",
+      "signup": "サインアップ"
+    },
+    "form": {
+      "email": "メールアドレス",
+      "password": "パスワード",
+      "confirmPassword": "パスワード確認"
+    },
+    "validation": {
+      "email": {
+        "required": "メールアドレスを入力してください",
+        "invalid": "有効なメールアドレスを入力してください"
+      },
+      "password": {
+        "required": "パスワードを入力してください",
+        "tooShort": "パスワードは6文字以上である必要があります"
+      },
+      "confirmPassword": {
+        "required": "パスワード確認を入力してください",
+        "notMatch": "パスワードが一致しません"
+      }
+    },
+    "error": {
+      "invalidCredential": "メールアドレスまたはパスワードが正しくありません",
+      "userNotFound": "このメールアドレスで登録されたアカウントはありません",
+      "emailAlreadyInUse": "このメールアドレスは既に登録されています",
+      "weakPassword": "パスワードが弱すぎます（6文字以上推奨）",
+      "invalidEmail": "メールアドレスの形式が正しくありません",
+      "operationNotAllowed": "この認証方法は利用できません",
+      "tooManyRequests": "ログイン試行回数が多すぎます。後でもう一度試してください",
+      "general": "認証に失敗しました。もう一度試してください",
+      "noUserLoggedIn": "ユーザーがログインしていません",
+      "taskListNotFound": "タスクリストが見つかりません"
+    },
+    "button": {
+      "signin": "ログイン",
+      "signingIn": "ログイン中...",
+      "signup": "サインアップ",
+      "signingUp": "サインアップ中...",
+      "forgotPassword": "パスワードを忘れた",
+      "resetPassword": "パスワードリセット",
+      "sendResetEmail": "リセットメール送信",
+      "sending": "送信中...",
+      "backToSignIn": "ログインに戻る",
+      "signOut": "ログアウト",
+      "deleteAccount": "アカウント削除",
+      "cancel": "キャンセル",
+      "delete": "削除"
+    },
+    "passwordReset": {
+      "instruction": "登録されているメールアドレスを入力してください。パスワードリセットメールを送信します。",
+      "success": "パスワードリセットメールを送信しました。メールをご確認ください。",
+      "title": "パスワード再設定",
+      "newPassword": "新しいパスワード",
+      "confirmNewPassword": "新しいパスワード確認",
+      "setNewPassword": "パスワード再設定",
+      "settingNewPassword": "再設定中...",
+      "invalidCode": "パスワードリセットリンクが無効です",
+      "expiredCode": "パスワードリセットリンクの有効期限が切れています",
+      "resetSuccess": "パスワードが正常に変更されました"
+    },
+    "placeholder": {
+      "email": "example@email.com",
+      "password": "••••••••"
+    },
+    "signOutConfirm": {
+      "title": "ログアウト",
+      "message": "ログアウトしてもよろしいですか？"
+    },
+    "deleteAccountConfirm": {
+      "title": "アカウント削除",
+      "message": "アカウントを削除すると、すべてのデータが削除されます。この操作は取り消せません。本当に削除しますか？"
+    }
+  }
+}
