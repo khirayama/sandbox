@@ -1,35 +1,14 @@
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  signOut as firebaseSignOut,
-  onAuthStateChanged,
-  sendPasswordResetEmail as firebaseSendPasswordResetEmail,
-  verifyPasswordResetCode as firebaseVerifyPasswordResetCode,
-  confirmPasswordReset as firebaseConfirmPasswordReset,
-  deleteUser,
-  ActionCodeSettings,
-} from "firebase/auth";
-import {
-  doc,
-  setDoc,
-  updateDoc,
-  deleteField,
-  collection,
-  query,
-  where,
-  onSnapshot,
-  writeBatch,
-} from "firebase/firestore";
-import { auth, db } from "./firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, collection, query, where, onSnapshot } from "firebase/firestore";
+
+import { auth, db } from "@/lib/firebase";
 import {
   AppState,
-  Settings,
-  Task,
   SettingsStore,
   TaskListStore,
   TaskListOrderStore,
   User,
-} from "./types";
+} from "@/lib/types";
 
 type DataStore = {
   user: User | null;
@@ -55,8 +34,8 @@ const deepEqual = (a: unknown, b: unknown): boolean => {
   return keysA.every((key) =>
     deepEqual(
       (a as Record<string, unknown>)[key],
-      (b as Record<string, unknown>)[key],
-    ),
+      (b as Record<string, unknown>)[key]
+    )
   );
 };
 
@@ -78,7 +57,7 @@ const transform = (d: DataStore): AppState => {
             .sort(
               (a, b) =>
                 (a[1] as unknown as { order: number }).order -
-                (b[1] as unknown as { order: number }).order,
+                (b[1] as unknown as { order: number }).order
             )
             .map(([listId]) => {
               const listData = d.taskLists[listId];
@@ -86,7 +65,7 @@ const transform = (d: DataStore): AppState => {
                 id: listId,
                 name: listData.name,
                 tasks: Object.values(listData.tasks).sort(
-                  (a, b) => a.order - b.order,
+                  (a, b) => a.order - b.order
                 ),
                 history: listData.history,
                 background: listData.background,
@@ -109,7 +88,7 @@ function createStore() {
 
   let prevState: AppState | null = null;
 
-  const emit = () => {
+  const commit = () => {
     const nextState = transform(data);
     if (!prevState || !deepEqual(prevState, nextState)) {
       prevState = nextState;
@@ -127,7 +106,7 @@ function createStore() {
       } else {
         data.settings = null;
       }
-      emit();
+      commit();
     });
     unsubscribers.push(settingsUnsub);
 
@@ -139,9 +118,9 @@ function createStore() {
         } else {
           data.taskListOrder = null;
         }
-        emit();
+        commit();
         subscribeToTaskLists(data.taskListOrder);
-      },
+      }
     );
     unsubscribers.push(taskListOrderUnsub);
   };
@@ -152,7 +131,7 @@ function createStore() {
 
     if (!taskListOrder) {
       data.taskLists = {};
-      emit();
+      commit();
       return;
     }
 
@@ -162,7 +141,7 @@ function createStore() {
 
     if (taskListIds.length === 0) {
       data.taskLists = {};
-      emit();
+      commit();
       return;
     }
 
@@ -180,8 +159,8 @@ function createStore() {
             lists[doc.id] = doc.data() as TaskListStore;
           });
           data.taskLists = { ...data.taskLists, ...lists };
-          emit();
-        },
+          commit();
+        }
       );
       unsubscribers.push(taskListsUnsub);
     });
@@ -198,11 +177,13 @@ function createStore() {
       data.taskListOrder = null;
       data.taskLists = {};
     }
-    emit();
+    commit();
   });
 
   const store = {
     getState: (): AppState => transform(data),
+    getData: (): DataStore => data,
+    commit,
     subscribe: (listener: StoreListener) => {
       listeners.add(listener);
       return () => listeners.delete(listener);
@@ -212,313 +193,6 @@ function createStore() {
       authUnsubscribe();
       unsubscribers.forEach((unsub) => unsub());
     },
-    // Actions for Auth
-    signUp: async (email: string, password: string) => {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
-      const uid = userCredential.user.uid;
-
-      const settingsData: SettingsStore = {
-        theme: "system",
-        language: "ja",
-        taskInsertPosition: "bottom",
-        autoSort: false,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      };
-      await setDoc(doc(db, "settings", uid), settingsData);
-
-      const taskListOrderData = {
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      } as TaskListOrderStore;
-      await setDoc(doc(db, "taskListOrder", uid), taskListOrderData);
-    },
-    signIn: async (email: string, password: string) => {
-      await signInWithEmailAndPassword(auth, email, password);
-    },
-    signOut: async () => {
-      await firebaseSignOut(auth);
-    },
-    sendPasswordResetEmail: async (email: string) => {
-      const resetUrl =
-        process.env.NEXT_PUBLIC_PASSWORD_RESET_URL || "http://localhost:3000";
-      const actionCodeSettings: ActionCodeSettings = {
-        url: resetUrl,
-        handleCodeInApp: false,
-      };
-      await firebaseSendPasswordResetEmail(auth, email, actionCodeSettings);
-    },
-    verifyPasswordResetCode: async (code: string) => {
-      return await firebaseVerifyPasswordResetCode(auth, code);
-    },
-    confirmPasswordReset: async (code: string, newPassword: string) => {
-      await firebaseConfirmPasswordReset(auth, code, newPassword);
-    },
-    deleteAccount: async () => {
-      const uid = auth.currentUser?.uid;
-      if (!uid) throw new Error("No user logged in");
-
-      const batch = writeBatch(db);
-      batch.delete(doc(db, "settings", uid));
-      batch.delete(doc(db, "taskListOrder", uid));
-
-      const taskListIds = Object.keys(data.taskLists);
-      taskListIds.forEach((id) => {
-        batch.delete(doc(db, "taskLists", id));
-      });
-
-      await batch.commit();
-      await deleteUser(auth.currentUser!);
-    },
-    // Actions for App
-    updateSettings: async (settings: Partial<Settings>) => {
-      const uid = auth.currentUser?.uid;
-      if (!uid) throw new Error("No user logged in");
-
-      const now = Date.now();
-
-      if (data.settings) {
-        data.settings = {
-          ...data.settings,
-          ...settings,
-          updatedAt: now,
-        };
-      }
-
-      emit();
-
-      try {
-        const updates: Record<string, unknown> = {
-          ...settings,
-          updatedAt: now,
-        };
-        await updateDoc(doc(db, "settings", uid), updates);
-      } catch (error) {
-        throw error;
-      }
-    },
-    updateTaskListOrder: async (
-      taskListOrder: Omit<TaskListOrderStore, "createdAt" | "updatedAt">,
-    ) => {
-      const uid = auth.currentUser?.uid;
-      if (!uid) throw new Error("No user logged in");
-
-      const now = Date.now();
-
-      if (data.taskListOrder) {
-        data.taskListOrder = {
-          ...data.taskListOrder,
-          ...taskListOrder,
-          updatedAt: now,
-        } as TaskListOrderStore;
-      }
-
-      emit();
-
-      try {
-        const updates: Record<string, unknown> = {
-          ...taskListOrder,
-          updatedAt: now,
-        };
-        await updateDoc(doc(db, "taskListOrder", uid), updates);
-      } catch (error) {
-        throw error;
-      }
-    },
-    createTaskList: async (name: string, background: string = "#ffffff") => {
-      const uid = auth.currentUser?.uid;
-      if (!uid) throw new Error("No user logged in");
-
-      const taskListId = doc(collection(db, "taskLists")).id;
-
-      const maxOrder =
-        Object.values(data.taskListOrder || {})
-          .filter(
-            (item) =>
-              typeof item === "object" && item !== null && "order" in item,
-          )
-          .map((item) => (item as { order: number }).order)
-          .reduce((max, order) => Math.max(max, order), -1) + 1;
-
-      const now = Date.now();
-      const newTaskList: TaskListStore = {
-        id: taskListId,
-        name,
-        tasks: {},
-        history: [],
-        background,
-        createdAt: now,
-        updatedAt: now,
-      };
-      data.taskLists[taskListId] = newTaskList;
-      if (data.taskListOrder) {
-        data.taskListOrder[taskListId] = { order: maxOrder };
-        data.taskListOrder.updatedAt = now;
-      }
-
-      emit();
-
-      try {
-        const batch = writeBatch(db);
-        batch.set(doc(db, "taskLists", taskListId), newTaskList);
-        batch.update(doc(db, "taskListOrder", uid), {
-          [taskListId]: { order: maxOrder },
-          updatedAt: now,
-        });
-        await batch.commit();
-      } catch (error) {
-        throw error;
-      }
-
-      return taskListId;
-    },
-    updateTaskList: async (
-      taskListId: string,
-      updates: Partial<Omit<TaskListStore, "id" | "createdAt" | "updatedAt">>,
-    ) => {
-      const now = Date.now();
-
-      if (data.taskLists[taskListId]) {
-        data.taskLists[taskListId] = {
-          ...data.taskLists[taskListId],
-          ...updates,
-          updatedAt: now,
-        };
-      }
-
-      emit();
-
-      try {
-        const updateData: Record<string, unknown> = {
-          ...updates,
-          updatedAt: now,
-        };
-        await updateDoc(doc(db, "taskLists", taskListId), updateData);
-      } catch (error) {
-        throw error;
-      }
-    },
-    deleteTaskList: async (taskListId: string) => {
-      const uid = auth.currentUser?.uid;
-      if (!uid) throw new Error("No user logged in");
-
-      const now = Date.now();
-
-      delete data.taskLists[taskListId];
-      if (data.taskListOrder) {
-        const newTaskListOrder = { ...data.taskListOrder };
-        delete newTaskListOrder[taskListId];
-        newTaskListOrder.updatedAt = now;
-        data.taskListOrder = newTaskListOrder;
-      }
-
-      emit();
-
-      try {
-        const batch = writeBatch(db);
-        batch.delete(doc(db, "taskLists", taskListId));
-        batch.update(doc(db, "taskListOrder", uid), {
-          [taskListId]: deleteField(),
-          updatedAt: now,
-        });
-        await batch.commit();
-      } catch (error) {
-        throw error;
-      }
-    },
-    addTask: async (taskListId: string, text: string, date: string = "") => {
-      const taskId = doc(collection(db, "taskLists")).id;
-
-      const taskListData = data.taskLists[taskListId];
-      if (!taskListData) throw new Error("Task list not found");
-
-      const maxOrder =
-        Object.values(taskListData.tasks)
-          .map((task) => task.order)
-          .reduce((max, order) => Math.max(max, order), -1) + 1;
-
-      const now = Date.now();
-      const newTask = {
-        id: taskId,
-        text,
-        completed: false,
-        date,
-        order: maxOrder,
-      };
-      data.taskLists[taskListId].tasks[taskId] = newTask;
-      data.taskLists[taskListId].updatedAt = now;
-
-      emit();
-
-      try {
-        const taskListRef = doc(db, "taskLists", taskListId);
-        await updateDoc(taskListRef, {
-          [`tasks.${taskId}`]: newTask,
-          updatedAt: now,
-        });
-      } catch (error) {
-        throw error;
-      }
-
-      return taskId;
-    },
-    updateTask: async (
-      taskListId: string,
-      taskId: string,
-      updates: Partial<Task>,
-    ) => {
-      const now = Date.now();
-
-      if (
-        data.taskLists[taskListId] &&
-        data.taskLists[taskListId].tasks[taskId]
-      ) {
-        data.taskLists[taskListId].tasks[taskId] = {
-          ...data.taskLists[taskListId].tasks[taskId],
-          ...updates,
-        };
-        data.taskLists[taskListId].updatedAt = now;
-      }
-
-      emit();
-
-      try {
-        const taskListRef = doc(db, "taskLists", taskListId);
-        const updateData: Record<string, unknown> = { updatedAt: now };
-        Object.entries(updates).forEach(([key, value]) => {
-          updateData[`tasks.${taskId}.${key}`] = value;
-        });
-        await updateDoc(taskListRef, updateData);
-      } catch (error) {
-        throw error;
-      }
-    },
-    deleteTask: async (taskListId: string, taskId: string) => {
-      const now = Date.now();
-
-      if (data.taskLists[taskListId]) {
-        const newTasks = { ...data.taskLists[taskListId].tasks };
-        delete newTasks[taskId];
-        data.taskLists[taskListId].tasks = newTasks;
-        data.taskLists[taskListId].updatedAt = now;
-      }
-
-      emit();
-
-      try {
-        const taskListRef = doc(db, "taskLists", taskListId);
-        await updateDoc(taskListRef, {
-          [`tasks.${taskId}`]: deleteField(),
-          updatedAt: now,
-        });
-      } catch (error) {
-        throw error;
-      }
-    },
   };
 
   return store;
@@ -526,17 +200,4 @@ function createStore() {
 
 export const appStore = createStore();
 
-export const {
-  signUp,
-  signIn,
-  signOut,
-  sendPasswordResetEmail,
-  verifyPasswordResetCode,
-  confirmPasswordReset,
-  deleteAccount,
-  createTaskList,
-  updateSettings,
-  addTask,
-  updateTask,
-  deleteTask,
-} = appStore;
+export const { getData, commit } = appStore;
