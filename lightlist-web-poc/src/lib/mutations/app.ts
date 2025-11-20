@@ -46,7 +46,7 @@ export async function updateSettings(settings: Partial<Settings>) {
 }
 
 export async function updateTaskListOrder(
-  taskListOrder: Omit<TaskListOrderStore, "createdAt" | "updatedAt">
+  taskListOrder: Omit<TaskListOrderStore, "createdAt" | "updatedAt">,
 ) {
   const data = getData();
 
@@ -78,7 +78,7 @@ export async function updateTaskListOrder(
 
 export async function createTaskList(
   name: string,
-  background: string = "#ffffff"
+  background: string = "#ffffff",
 ) {
   const data = getData();
 
@@ -90,7 +90,7 @@ export async function createTaskList(
   const maxOrder =
     Object.values(data.taskListOrder || {})
       .filter(
-        (item) => typeof item === "object" && item !== null && "order" in item
+        (item) => typeof item === "object" && item !== null && "order" in item,
       )
       .map((item) => (item as { order: number }).order)
       .reduce((max, order) => Math.max(max, order), -1) + 1;
@@ -130,7 +130,7 @@ export async function createTaskList(
 
 export async function updateTaskList(
   taskListId: string,
-  updates: Partial<Omit<TaskListStore, "id" | "createdAt" | "updatedAt">>
+  updates: Partial<Omit<TaskListStore, "id" | "createdAt" | "updatedAt">>,
 ) {
   const data = getData();
 
@@ -191,7 +191,7 @@ export async function deleteTaskList(taskListId: string) {
 export async function addTask(
   taskListId: string,
   text: string,
-  date: string = ""
+  date: string = "",
 ) {
   const data = getData();
 
@@ -234,7 +234,7 @@ export async function addTask(
 export async function updateTask(
   taskListId: string,
   taskId: string,
-  updates: Partial<Task>
+  updates: Partial<Task>,
 ) {
   const data = getData();
 

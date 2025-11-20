@@ -18,7 +18,7 @@ export async function signUp(email: string, password: string) {
   const userCredential = await createUserWithEmailAndPassword(
     auth,
     email,
-    password
+    password,
   );
   const uid = userCredential.user.uid;
 
@@ -49,7 +49,7 @@ export async function signOut() {
 
 export async function sendPasswordResetEmail(
   email: string,
-  language?: Language
+  language?: Language,
 ) {
   const data = getData();
 

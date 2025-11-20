@@ -34,8 +34,8 @@ const deepEqual = (a: unknown, b: unknown): boolean => {
   return keysA.every((key) =>
     deepEqual(
       (a as Record<string, unknown>)[key],
-      (b as Record<string, unknown>)[key]
-    )
+      (b as Record<string, unknown>)[key],
+    ),
   );
 };
 
@@ -57,7 +57,7 @@ const transform = (d: DataStore): AppState => {
             .sort(
               (a, b) =>
                 (a[1] as unknown as { order: number }).order -
-                (b[1] as unknown as { order: number }).order
+                (b[1] as unknown as { order: number }).order,
             )
             .map(([listId]) => {
               const listData = d.taskLists[listId];
@@ -65,7 +65,7 @@ const transform = (d: DataStore): AppState => {
                 id: listId,
                 name: listData.name,
                 tasks: Object.values(listData.tasks).sort(
-                  (a, b) => a.order - b.order
+                  (a, b) => a.order - b.order,
                 ),
                 history: listData.history,
                 background: listData.background,
@@ -120,7 +120,7 @@ function createStore() {
         }
         commit();
         subscribeToTaskLists(data.taskListOrder);
-      }
+      },
     );
     unsubscribers.push(taskListOrderUnsub);
   };
@@ -160,7 +160,7 @@ function createStore() {
           });
           data.taskLists = { ...data.taskLists, ...lists };
           commit();
-        }
+        },
       );
       unsubscribers.push(taskListsUnsub);
     });

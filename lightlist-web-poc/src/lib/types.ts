@@ -28,12 +28,12 @@ export type TaskListOrderStore = {
 };
 
 export type TaskListStoreTask = {
-      id: string;
-      text: string;
-      completed: boolean;
-      date: string;
-      order: number;
-}
+  id: string;
+  text: string;
+  completed: boolean;
+  date: string;
+  order: number;
+};
 
 export type TaskListStore = {
   id: string;
