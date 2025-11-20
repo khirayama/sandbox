@@ -1,6 +1,7 @@
 import { initializeApp, getApps } from "firebase/app";
 import { getAuth, connectAuthEmulator } from "firebase/auth";
 import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import type { Language } from "./types";
 
 // Emulator ports (must match firebase.json)
 const FIREBASE_EMULATOR_PORTS = {
@@ -34,7 +35,7 @@ if (process.env.NEXT_PUBLIC_USE_EMULATOR === "true") {
       `http://localhost:${FIREBASE_EMULATOR_PORTS.auth}`,
       {
         disableWarnings: true,
-      },
+      }
     );
   }
 
@@ -46,7 +47,7 @@ if (process.env.NEXT_PUBLIC_USE_EMULATOR === "true") {
       connectFirestoreEmulator(
         db,
         "localhost",
-        FIREBASE_EMULATOR_PORTS.firestore,
+        FIREBASE_EMULATOR_PORTS.firestore
       );
     } catch (error) {
       // Emulator already connected or another error occurred
