@@ -27,17 +27,19 @@ export type TaskListOrderStore = {
   updatedAt: number;
 };
 
-export type TaskListStore = {
-  id: string;
-  name: string;
-  tasks: {
-    [taskId: string]: {
+export type TaskListStoreTask = {
       id: string;
       text: string;
       completed: boolean;
       date: string;
       order: number;
-    };
+}
+
+export type TaskListStore = {
+  id: string;
+  name: string;
+  tasks: {
+    [taskId: string]: TaskListStoreTask;
   };
   history: string[];
   background: string;
