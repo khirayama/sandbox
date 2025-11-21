@@ -229,6 +229,142 @@ Firebase 認証エラーをスロー
 **注意:**
 この操作は取り消せません。
 
+## 設定機能（Settings）
+
+設定ページは `src/pages/settings.tsx` に実装されています。
+
+### 設定ページの機能
+
+#### 1. ユーザー情報表示
+
+- ログイン中のメールアドレスを表示
+- 認証状態を確認し、未認証時はログインページへリダイレクト
+
+#### 2. テーマ設定
+
+テーマは3つのオプションから選択できます：
+
+- **システム**: OS の設定に従う（`prefers-color-scheme`）
+- **ライト**: 常にライトモードを使用
+- **ダーク**: 常にダークモードを使用
+
+**実装詳細:**
+
+- テーマ選択はラジオボタンで実装
+- 選択後、`updateSettings({ theme })` で Firestore に保存
+- `_app.tsx` でテーマを監視し、HTML の `dark` クラスを切り替え
+- Tailwind CSS の `dark:` プレフィックスでダークモード対応
+
+**テーマ適用ロジック:**
+
+```typescript
+// _app.tsx の applyTheme 関数
+const isDark =
+  theme === "dark" ||
+  (theme === "system" &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches);
+document.documentElement.classList.toggle("dark", isDark);
+```
+
+#### 3. 言語設定
+
+2つの言語から選択できます：
+
+- **日本語** (`ja`)
+- **English** (`en`)
+
+**実装詳細:**
+
+- 言語選択はラジオボタンで実装
+- `updateSettings({ language })`で Firestore に保存
+- `i18next.changeLanguage()` で UI の言語を即座に切り替え
+- 言語変更後、自動的に UI テキストが更新される
+
+#### 4. ログアウト
+
+ログアウトボタンは以下の動作を実行します：
+
+1. 確認ダイアログを表示
+2. ユーザーが確認後、`signOut()` を呼び出し
+3. Firebase セッションを終了
+4. ログインページ (`/`) へリダイレクト
+
+#### 5. アカウント削除
+
+アカウント削除ボタンは以下の動作を実行します：
+
+1. 警告メッセージ付きの確認ダイアログを表示（この操作は取り消せないことを明示）
+2. ユーザーが確認後、`deleteAccount()` を呼び出し
+3. Firestore のユーザーデータを削除
+4. Firebase Authentication のアカウントを削除
+5. ログインページ (`/`) へリダイレクト
+
+**注意:**
+この操作は取り消せません。
+
+### API インターフェース
+
+### updateSettings(settings: Partial<Settings>): Promise<void>
+
+ユーザー設定を更新します。
+
+**パラメータ:**
+
+- `settings`: 更新対象の設定オブジェクト
+  - `theme?: Theme` - テーマ（"system" | "light" | "dark"）
+  - `language?: Language` - 言語（"ja" | "en"）
+  - その他の設定フィールドも対応
+
+**動作:**
+
+1. ローカルストアを楽観的に更新
+2. Firestore に非同期で保存
+3. `updatedAt` タイムスタンプを自動設定
+
+**例外:**
+Firebase Firestore のエラーをスロー
+
+### 多言語対応
+
+設定ページのすべてのテキストは i18next を使用して多言語対応されています。
+
+**メッセージキー:**
+
+```
+settings:
+  title: ページタイトル
+  userInfo:
+    title: ユーザー情報セクションのタイトル
+    email: メールアドレスのラベル
+  theme:
+    title: テーマ設定のタイトル
+    system: システム設定オプション
+    light: ライト設定オプション
+    dark: ダーク設定オプション
+  language:
+    title: 言語設定のタイトル
+    japanese: 日本語オプション
+    english: English オプション
+  danger:
+    title: 危険な操作セクションのタイトル
+    signOut: ログアウトボタンテキスト
+    deleteAccount: アカウント削除ボタンテキスト
+```
+
+### テーマ設定の技術仕様
+
+**Tailwind CSS 設定:**
+
+`tailwind.config.js` で `darkMode: "class"` を指定しており、HTML の `class="dark"` で切り替え。
+
+**CSS:**
+
+`globals.css` で `html.dark` に対して `color-scheme: dark` を設定。
+
+**システムテーマ検出:**
+
+`prefers-color-scheme` メディアクエリで OS の設定を監視。テーマが "system" に設定されている場合、OS の設定変更時に自動的に UI が更新される。
+
 ## 多言語対応
 
 すべての認証メッセージは i18next を使用して多言語対応されています。
