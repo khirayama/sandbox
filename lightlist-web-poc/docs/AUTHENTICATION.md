@@ -4,6 +4,86 @@
 
 LightList は Firebase Authentication を使用したメール/パスワード認証システムを実装しています。
 
+## アーキテクチャ
+
+### ディレクトリ構成
+
+```
+src/
+├── components/
+│   ├── FormInput.tsx          - フォーム入力欄コンポーネント
+│   ├── ErrorMessage.tsx       - エラーメッセージ表示コンポーネント
+│   └── SuccessMessage.tsx     - 成功メッセージ表示コンポーネント
+├── lib/
+│   ├── mutations/
+│   │   └── auth.ts            - 認証関連のFirestore操作
+│   └── utils/
+│       ├── validation.ts      - フォームバリデーション関数
+│       └── errors.ts          - エラーメッセージハンドリング関数
+└── pages/
+    ├── index.tsx              - サインイン/サインアップ/パスワードリセット依頼ページ
+    └── password_reset.tsx     - パスワードリセット実行ページ
+```
+
+### 共通コンポーネント
+
+#### FormInput
+
+フォーム入力欄を統一されたスタイルで表示します。
+
+**プロップス:**
+
+- `id`: HTML id属性
+- `label`: 入力欄のラベル
+- `type`: input要素のtype属性（text, password, email など）
+- `value`: 現在の入力値
+- `onChange`: 入力値変更時のコールバック関数
+- `error`: エラーメッセージ（表示時のみ）
+- `disabled`: 入力欄の無効化フラグ
+- `placeholder`: プレースホルダーテキスト
+
+#### ErrorMessage
+
+エラーメッセージを赤色で表示します。
+
+**プロップス:**
+
+- `message`: 表示するエラーメッセージ
+
+#### SuccessMessage
+
+成功メッセージを緑色で表示します。
+
+**プロップス:**
+
+- `message`: 表示する成功メッセージ
+
+### ユーティリティ関数
+
+#### lib/utils/validation.ts
+
+フォームバリデーション関数を提供します。
+
+**エクスポート:**
+
+- `validateAuthForm(data, t)`: サインイン/サインアップフォームのバリデーション
+  - メールアドレス形式、パスワード最小長、確認パスワード一致などをチェック
+  - 戻り値: エラーメッセージオブジェクト
+
+- `validatePasswordForm(data, t)`: パスワードリセット時のバリデーション
+  - パスワード最小長、確認パスワード一致などをチェック
+  - 戻り値: エラーメッセージオブジェクト
+
+#### lib/utils/errors.ts
+
+エラーハンドリング関数を提供します。
+
+**エクスポート:**
+
+- `getErrorMessage(errorCode, t)`: Firebaseエラーコードを多言語対応メッセージに変換
+  - サポートするエラーコード: auth/invalid-credential, auth/email-already-in-use, auth/weak-password など
+  - 戻り値: 翻訳済みのエラーメッセージ
+
 ## 認証フロー
 
 ### 1. サインアップ (Sign Up)
@@ -386,9 +466,55 @@ auth:
   placeholder: 入力フィールドのプレースホルダー
   signOutConfirm: ログアウト確認ダイアログ
   deleteAccountConfirm: アカウント削除確認ダイアログ
+  tabs: タブラベル（signin, signup）
 ```
 
 詳細は `locales/ja.json` および `locales/en.json` を参照してください。
+
+## ページコンポーネント実装
+
+### index.tsx（認証ページ）
+
+3つのタブを備えた統一された認証ページです。
+
+**機能:**
+
+- **Sign In タブ**: メールアドレスとパスワードでログイン
+- **Sign Up タブ**: メールアドレス、パスワード、パスワード確認でアカウント作成
+- **Password Reset タブ**: パスワードリセットメール送信
+
+**使用コンポーネント:**
+
+- FormInput: フォーム入力
+- ErrorMessage: エラー表示
+- SuccessMessage: 成功メッセージ表示
+
+**使用ユーティリティ:**
+
+- validateAuthForm: フォームバリデーション
+- getErrorMessage: エラーメッセージ変換
+
+### password_reset.tsx（パスワードリセット実行ページ）
+
+メール内のリセットリンクから遷移し、新しいパスワード設定を行うページです。
+
+**機能:**
+
+- リセットコード検証（無効なコード、期限切れコードの判定）
+- 新しいパスワード入力フォーム
+- パスワード更新後、ログインページへリダイレクト
+
+**使用コンポーネント:**
+
+- FormInput: パスワード入力
+- ErrorMessage: エラー表示
+- SuccessMessage: 成功メッセージ表示
+- Spinner: ローディング表示
+
+**使用ユーティリティ:**
+
+- validatePasswordForm: パスワード入力フォームのバリデーション
+- getErrorMessage: エラーメッセージ変換
 
 ## 状態管理
 
