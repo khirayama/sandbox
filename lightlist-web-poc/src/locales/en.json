@@ -1,6 +1,16 @@
 {
   "title": "LightList",
   "copyright": "© 2024 LightList. All rights reserved.",
+  "common": {
+    "loading": "Loading...",
+    "back": "Back",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "close": "Close",
+    "adding": "Adding...",
+    "error": "An error occurred"
+  },
   "auth": {
     "tabs": {
       "signin": "Sign In",
@@ -75,6 +85,54 @@
     "deleteAccountConfirm": {
       "title": "Delete Account",
       "message": "Deleting your account will permanently remove all your data. This action cannot be undone. Are you sure?"
+    }
+  },
+  "app": {
+    "title": "Tasks",
+    "emptyState": "No task lists",
+    "createNew": "Create",
+    "createTaskList": "Create Task List",
+    "taskListName": "Task List Name",
+    "taskListNamePlaceholder": "Enter task list name",
+    "create": "Create",
+    "creating": "Creating...",
+    "cancel": "Cancel",
+    "error": "An error occurred",
+    "moveUp": "Move Up",
+    "moveDown": "Move Down",
+    "dragHint": "Drag to reorder"
+  },
+  "taskList": {
+    "taskCount": "tasks",
+    "editColor": "Change Color",
+    "addTask": "Add",
+    "addTaskPlaceholder": "Enter task...",
+    "selectColor": "Select Color",
+    "deleteList": "Delete List",
+    "deleteConfirm": "Delete this task list?",
+    "dragHint": "Drag to reorder"
+  },
+  "settings": {
+    "title": "Settings",
+    "userInfo": {
+      "title": "User Information",
+      "email": "Email Address"
+    },
+    "theme": {
+      "title": "Theme",
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "language": {
+      "title": "Language",
+      "japanese": "日本語",
+      "english": "English"
+    },
+    "danger": {
+      "title": "Danger Zone",
+      "signOut": "Sign Out",
+      "deleteAccount": "Delete Account"
     }
   }
 }
