@@ -61,6 +61,15 @@ const transform = (d: DataStore): AppState => {
             )
             .map(([listId]) => {
               const listData = d.taskLists[listId];
+              if (!listData) {
+                return {
+                  id: listId,
+                  name: "",
+                  tasks: [],
+                  history: [],
+                  background: "#ffffff",
+                };
+              }
               return {
                 id: listId,
                 name: listData.name,
