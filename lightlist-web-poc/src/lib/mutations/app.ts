@@ -5,6 +5,9 @@ import {
   collection,
   writeBatch,
   runTransaction,
+  query,
+  where,
+  getDocs,
 } from "firebase/firestore";
 
 import { auth, db } from "@/lib/firebase";
@@ -163,6 +166,7 @@ export async function createTaskList(
     name,
     tasks: {},
     history: [],
+    shareCode: null,
     background,
     createdAt: now,
     updatedAt: now,
@@ -458,6 +462,149 @@ export async function updateTasksOrder(
       });
     }
   } catch (error) {
+    throw error;
+  }
+}
+
+function generateRandomShareCode(length: number = 8): string {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let code = "";
+  for (let i = 0; i < length; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return code;
+}
+
+async function isShareCodeUnique(shareCode: string): Promise<boolean> {
+  const taskListsRef = collection(db, "taskLists");
+  const q = query(taskListsRef, where("shareCode", "==", shareCode));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.empty;
+}
+
+export async function generateShareCode(taskListId: string): Promise<string> {
+  const data = getData();
+
+  if (!data.taskLists[taskListId]) {
+    throw new Error("Task list not found");
+  }
+
+  let shareCode: string;
+  let isUnique = false;
+
+  while (!isUnique) {
+    shareCode = generateRandomShareCode();
+    isUnique = await isShareCodeUnique(shareCode);
+  }
+
+  const now = Date.now();
+  data.taskLists[taskListId].shareCode = shareCode;
+  data.taskLists[taskListId].updatedAt = now;
+
+  commit();
+
+  try {
+    await updateDoc(doc(db, "taskLists", taskListId), {
+      shareCode,
+      updatedAt: now,
+    });
+  } catch (error) {
+    data.taskLists[taskListId].shareCode = null;
+    commit();
+    throw error;
+  }
+
+  return shareCode;
+}
+
+export async function removeShareCode(taskListId: string): Promise<void> {
+  const data = getData();
+
+  if (!data.taskLists[taskListId]) {
+    throw new Error("Task list not found");
+  }
+
+  const now = Date.now();
+  data.taskLists[taskListId].shareCode = null;
+  data.taskLists[taskListId].updatedAt = now;
+
+  commit();
+
+  try {
+    await updateDoc(doc(db, "taskLists", taskListId), {
+      shareCode: null,
+      updatedAt: now,
+    });
+  } catch (error) {
+    data.taskLists[taskListId].shareCode = null;
+    commit();
+    throw error;
+  }
+}
+
+export async function fetchTaskListByShareCode(
+  shareCode: string,
+): Promise<TaskListStore | null> {
+  const taskListsRef = collection(db, "taskLists");
+  const q = query(taskListsRef, where("shareCode", "==", shareCode));
+  const querySnapshot = await getDocs(q);
+
+  if (querySnapshot.empty) {
+    return null;
+  }
+
+  const docData = querySnapshot.docs[0];
+  return docData.data() as TaskListStore;
+}
+
+export async function addSharedTaskListToOrder(
+  taskListId: string,
+): Promise<void> {
+  const data = getData();
+
+  const uid = auth.currentUser?.uid;
+  if (!uid) throw new Error("No user logged in");
+
+  if (!data.taskListOrder) {
+    throw new Error("TaskListOrder not found");
+  }
+
+  if (data.taskListOrder[taskListId]) {
+    throw new Error("This task list is already in your order");
+  }
+
+  const taskListOrders =
+    Object.entries(data.taskListOrder)
+      .filter(([key]) => key !== "createdAt" && key !== "updatedAt")
+      .map(([, value]) => (value as { order: number }).order) || [];
+
+  let newOrder: number;
+  if (taskListOrders.length === 0) {
+    newOrder = 1.0;
+  } else {
+    const maxOrder = Math.max(...taskListOrders);
+    newOrder = maxOrder + 1.0;
+  }
+
+  const now = Date.now();
+
+  if (data.taskListOrder) {
+    data.taskListOrder[taskListId] = { order: newOrder };
+    data.taskListOrder.updatedAt = now;
+  }
+
+  commit();
+
+  try {
+    await updateDoc(doc(db, "taskListOrder", uid), {
+      [taskListId]: { order: newOrder },
+      updatedAt: now,
+    });
+  } catch (error) {
+    if (data.taskListOrder) {
+      delete data.taskListOrder[taskListId];
+      commit();
+    }
     throw error;
   }
 }

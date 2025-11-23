@@ -67,6 +67,7 @@ const transform = (d: DataStore): AppState => {
                   name: "",
                   tasks: [],
                   history: [],
+                  shareCode: null,
                   background: "#ffffff",
                 };
               }
@@ -77,6 +78,7 @@ const transform = (d: DataStore): AppState => {
                   (a, b) => a.order - b.order,
                 ),
                 history: listData.history,
+                shareCode: listData.shareCode,
                 background: listData.background,
               };
             })
