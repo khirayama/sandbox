@@ -1,6 +1,19 @@
 {
   "title": "LightList",
   "copyright": "© 2024 LightList. All rights reserved.",
+  "common": {
+    "loading": "読み込み中...",
+    "back": "戻る",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "deleting": "削除中...",
+    "close": "閉じる",
+    "adding": "追加中...",
+    "add": "追加",
+    "copy": "コピー",
+    "copied": "コピーしました",
+    "error": "エラーが発生しました"
+  },
   "auth": {
     "tabs": {
       "signin": "ログイン",
@@ -75,6 +88,77 @@
     "deleteAccountConfirm": {
       "title": "アカウント削除",
       "message": "アカウントを削除すると、すべてのデータが削除されます。この操作は取り消せません。本当に削除しますか？"
+    }
+  },
+  "app": {
+    "title": "タスク",
+    "emptyState": "タスクリストがありません",
+    "createNew": "新規作成",
+    "createTaskList": "タスクリスト作成",
+    "taskListName": "タスクリスト名",
+    "taskListNamePlaceholder": "タスクリスト名を入力",
+    "create": "作成",
+    "creating": "作成中...",
+    "cancel": "キャンセル",
+    "error": "エラーが発生しました",
+    "moveUp": "上へ",
+    "moveDown": "下へ",
+    "dragHint": "ドラッグして並び替え"
+  },
+  "taskList": {
+    "taskCount": "個のタスク",
+    "editColor": "色を変更",
+    "addTask": "追加",
+    "addTaskPlaceholder": "タスクを入力...",
+    "selectColor": "色を選択",
+    "deleteList": "リストを削除",
+    "deleteConfirm": "このタスクリストを削除しますか？",
+    "dragHint": "ドラッグして並び替え",
+    "share": "共有",
+    "shareTitle": "リストを共有",
+    "shareCode": "共有コード",
+    "shareDescription": "このタスクリストを他の人と共有します。以下のボタンをクリックして共有コードを生成してください。",
+    "generateShare": "共有コードを生成",
+    "removeShare": "共有を停止"
+  },
+  "settings": {
+    "title": "設定",
+    "userInfo": {
+      "title": "ユーザー情報",
+      "email": "メールアドレス"
+    },
+    "theme": {
+      "title": "テーマ",
+      "system": "システム",
+      "light": "ライト",
+      "dark": "ダーク"
+    },
+    "language": {
+      "title": "言語",
+      "japanese": "日本語",
+      "english": "English"
+    },
+    "danger": {
+      "title": "危険な操作",
+      "signOut": "ログアウト",
+      "deleteAccount": "アカウント削除"
+    }
+  },
+  "pages": {
+    "sharecode": {
+      "notFound": "このタスクリストが見つかりません",
+      "error": "タスクリストを読み込めませんでした",
+      "addTaskError": "タスクを追加できませんでした",
+      "updateError": "タスクを更新できませんでした",
+      "deleteError": "タスクを削除できませんでした",
+      "reorderError": "タスクの順序を変更できませんでした",
+      "addToOrderError": "このタスクリストを追加できませんでした",
+      "addToOrder": "自分のリストに追加"
+    },
+    "tasklist": {
+      "addTaskPlaceholder": "タスクを入力...",
+      "noTasks": "タスクがありません",
+      "dragHint": "ドラッグして並び替え"
     }
   }
 }

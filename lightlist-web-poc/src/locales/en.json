@@ -1,6 +1,19 @@
 {
   "title": "LightList",
   "copyright": "© 2024 LightList. All rights reserved.",
+  "common": {
+    "loading": "Loading...",
+    "back": "Back",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "close": "Close",
+    "adding": "Adding...",
+    "add": "Add",
+    "copy": "Copy",
+    "copied": "Copied",
+    "error": "An error occurred"
+  },
   "auth": {
     "tabs": {
       "signin": "Sign In",
@@ -75,6 +88,77 @@
     "deleteAccountConfirm": {
       "title": "Delete Account",
       "message": "Deleting your account will permanently remove all your data. This action cannot be undone. Are you sure?"
+    }
+  },
+  "app": {
+    "title": "Tasks",
+    "emptyState": "No task lists",
+    "createNew": "Create",
+    "createTaskList": "Create Task List",
+    "taskListName": "Task List Name",
+    "taskListNamePlaceholder": "Enter task list name",
+    "create": "Create",
+    "creating": "Creating...",
+    "cancel": "Cancel",
+    "error": "An error occurred",
+    "moveUp": "Move Up",
+    "moveDown": "Move Down",
+    "dragHint": "Drag to reorder"
+  },
+  "taskList": {
+    "taskCount": "tasks",
+    "editColor": "Change Color",
+    "addTask": "Add",
+    "addTaskPlaceholder": "Enter task...",
+    "selectColor": "Select Color",
+    "deleteList": "Delete List",
+    "deleteConfirm": "Delete this task list?",
+    "dragHint": "Drag to reorder",
+    "share": "Share",
+    "shareTitle": "Share List",
+    "shareCode": "Share Code",
+    "shareDescription": "Share this task list with others. Click the button below to generate a share code.",
+    "generateShare": "Generate Share Code",
+    "removeShare": "Stop Sharing"
+  },
+  "settings": {
+    "title": "Settings",
+    "userInfo": {
+      "title": "User Information",
+      "email": "Email Address"
+    },
+    "theme": {
+      "title": "Theme",
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "language": {
+      "title": "Language",
+      "japanese": "日本語",
+      "english": "English"
+    },
+    "danger": {
+      "title": "Danger Zone",
+      "signOut": "Sign Out",
+      "deleteAccount": "Delete Account"
+    }
+  },
+  "pages": {
+    "sharecode": {
+      "notFound": "This task list not found",
+      "error": "Failed to load task list",
+      "addTaskError": "Failed to add task",
+      "updateError": "Failed to update task",
+      "deleteError": "Failed to delete task",
+      "reorderError": "Failed to reorder tasks",
+      "addToOrderError": "Failed to add this task list",
+      "addToOrder": "Add to My Lists"
+    },
+    "tasklist": {
+      "addTaskPlaceholder": "Enter task...",
+      "noTasks": "No tasks",
+      "dragHint": "Drag to reorder"
     }
   }
 }
