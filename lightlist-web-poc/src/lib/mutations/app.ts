@@ -18,7 +18,7 @@ import {
   TaskListStore,
   TaskListStoreTask,
 } from "@/lib/types";
-import { getData, commit } from "@/lib/store";
+import { getData } from "@/lib/store";
 import {
   calculateOrderForInsert,
   reindexOrders,
@@ -27,37 +27,15 @@ import {
 } from "@/lib/utils/order";
 
 export async function updateSettings(settings: Partial<Settings>) {
-  const data = getData();
-
   const uid = auth.currentUser?.uid;
   if (!uid) throw new Error("No user logged in");
 
   const now = Date.now();
-  const prevSettings = data.settings ? { ...data.settings } : null;
-
-  if (data.settings) {
-    data.settings = {
-      ...data.settings,
-      ...settings,
-      updatedAt: now,
-    };
-  }
-
-  commit();
-
-  try {
-    const updates: Record<string, unknown> = {
-      ...settings,
-      updatedAt: now,
-    };
-    await updateDoc(doc(db, "settings", uid), updates);
-  } catch (error) {
-    if (prevSettings && data.settings) {
-      data.settings = prevSettings;
-      commit();
-    }
-    throw error;
-  }
+  const updates: Record<string, unknown> = {
+    ...settings,
+    updatedAt: now,
+  };
+  await updateDoc(doc(db, "settings", uid), updates);
 }
 
 /**
@@ -85,7 +63,6 @@ export async function updateTaskListOrder(
       order: (value as { order: number }).order,
     }));
 
-  // 浮動小数 order を計算
   const { newOrder, needsReindexing } = calculateDragDropOrder(
     taskListOrders,
     draggedTaskListId,
@@ -94,44 +71,18 @@ export async function updateTaskListOrder(
 
   const now = Date.now();
 
-  try {
-    if (needsReindexing) {
-      const reindexedTaskLists = reindexOrders(taskListOrders);
-
-      // ローカルステート更新
-      reindexedTaskLists.forEach((tl) => {
-        if (data.taskListOrder && data.taskListOrder[tl.id]) {
-          data.taskListOrder[tl.id].order = tl.order;
-        }
-      });
-      data.taskListOrder.updatedAt = now;
-
-      commit();
-
-      // reindex 実行
-      const updateData: Record<string, unknown> = { updatedAt: now };
-      reindexedTaskLists.forEach((tl) => {
-        updateData[tl.id] = { order: tl.order };
-      });
-      await updateDoc(doc(db, "taskListOrder", uid), updateData);
-    } else {
-      // reindex が不要：ドラッグされた TaskList のみ order 更新
-
-      // ローカルステート更新
-      if (data.taskListOrder[draggedTaskListId]) {
-        data.taskListOrder[draggedTaskListId].order = newOrder;
-        data.taskListOrder.updatedAt = now;
-      }
-
-      commit();
-
-      await updateDoc(doc(db, "taskListOrder", uid), {
-        [draggedTaskListId]: { order: newOrder },
-        updatedAt: now,
-      });
-    }
-  } catch (error) {
-    throw error;
+  if (needsReindexing) {
+    const reindexedTaskLists = reindexOrders(taskListOrders);
+    const updateData: Record<string, unknown> = { updatedAt: now };
+    reindexedTaskLists.forEach((tl) => {
+      updateData[tl.id] = { order: tl.order };
+    });
+    await updateDoc(doc(db, "taskListOrder", uid), updateData);
+  } else {
+    await updateDoc(doc(db, "taskListOrder", uid), {
+      [draggedTaskListId]: { order: newOrder },
+      updatedAt: now,
+    });
   }
 }
 
@@ -146,7 +97,6 @@ export async function createTaskList(
 
   const taskListId = doc(collection(db, "taskLists")).id;
 
-  // TaskList の order を計算（浮動小数を使用）
   const taskListOrders =
     Object.entries(data.taskListOrder || {})
       .filter(([key]) => key !== "createdAt" && key !== "updatedAt")
@@ -171,25 +121,14 @@ export async function createTaskList(
     createdAt: now,
     updatedAt: now,
   };
-  data.taskLists[taskListId] = newTaskList;
-  if (data.taskListOrder) {
-    data.taskListOrder[taskListId] = { order: newOrder };
-    data.taskListOrder.updatedAt = now;
-  }
 
-  commit();
-
-  try {
-    const batch = writeBatch(db);
-    batch.set(doc(db, "taskLists", taskListId), newTaskList);
-    batch.update(doc(db, "taskListOrder", uid), {
-      [taskListId]: { order: newOrder },
-      updatedAt: now,
-    });
-    await batch.commit();
-  } catch (error) {
-    throw error;
-  }
+  const batch = writeBatch(db);
+  batch.set(doc(db, "taskLists", taskListId), newTaskList);
+  batch.update(doc(db, "taskListOrder", uid), {
+    [taskListId]: { order: newOrder },
+    updatedAt: now,
+  });
+  await batch.commit();
 
   return taskListId;
 }
@@ -198,60 +137,27 @@ export async function updateTaskList(
   taskListId: string,
   updates: Partial<Omit<TaskListStore, "id" | "createdAt" | "updatedAt">>,
 ) {
-  const data = getData();
-
   const now = Date.now();
-
-  if (data.taskLists[taskListId]) {
-    data.taskLists[taskListId] = {
-      ...data.taskLists[taskListId],
-      ...updates,
-      updatedAt: now,
-    };
-  }
-
-  commit();
-
-  try {
-    const updateData: Record<string, unknown> = {
-      ...updates,
-      updatedAt: now,
-    };
-    await updateDoc(doc(db, "taskLists", taskListId), updateData);
-  } catch (error) {
-    throw error;
-  }
+  const updateData: Record<string, unknown> = {
+    ...updates,
+    updatedAt: now,
+  };
+  await updateDoc(doc(db, "taskLists", taskListId), updateData);
 }
 
 export async function deleteTaskList(taskListId: string) {
-  const data = getData();
-
   const uid = auth.currentUser?.uid;
   if (!uid) throw new Error("No user logged in");
 
   const now = Date.now();
 
-  delete data.taskLists[taskListId];
-  if (data.taskListOrder) {
-    const newTaskListOrder = { ...data.taskListOrder };
-    delete newTaskListOrder[taskListId];
-    newTaskListOrder.updatedAt = now;
-    data.taskListOrder = newTaskListOrder;
-  }
-
-  commit();
-
-  try {
-    const batch = writeBatch(db);
-    batch.delete(doc(db, "taskLists", taskListId));
-    batch.update(doc(db, "taskListOrder", uid), {
-      [taskListId]: deleteField(),
-      updatedAt: now,
-    });
-    await batch.commit();
-  } catch (error) {
-    throw error;
-  }
+  const batch = writeBatch(db);
+  batch.delete(doc(db, "taskLists", taskListId));
+  batch.update(doc(db, "taskListOrder", uid), {
+    [taskListId]: deleteField(),
+    updatedAt: now,
+  });
+  await batch.commit();
 }
 
 export async function addTask(
@@ -269,22 +175,15 @@ export async function addTask(
   const tasks = Object.values(taskListData.tasks);
   const insertPosition = data.settings?.taskInsertPosition || "bottom";
 
-  // 浮動小数 order を計算
   let newOrder = calculateOrderForInsert(
     tasks.map((t) => ({ id: t.id, order: t.order })),
     insertPosition as "top" | "bottom",
   );
 
-  // reindex が必要かチェック
+  let reindexedTasks: Array<{ id: string; order: number }> = [];
   if (shouldReindex([...tasks.map((t) => t.order), newOrder])) {
-    const reindexedTasks = reindexOrders(tasks);
-    // reindex 実行時は新規タスクを末尾に追加
+    reindexedTasks = reindexOrders(tasks);
     newOrder = Math.max(...reindexedTasks.map((t) => t.order)) + 1.0;
-
-    // 既存タスクの order を更新
-    reindexedTasks.forEach((task) => {
-      data.taskLists[taskListId].tasks[task.id].order = task.order;
-    });
   }
 
   const now = Date.now();
@@ -295,39 +194,31 @@ export async function addTask(
     date,
     order: newOrder,
   };
-  data.taskLists[taskListId].tasks[taskId] = newTask;
-  data.taskLists[taskListId].updatedAt = now;
 
-  commit();
+  await runTransaction(db, async (transaction) => {
+    const taskListRef = doc(db, "taskLists", taskListId);
+    const updateData: Record<string, unknown> = {
+      [`tasks.${taskId}`]: newTask,
+      updatedAt: now,
+    };
 
-  try {
-    // トランザクション使用：既存 order の更新 + 新規タスク追加を一度に実行
-    await runTransaction(db, async (transaction) => {
-      const taskListRef = doc(db, "taskLists", taskListId);
-      const taskListSnap = await transaction.get(taskListRef);
-      const currentTaskList = taskListSnap.data() as TaskListStore;
+    if (reindexedTasks.length > 0) {
+      reindexedTasks.forEach((task) => {
+        updateData[`tasks.${task.id}.order`] = task.order;
+      });
+    }
 
-      const updateData: Record<string, unknown> = {
-        [`tasks.${taskId}`]: newTask,
-        updatedAt: now,
-      };
-
-      // reindex が実行されていれば、既存タスクの order も更新
-      if (shouldReindex([...tasks.map((t) => t.order), newOrder])) {
-        Object.entries(data.taskLists[taskListId].tasks).forEach(
-          ([id, task]) => {
-            if (id !== taskId) {
-              updateData[`tasks.${id}.order`] = task.order;
-            }
-          },
-        );
+    const history = [...(taskListData.history || [])];
+    if (!history.includes(text)) {
+      history.unshift(text);
+      if (history.length > 300) {
+        history.pop();
       }
+      updateData.history = history;
+    }
 
-      transaction.update(taskListRef, updateData);
-    });
-  } catch (error) {
-    throw error;
-  }
+    transaction.update(taskListRef, updateData);
+  });
 
   return taskId;
 }
@@ -337,55 +228,22 @@ export async function updateTask(
   taskId: string,
   updates: Partial<Task>,
 ) {
-  const data = getData();
-
   const now = Date.now();
-
-  if (data.taskLists[taskListId] && data.taskLists[taskListId].tasks[taskId]) {
-    data.taskLists[taskListId].tasks[taskId] = {
-      ...data.taskLists[taskListId].tasks[taskId],
-      ...updates,
-    };
-    data.taskLists[taskListId].updatedAt = now;
-  }
-
-  commit();
-
-  try {
-    const taskListRef = doc(db, "taskLists", taskListId);
-    const updateData: Record<string, unknown> = { updatedAt: now };
-    Object.entries(updates).forEach(([key, value]) => {
-      updateData[`tasks.${taskId}.${key}`] = value;
-    });
-    await updateDoc(taskListRef, updateData);
-  } catch (error) {
-    throw error;
-  }
+  const taskListRef = doc(db, "taskLists", taskListId);
+  const updateData: Record<string, unknown> = { updatedAt: now };
+  Object.entries(updates).forEach(([key, value]) => {
+    updateData[`tasks.${taskId}.${key}`] = value;
+  });
+  await updateDoc(taskListRef, updateData);
 }
 
 export async function deleteTask(taskListId: string, taskId: string) {
-  const data = getData();
-
   const now = Date.now();
-
-  if (data.taskLists[taskListId]) {
-    const newTasks = { ...data.taskLists[taskListId].tasks };
-    delete newTasks[taskId];
-    data.taskLists[taskListId].tasks = newTasks;
-    data.taskLists[taskListId].updatedAt = now;
-  }
-
-  commit();
-
-  try {
-    const taskListRef = doc(db, "taskLists", taskListId);
-    await updateDoc(taskListRef, {
-      [`tasks.${taskId}`]: deleteField(),
-      updatedAt: now,
-    });
-  } catch (error) {
-    throw error;
-  }
+  const taskListRef = doc(db, "taskLists", taskListId);
+  await updateDoc(taskListRef, {
+    [`tasks.${taskId}`]: deleteField(),
+    updatedAt: now,
+  });
 }
 
 /**
@@ -408,7 +266,6 @@ export async function updateTasksOrder(
 
   const tasks = Object.values(taskListData.tasks);
 
-  // 浮動小数 order を計算
   const { newOrder, needsReindexing } = calculateDragDropOrder(
     tasks.map((t) => ({ id: t.id, order: t.order })),
     draggedTaskId,
@@ -417,52 +274,24 @@ export async function updateTasksOrder(
 
   const now = Date.now();
 
-  try {
-    // reindex が必要な場合の処理
-    if (needsReindexing) {
-      const reindexedTasks = reindexOrders(tasks);
-
-      // ローカルステート更新
+  if (needsReindexing) {
+    const reindexedTasks = reindexOrders(tasks);
+    await runTransaction(db, async (transaction) => {
+      const taskListRef = doc(db, "taskLists", taskListId);
+      const updateData: Record<string, unknown> = { updatedAt: now };
       reindexedTasks.forEach((task) => {
-        data.taskLists[taskListId].tasks[task.id].order = task.order;
+        updateData[`tasks.${task.id}.order`] = task.order;
       });
-      data.taskLists[taskListId].updatedAt = now;
-
-      commit();
-
-      // トランザクション：全タスクの order を再割り当て
-      await runTransaction(db, async (transaction) => {
-        const taskListRef = doc(db, "taskLists", taskListId);
-        const updateData: Record<string, unknown> = { updatedAt: now };
-
-        reindexedTasks.forEach((task) => {
-          updateData[`tasks.${task.id}.order`] = task.order;
-        });
-
-        transaction.update(taskListRef, updateData);
+      transaction.update(taskListRef, updateData);
+    });
+  } else {
+    await runTransaction(db, async (transaction) => {
+      const taskListRef = doc(db, "taskLists", taskListId);
+      transaction.update(taskListRef, {
+        [`tasks.${draggedTaskId}.order`]: newOrder,
+        updatedAt: now,
       });
-    } else {
-      // reindex が不要：ドラッグされたタスクのみ order 更新
-
-      // ローカルステート更新
-      if (data.taskLists[taskListId].tasks[draggedTaskId]) {
-        data.taskLists[taskListId].tasks[draggedTaskId].order = newOrder;
-        data.taskLists[taskListId].updatedAt = now;
-      }
-
-      commit();
-
-      // トランザクション：ドラッグされたタスクのみ更新
-      await runTransaction(db, async (transaction) => {
-        const taskListRef = doc(db, "taskLists", taskListId);
-        transaction.update(taskListRef, {
-          [`tasks.${draggedTaskId}.order`]: newOrder,
-          updatedAt: now,
-        });
-      });
-    }
-  } catch (error) {
-    throw error;
+    });
   }
 }
 
@@ -498,21 +327,10 @@ export async function generateShareCode(taskListId: string): Promise<string> {
   }
 
   const now = Date.now();
-  data.taskLists[taskListId].shareCode = shareCode;
-  data.taskLists[taskListId].updatedAt = now;
-
-  commit();
-
-  try {
-    await updateDoc(doc(db, "taskLists", taskListId), {
-      shareCode,
-      updatedAt: now,
-    });
-  } catch (error) {
-    data.taskLists[taskListId].shareCode = null;
-    commit();
-    throw error;
-  }
+  await updateDoc(doc(db, "taskLists", taskListId), {
+    shareCode,
+    updatedAt: now,
+  });
 
   return shareCode;
 }
@@ -525,21 +343,10 @@ export async function removeShareCode(taskListId: string): Promise<void> {
   }
 
   const now = Date.now();
-  data.taskLists[taskListId].shareCode = null;
-  data.taskLists[taskListId].updatedAt = now;
-
-  commit();
-
-  try {
-    await updateDoc(doc(db, "taskLists", taskListId), {
-      shareCode: null,
-      updatedAt: now,
-    });
-  } catch (error) {
-    data.taskLists[taskListId].shareCode = null;
-    commit();
-    throw error;
-  }
+  await updateDoc(doc(db, "taskLists", taskListId), {
+    shareCode: null,
+    updatedAt: now,
+  });
 }
 
 export async function fetchTaskListByShareCode(
@@ -588,23 +395,8 @@ export async function addSharedTaskListToOrder(
 
   const now = Date.now();
 
-  if (data.taskListOrder) {
-    data.taskListOrder[taskListId] = { order: newOrder };
-    data.taskListOrder.updatedAt = now;
-  }
-
-  commit();
-
-  try {
-    await updateDoc(doc(db, "taskListOrder", uid), {
-      [taskListId]: { order: newOrder },
-      updatedAt: now,
-    });
-  } catch (error) {
-    if (data.taskListOrder) {
-      delete data.taskListOrder[taskListId];
-      commit();
-    }
-    throw error;
-  }
+  await updateDoc(doc(db, "taskListOrder", uid), {
+    [taskListId]: { order: newOrder },
+    updatedAt: now,
+  });
 }
