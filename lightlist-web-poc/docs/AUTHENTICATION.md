@@ -539,21 +539,6 @@ const unsubscribe = appStore.subscribe((newState) => {
 });
 ```
 
-## Firebase Emulator
-
-開発時には Firebase Emulator を使用してローカル環境でテストできます。
-
-**環境変数:**
-
-```
-NEXT_PUBLIC_USE_EMULATOR=true
-```
-
-**接続先:**
-
-- Authentication Emulator: `http://localhost:9099`
-- Firestore Emulator: `localhost:8081`
-
 ## セキュリティに関する注意
 
 1. **パスワード強度:**
