@@ -19,9 +19,6 @@ node_modules/
 .env.production.local
 
 # Firebase
-firebase-export-*/
-emulator-export/
-.firebase-emulator-data/
 *.log
 
 # IDE
