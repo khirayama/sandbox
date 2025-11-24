@@ -6,10 +6,6 @@
   "scripts": {
     "dev": "next",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "emu": "firebase emulators:start",
-    "emu:import": "firebase emulators:start --import=./emulator-export",
-    "emu:export": "firebase emulators:export ./emulator-export",
-    "emu:clear": "rm -rf ./emulator-export",
     "format": "prettier --write .",
     "build": "next build"
   },
