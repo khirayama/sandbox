@@ -7,6 +7,11 @@ import { onAuthStateChanged } from "firebase/auth";
 
 import { auth } from "@/lib/firebase";
 import { signIn, signUp, sendPasswordResetEmail } from "@/lib/mutations/auth";
+import { FormInput } from "@/components/FormInput";
+import { ErrorMessage } from "@/components/ErrorMessage";
+import { SuccessMessage } from "@/components/SuccessMessage";
+import { getErrorMessage } from "@/lib/utils/errors";
+import { validateAuthForm } from "@/lib/utils/validation";
 
 type AuthTab = "signin" | "signup" | "reset";
 
@@ -16,123 +21,6 @@ interface FormErrors {
   confirmPassword?: string;
   general?: string;
 }
-
-// ===== Components =====
-interface FormInputProps {
-  id: string;
-  label: string;
-  type: string;
-  value: string;
-  onChange: (value: string) => void;
-  error?: string;
-  disabled: boolean;
-  placeholder: string;
-}
-
-const FormInput = ({
-  id,
-  label,
-  type,
-  value,
-  onChange,
-  error,
-  disabled,
-  placeholder,
-}: FormInputProps) => (
-  <div>
-    <label
-      htmlFor={id}
-      className="block text-sm font-medium text-gray-700 mb-2"
-    >
-      {label}
-    </label>
-    <input
-      id={id}
-      type={type}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      disabled={disabled}
-      className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100 ${
-        error ? "border-red-500" : "border-gray-300"
-      }`}
-      placeholder={placeholder}
-    />
-    {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
-  </div>
-);
-
-const ErrorMessage = ({ message }: { message: string }) => (
-  <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
-    <p className="text-sm text-red-700">{message}</p>
-  </div>
-);
-
-const SuccessMessage = ({ message }: { message: string }) => (
-  <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-    <p className="text-sm text-green-700">{message}</p>
-  </div>
-);
-
-// ===== Utility Functions =====
-const validateEmail = (email: string): boolean => {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-};
-
-const getErrorMessage = (
-  errorCode: string,
-  t: (key: string) => string,
-): string => {
-  const errorKeyMap: { [key: string]: string } = {
-    "auth/invalid-credential": "auth.error.invalidCredential",
-    "auth/user-not-found": "auth.error.userNotFound",
-    "auth/email-already-in-use": "auth.error.emailAlreadyInUse",
-    "auth/weak-password": "auth.error.weakPassword",
-    "auth/invalid-email": "auth.error.invalidEmail",
-    "auth/operation-not-allowed": "auth.error.operationNotAllowed",
-    "auth/too-many-requests": "auth.error.tooManyRequests",
-    "auth/expired-action-code": "auth.passwordReset.expiredCode",
-    "auth/invalid-action-code": "auth.passwordReset.invalidCode",
-  };
-  const key = errorKeyMap[errorCode] || "auth.error.general";
-  return t(key);
-};
-
-const validateAuthForm = (
-  data: {
-    email: string;
-    password: string;
-    confirmPassword?: string;
-    requirePasswordConfirm?: boolean;
-  },
-  t: (key: string) => string,
-): FormErrors => {
-  const errors: FormErrors = {};
-
-  // Email validation
-  if (!data.email.trim()) {
-    errors.email = t("auth.validation.email.required");
-  } else if (!validateEmail(data.email)) {
-    errors.email = t("auth.validation.email.invalid");
-  }
-
-  // Password validation
-  if (!data.password) {
-    errors.password = t("auth.validation.password.required");
-  } else if (data.requirePasswordConfirm && data.password.length < 6) {
-    errors.password = t("auth.validation.password.tooShort");
-  }
-
-  // Confirm password validation
-  if (data.requirePasswordConfirm) {
-    if (!data.confirmPassword) {
-      errors.confirmPassword = t("auth.validation.confirmPassword.required");
-    } else if (data.password !== data.confirmPassword) {
-      errors.confirmPassword = t("auth.validation.confirmPassword.notMatch");
-    }
-  }
-
-  return errors;
-};
 
 // ===== Main Component =====
 export default function IndexPage() {
