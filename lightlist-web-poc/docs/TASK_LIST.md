@@ -4,43 +4,80 @@
 
 LightList はタスクリスト管理機能を提供しており、複数のタスクリストを作成・管理できます。各タスクリストは個別のタスクを含み、ユーザーが効率的に作業を管理できるように設計されています。
 
-## タスクリスト一覧ページ
+## タスク管理ページ（統合ドロワーレイアウト）
 
 **ページ:** `src/pages/app.tsx`
 
 ### 概要
 
-タスクリスト一覧ページは、ユーザーのすべてのタスクリストをグリッド表示し、新規作成機能を提供します。
+タスク管理ページは、タスクリスト一覧とタスク詳細を統合したドロワーレイアウトで表示します。モバイルではオーバーレイドロワー、デスクトップでは2カラムレイアウトで表示され、シームレスなタスク管理体験を提供します。
+
+### レイアウト仕様
+
+#### モバイル（< 768px）
+
+- **サイドバー:** オーバーレイドロワー（左からスライドイン）
+  - ハンバーガーメニューボタンで開閉
+  - スワイプジェスチャーで開閉（右スワイプで開く、左スワイプで閉じる）
+  - タスクリスト選択後は自動で閉じる
+  - 半透明背景で画面を覆う
+
+#### デスクトップ（>= 768px）
+
+- **レイアウト:** 固定サイドバー（w-80 / 320px）+ メインコンテンツ
+- **サイドバー:** 常に表示、開閉機能なし
+- **ハンバーガーメニュー:** 非表示
 
 ### 主要機能
 
-#### 1. タスクリスト一覧表示
+#### 1. タスクリスト一覧表示（サイドバー）
 
 **仕様:**
 
-- グリッドレイアウトで複数のタスクリストを表示
-  - レスポンシブ対応：1列（モバイル）→ 2列（タブレット）→ 3列（デスクトップ）
-- 各リストカード上に以下の情報を表示：
+- 縦並びリスト形式でタスクリストを表示
+- 各リスト項目は以下の情報を表示：
+  - 背景色インジケータ（上部の色付きバー）
   - リスト名（切り詰め表示対応）
-  - タスク数（"X tasks" フォーマット）
-  - 背景色の視覚的インジケータ（カードの上部に4px の色付きボーダー）
-- リストカードはホバー時にスケールとシャドウが増加（視覚的フィードバック）
+  - タスク数
+- リスト項目はホバー時に視覚的フィードバック
+
+**選択状態:**
+
+- 現在選択中のリストは `ring-2 ring-indigo-500` で視覚化
+- リスト項目クリックで選択（メインエリアにタスク一覧を表示）
 
 **エラーハンドリング:**
 
 - 認証されていないユーザーはリダイレクト処理により、`/` へ移動
 - リスト読み込み中の状態をローディング表示で表現
 
-#### 2. 空の状態表示
+#### 2. スワイプジェスチャー対応（モバイルのみ）
+
+**スワイプ操作:**
+
+- **右スワイプ:** メインエリアから右にスワイプするとドロワーが開く
+- **左スワイプ:** ドロワーから左にスワイプするとドロワーが閉じる
+- **スクロール保護:** `preventScrollOnSwipe: true` でスクロール操作との競合を回避
+
+**技術実装:**
+
+- ライブラリ: `react-swipeable`
+- `trackMouse: false` でマウスでのスワイプを無効化（デスクトップ向け）
+
+#### 3. 空の状態表示（サイドバー）
 
 **表示条件:**
 
-タスクリストが存在しない場合、以下の空の状態画面を表示：
+タスクリストが存在しない場合、サイドバーに以下を表示：
 
 - "タスクリストがありません" メッセージ
-- 新規作成ボタンへ導く UI
+- 新規作成ボタン
 
-#### 3. 新規作成機能
+**メイン エリア:**
+
+- タスクリストが選択されていない場合は、空の状態メッセージと新規作成ボタンを表示
+
+#### 4. 新規作成機能
 
 **ページレイアウト:**
 
@@ -82,13 +119,7 @@ LightList はタスクリスト管理機能を提供しており、複数のタ�
 - 作成中にエラーが発生した場合、エラーメッセージを表示
 - ユーザーは同じモーダル内で再度試行可能
 
-#### 4. リスト詳細ページへのナビゲーション
-
-**ユーザー操作:**
-
-リストカードをクリックすると、リスト詳細ページ（`/list/{taskListId}`）へナビゲート
-
-#### 5. タスクリストの並び替え（ドラッグ&ドロップ）
+#### 4. タスクリストの並び替え（ドラッグ&ドロップ）
 
 **機能:**
 
@@ -142,10 +173,37 @@ LightList はタスクリスト管理機能を提供しており、複数のタ�
 ### ページレベルの状態
 
 ```typescript
+// ドロワーとタスクリスト選択状態
+const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+const [selectedTaskListId, setSelectedTaskListId] = useState<string | null>(
+  null,
+);
+
+// タスクリスト作成
 const [showCreateListForm, setShowCreateListForm] = useState(false);
 const [createListInput, setCreateListInput] = useState("");
 const [creatingList, setCreatingList] = useState(false);
+
+// タスク操作状態（メインコンテンツ内）
+const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+const [editingTaskText, setEditingTaskText] = useState("");
+const [newTaskText, setNewTaskText] = useState("");
+const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+const [showEditColorModal, setShowEditColorModal] = useState(false);
+const [editingColor, setEditingColor] = useState("");
+const [showShareModal, setShowShareModal] = useState(false);
 ```
+
+**ドロワー状態の詳細:**
+
+- `isDrawerOpen`: モバイルでドロワーが開いている状態
+  - モバイル（< 768px）: クリック/スワイプで動的に変更
+  - デスクトップ（>= 768px）: 常に false（常時表示）
+
+- `selectedTaskListId`: 現在選択中のタスクリスト ID
+  - マウント時に自動的に最初のリストを選択
+  - リスト項目クリックで変更
+  - モバイルでの選択時に自動的にドロワーが閉じる
 
 ### アプリケーション状態（Store）
 
@@ -383,13 +441,17 @@ app:
 1. キャンセルボタンをクリック
 2. ブラウザを刷新してセッションをリセット
 
-## タスク詳細ページ
-
-**ページ:** `src/pages/tasklists/[id].tsx`
+## メインコンテンツエリア（タスク詳細表示）
 
 ### 概要
 
-タスク詳細ページは、特定のタスクリスト内のすべてのタスクを表示・管理します。タスクの作成、編集、削除、完了状態の切り替え、および並び替え機能を提供します。
+メインコンテンツエリアは、統合ドロワーレイアウトの右側に表示される領域です。サイドバーで選択されたタスクリスト内のすべてのタスクを表示・管理します。タスクの作成、編集、削除、完了状態の切り替え、および並び替え機能を提供します。
+
+### 後方互換性
+
+**旧ページ:** `/tasklists/[id].tsx` → `/app` へリダイレクト
+
+既存のブックマークやリンク（例：`/tasklists/list-id`）の互換性を保つため、自動的に `/app` にリダイレクトされます。ユーザーは統合されたドロワーレイアウトで同じタスク管理機能を利用できます。
 
 ### 主要機能
 
@@ -550,19 +612,16 @@ app:
 
 ### 状態管理
 
-**ページレベルの状態:**
+メインコンテンツエリアの状態は、親の app.tsx コンポーネントで一元管理されます。詳細は上記の「状態管理」セクションを参照してください。
 
-```typescript
-const [state, setState] = useState<AppState | null>(null);
-const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
-const [editingTaskText, setEditingTaskText] = useState("");
-const [newTaskText, setNewTaskText] = useState("");
-const [showEditListModal, setShowEditListModal] = useState(false);
-const [editListName, setEditListName] = useState("");
-const [editListColor, setEditListColor] = useState("");
-const [editingListName, setEditingListName] = useState(false);
-const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-```
+主な状態変数：
+
+- `editingTaskId`: 編集中のタスク ID
+- `editingTaskText`: 編集中のテキスト
+- `newTaskText`: 新規タスク入力テキスト
+- `showDeleteConfirm`: 削除確認モーダルの表示状態
+- `showEditColorModal`: 色編集モーダルの表示状態
+- `showShareModal`: 共有モーダルの表示状態
 
 ### API インターフェース
 
