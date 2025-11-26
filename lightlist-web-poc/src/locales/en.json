@@ -12,7 +12,8 @@
     "add": "Add",
     "copy": "Copy",
     "copied": "Copied",
-    "error": "An error occurred"
+    "error": "An error occurred",
+    "confirmDelete": "Are you sure you want to delete?"
   },
   "auth": {
     "tabs": {
@@ -103,7 +104,8 @@
     "error": "An error occurred",
     "moveUp": "Move Up",
     "moveDown": "Move Down",
-    "dragHint": "Drag to reorder"
+    "dragHint": "Drag to reorder",
+    "openMenu": "Open Menu"
   },
   "taskList": {
     "taskCount": "tasks",

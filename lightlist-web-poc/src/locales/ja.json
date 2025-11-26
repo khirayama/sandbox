@@ -12,7 +12,8 @@
     "add": "追加",
     "copy": "コピー",
     "copied": "コピーしました",
-    "error": "エラーが発生しました"
+    "error": "エラーが発生しました",
+    "confirmDelete": "削除してもよろしいですか？"
   },
   "auth": {
     "tabs": {
@@ -103,7 +104,8 @@
     "error": "エラーが発生しました",
     "moveUp": "上へ",
     "moveDown": "下へ",
-    "dragHint": "ドラッグして並び替え"
+    "dragHint": "ドラッグして並び替え",
+    "openMenu": "メニューを開く"
   },
   "taskList": {
     "taskCount": "個のタスク",
