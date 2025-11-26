@@ -23,10 +23,10 @@
     "next": "^16.0.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-i18next": "^16.3.3"
+    "react-i18next": "^16.3.3",
+    "react-swipeable": "^7.0.2"
   },
   "devDependencies": {
-    "@tailwindcss/forms": "^0.5.10",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.3",
     "@types/react-dom": "^19.2.3",
