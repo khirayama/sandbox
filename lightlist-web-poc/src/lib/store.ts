@@ -211,4 +211,4 @@ function createStore() {
 
 export const appStore = createStore();
 
-export const { getData, commit } = appStore;
+export const { getData } = appStore;

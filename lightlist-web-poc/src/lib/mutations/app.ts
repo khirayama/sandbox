@@ -318,7 +318,7 @@ export async function generateShareCode(taskListId: string): Promise<string> {
     throw new Error("Task list not found");
   }
 
-  let shareCode: string;
+  let shareCode = "";
   let isUnique = false;
 
   while (!isUnique) {
