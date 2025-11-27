@@ -1,14 +1,14 @@
 import { onAuthStateChanged } from "firebase/auth";
 import { doc, collection, query, where, onSnapshot } from "firebase/firestore";
 
-import { auth, db } from "@/lib/firebase";
+import { auth, db } from "@/sdk/firebase";
 import {
   AppState,
   SettingsStore,
   TaskListStore,
   TaskListOrderStore,
   User,
-} from "@/lib/types";
+} from "@/sdk/types";
 
 type DataStore = {
   user: User | null;

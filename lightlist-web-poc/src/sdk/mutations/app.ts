@@ -10,21 +10,21 @@ import {
   getDocs,
 } from "firebase/firestore";
 
-import { auth, db } from "@/lib/firebase";
+import { auth, db } from "@/sdk/firebase";
 import {
   Settings,
   Task,
   TaskListOrderStore,
   TaskListStore,
   TaskListStoreTask,
-} from "@/lib/types";
-import { getData } from "@/lib/store";
+} from "@/sdk/types";
+import { getData } from "@/sdk/store";
 import {
   calculateOrderForInsert,
   reindexOrders,
   shouldReindex,
   calculateDragDropOrder,
-} from "@/lib/utils/order";
+} from "@/sdk/utils/order";
 
 export async function updateSettings(settings: Partial<Settings>) {
   const uid = auth.currentUser?.uid;

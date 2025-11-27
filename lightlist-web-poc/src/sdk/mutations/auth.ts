@@ -10,9 +10,9 @@ import {
 } from "firebase/auth";
 import { doc, setDoc, writeBatch } from "firebase/firestore";
 
-import { auth, db } from "@/lib/firebase";
-import { SettingsStore, TaskListOrderStore, Language } from "@/lib/types";
-import { getData } from "@/lib/store";
+import { auth, db } from "@/sdk/firebase";
+import { SettingsStore, TaskListOrderStore, Language } from "@/sdk/types";
+import { getData } from "@/sdk/store";
 
 export async function signUp(email: string, password: string) {
   const userCredential = await createUserWithEmailAndPassword(
