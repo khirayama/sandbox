@@ -1,8 +1,8 @@
 import type { AppProps } from "next/app";
 import { useEffect, useRef, useState } from "react";
 
-import i18n from "@/lib/i18n";
-import { appStore } from "@/lib/store";
+import i18n from "@/utils/i18n";
+import { appStore } from "@/sdk/store";
 
 import "@/styles/globals.css";
 
