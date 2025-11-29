@@ -5,13 +5,11 @@ import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import { onAuthStateChanged } from "firebase/auth";
 
-import { auth } from "@/lib/firebase";
-import { signIn, signUp, sendPasswordResetEmail } from "@/lib/mutations/auth";
+import { auth } from "@/sdk/firebase";
+import { signIn, signUp, sendPasswordResetEmail } from "@/sdk/mutations/auth";
 import { FormInput } from "@/components/FormInput";
-import { ErrorMessage } from "@/components/ErrorMessage";
-import { SuccessMessage } from "@/components/SuccessMessage";
-import { getErrorMessage } from "@/lib/utils/errors";
-import { validateAuthForm } from "@/lib/utils/validation";
+import { getErrorMessage } from "@/utils/errors";
+import { validateAuthForm } from "@/utils/validation";
 
 type AuthTab = "signin" | "signup" | "reset";
 
@@ -180,7 +178,11 @@ export default function IndexPage() {
               disabled={loading}
               placeholder={t("auth.placeholder.password")}
             />
-            {errors.general && <ErrorMessage message={errors.general} />}
+            {errors.general && (
+              <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-700">{errors.general}</p>
+              </div>
+            )}
             <button
               type="submit"
               disabled={loading}
@@ -231,7 +233,11 @@ export default function IndexPage() {
               disabled={loading}
               placeholder={t("auth.placeholder.password")}
             />
-            {errors.general && <ErrorMessage message={errors.general} />}
+            {errors.general && (
+              <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-sm text-red-700">{errors.general}</p>
+              </div>
+            )}
             <button
               type="submit"
               disabled={loading}
@@ -246,7 +252,11 @@ export default function IndexPage() {
         {activeTab === "reset" && (
           <form onSubmit={handlePasswordReset} className="space-y-4">
             {resetSent ? (
-              <SuccessMessage message={t("auth.passwordReset.success")} />
+              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-sm text-green-700">
+                  {t("auth.passwordReset.success")}
+                </p>
+              </div>
             ) : (
               <>
                 <p className="text-sm text-gray-600 mb-4">
@@ -262,7 +272,11 @@ export default function IndexPage() {
                   disabled={resetLoading}
                   placeholder={t("auth.placeholder.email")}
                 />
-                {errors.general && <ErrorMessage message={errors.general} />}
+                {errors.general && (
+                  <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-sm text-red-700">{errors.general}</p>
+                  </div>
+                )}
                 <button
                   type="submit"
                   disabled={resetLoading}

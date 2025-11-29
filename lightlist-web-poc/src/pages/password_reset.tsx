@@ -7,13 +7,11 @@ import { useTranslation } from "react-i18next";
 import {
   verifyPasswordResetCode,
   confirmPasswordReset,
-} from "@/lib/mutations/auth";
+} from "@/sdk/mutations/auth";
 import { Spinner } from "@/components/Spinner";
 import { FormInput } from "@/components/FormInput";
-import { ErrorMessage } from "@/components/ErrorMessage";
-import { SuccessMessage } from "@/components/SuccessMessage";
-import { getErrorMessage } from "@/lib/utils/errors";
-import { validatePasswordForm } from "@/lib/utils/validation";
+import { getErrorMessage } from "@/utils/errors";
+import { validatePasswordForm } from "@/utils/validation";
 
 interface FormErrors {
   password?: string;
@@ -109,9 +107,11 @@ export default function PasswordResetPage() {
           <h1 className="text-2xl font-bold text-gray-800 mb-6">
             {t("auth.passwordReset.title")}
           </h1>
-          <ErrorMessage
-            message={errors.general || t("auth.passwordReset.invalidCode")}
-          />
+          <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-sm text-red-700">
+              {errors.general || t("auth.passwordReset.invalidCode")}
+            </p>
+          </div>
           <button
             onClick={() => router.push("/")}
             className="mt-6 w-full bg-indigo-600 text-white font-medium py-2 rounded-lg hover:bg-indigo-700 transition-colors"
@@ -130,7 +130,11 @@ export default function PasswordResetPage() {
           <h1 className="text-2xl font-bold text-gray-800 mb-6">
             {t("auth.passwordReset.title")}
           </h1>
-          <SuccessMessage message={t("auth.passwordReset.resetSuccess")} />
+          <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-sm text-green-700">
+              {t("auth.passwordReset.resetSuccess")}
+            </p>
+          </div>
           <div className="mt-4 flex justify-center">
             <Spinner />
           </div>
@@ -146,7 +150,11 @@ export default function PasswordResetPage() {
           {t("auth.passwordReset.title")}
         </h1>
 
-        {errors.general && <ErrorMessage message={errors.general} />}
+        {errors.general && (
+          <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-sm text-red-700">{errors.general}</p>
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-6">
           <FormInput
